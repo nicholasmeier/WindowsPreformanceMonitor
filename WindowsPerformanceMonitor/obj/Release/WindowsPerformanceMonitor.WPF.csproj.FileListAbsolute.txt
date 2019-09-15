@@ -1,0 +1,5 @@
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Release\WindowsPerformanceMonitor.WPF.csprojAssemblyReference.cache
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Release\MainWindow.g.cs
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Release\App.g.cs
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Release\WindowsPerformanceMonitor_MarkupCompile.cache
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Release\WindowsPerformanceMonitor_MarkupCompile.lref

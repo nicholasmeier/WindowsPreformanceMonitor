@@ -1,0 +1,5 @@
+﻿  AssemblyInfo.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
+     Creating library C:\Users\Darren\source\repos\WindowsPerformanceMonitor\Debug\WindowsPerformanceMonitor.Cpp.Wrapper.lib and object C:\Users\Darren\source\repos\WindowsPerformanceMonitor\Debug\WindowsPerformanceMonitor.Cpp.Wrapper.exp
+WindowsPerformanceMonitor.Cpp.lib(Logic.obj) : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
+LINK : warning LNK4199: /DELAYLOAD:MeaningOfLife.Cpp.dll ignored; no imports found from MeaningOfLife.Cpp.dll
+  WindowsPerformanceMonitor.Cpp.Wrapper.vcxproj -> C:\Users\Darren\source\repos\WindowsPerformanceMonitor\Debug\WindowsPerformanceMonitor.Cpp.Wrapper.dll
