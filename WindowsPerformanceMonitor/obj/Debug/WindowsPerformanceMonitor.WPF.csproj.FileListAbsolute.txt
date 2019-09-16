@@ -16,3 +16,32 @@ C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\bin\Debug\WindowsPerformanceMonitor.Cpp.Wrapper.dll
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\bin\Debug\WindowsPerformanceMonitor.Cpp.Wrapper.pdb
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csproj.CopyComplete
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csprojAssemblyReference.cache
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\MainWindow.g.cs
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\App.g.cs
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor_MarkupCompile.cache
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor_MarkupCompile.lref
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.exe
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.pdb
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\bin\Debug\WindowsPerformanceMonitor.exe.config
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\bin\Debug\WindowsPerformanceMonitor.exe
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\bin\Debug\WindowsPerformanceMonitor.pdb
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\bin\Debug\WindowsPerformanceMonitor.Cpp.Wrapper.dll
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\bin\Debug\WindowsPerformanceMonitor.Cpp.Wrapper.pdb
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\MainWindow.baml
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.g.resources
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.Properties.Resources.resources
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csproj.GenerateResource.cache
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csproj.CoreCompileInputs.cache
+E:\Downloads\WindowsPreformanceMonitor-master (2)\WindowsPreformanceMonitor-master\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csproj.CopyComplete
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Logging.baml
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\RealTime.baml
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Logging.g.cs
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\RealTime.g.cs
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\HardwareDetails.baml
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Options.baml
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Startup.baml
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\HardwareDetails.g.cs
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Options.g.cs
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Startup.g.cs

@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="WindowsPerformanceMonitor.RealTime"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Loaded="OnControlLoaded"
+             >
+    <Grid>
+        <TextBlock Text="Data on realtime" Name="txtData1" />
+    </Grid>
+</UserControl>
