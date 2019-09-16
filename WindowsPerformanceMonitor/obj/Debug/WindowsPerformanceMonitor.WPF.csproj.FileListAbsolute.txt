@@ -45,3 +45,9 @@ C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\HardwareDetails.g.cs
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Options.g.cs
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Startup.g.cs
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\bin\Debug\LiveCharts.dll
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\bin\Debug\LiveCharts.Wpf.dll
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\bin\Debug\LiveCharts.pdb
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\bin\Debug\LiveCharts.xml
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\bin\Debug\LiveCharts.Wpf.pdb
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\bin\Debug\LiveCharts.Wpf.xml
