@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\App.xaml
-6-672340905
+7-2145015421
 
-10507026762
-16895846206
-HardwareDetails.xaml;Logging.xaml;MainWindow.xaml;Options.xaml;RealTime.xaml;Startup.xaml;
+12-535522717
+18-496134684
+Graphs\LiveLineGraph.xaml;HardwareDetails.xaml;Logging.xaml;MainWindow.xaml;Options.xaml;RealTime.xaml;Startup.xaml;
 
 False
 

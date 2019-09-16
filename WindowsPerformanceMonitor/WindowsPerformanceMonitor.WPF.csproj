@@ -43,6 +43,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -61,12 +63,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Graphs\LiveLineGraph.xaml.cs">
+      <DependentUpon>LiveLineGraph.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HardwareDetails.xaml.cs">
       <DependentUpon>HardwareDetails.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logging.xaml.cs">
       <DependentUpon>Logging.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\MeasureModel.cs" />
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
@@ -76,6 +82,10 @@
     <Compile Include="Startup.xaml.cs">
       <DependentUpon>Startup.xaml</DependentUpon>
     </Compile>
+    <Page Include="Graphs\LiveLineGraph.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="HardwareDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
