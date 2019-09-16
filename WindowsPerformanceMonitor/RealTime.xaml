@@ -3,24 +3,52 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Loaded="OnControlLoaded"
              >
-    <Canvas Height="425" Width="775">
-        <CheckBox Content="Detailed View" Canvas.Left="10" Canvas.Top="23" Height="15" Width="99" IsChecked="True"/>
-        <ComboBox Name="comboBox1" Canvas.Left="10" Canvas.Top="59" Width="120" SelectionChanged="ComboBox_SelectionChanged" MaxDropDownHeight="100">
-        </ComboBox>
-        <GroupBox Header="Graph Type" Height="106" Canvas.Left="10" Canvas.Top="99" Width="120"/>
-        <StackPanel Height="81" Canvas.Left="22" Canvas.Top="124" Width="99">
-            <RadioButton Content="CPU" IsChecked="True"></RadioButton>
-            <RadioButton Content="GPU"></RadioButton>
-            <RadioButton Content="Memory"></RadioButton>
-            <RadioButton Content="Disk"></RadioButton>
-            <RadioButton Content="Network"/>
-        </StackPanel>
-        <ListView Height="157" Canvas.Left="10" Canvas.Top="222" Width="755">
+    <Grid ShowGridLines="True" Height="Auto" Width="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn/>
+                    <GridViewColumn Header="Process" 
+                                    Width="100"/>
+                    <GridViewColumn Header="CPU" 
+                                    Width="100"/>
+                    <GridViewColumn Header="GPU" 
+                                    Width="100"/>
+                    <GridViewColumn Header="Memory" 
+                                    Width="100"/>
+                    <GridViewColumn Header="Disk" 
+                                    Width="100"/>
+                    <GridViewColumn Header="Network" 
+                                    Width="100"/>
                 </GridView>
             </ListView.View>
         </ListView>
-    </Canvas>
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+            <CheckBox HorizontalAlignment="Left" Height="20" Width="100" Grid.Row="0" Content="Detailed View" IsChecked="True" Margin="20,10,20,0"/>
+            <ComboBox HorizontalAlignment="Stretch" Name="comboBox1" Height="20" SelectionChanged="ComboBox_SelectionChanged" MaxDropDownHeight="100" Margin="20,5,20,0"/>
+            <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="127" Margin="20,5,20,10">
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type RadioButton}">
+                            <Setter Property="Margin" Value="5,5,0,0"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <RadioButton Content="CPU" IsChecked="True"></RadioButton>
+                    <RadioButton Content="GPU"></RadioButton>
+                    <RadioButton Content="Memory"></RadioButton>
+                    <RadioButton Content="Disk"></RadioButton>
+                    <RadioButton Content="Network"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
 </UserControl>

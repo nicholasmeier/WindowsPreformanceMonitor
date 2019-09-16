@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace WindowsPerformanceMonitor
 {
@@ -38,7 +40,7 @@ namespace WindowsPerformanceMonitor
         private void ConfigureComboBox()
         {
             comboBox1.Items.Add("System");
-            
+
             for (var i = 0; i < 5; i++)
             {
                 comboBox1.Items.Add($"Process {i}");
@@ -57,9 +59,9 @@ namespace WindowsPerformanceMonitor
 
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
+            // Make it so we can fill the bar and auto resize the others. see stack overflow post
         }
     }
 }
