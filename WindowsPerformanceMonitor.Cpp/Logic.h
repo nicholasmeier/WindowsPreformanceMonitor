@@ -9,8 +9,8 @@ namespace PerformanceMonitor
 		// to be visible from outside the DLL boundaries
 		class __declspec(dllexport) Logic
 		{
-		public:
-			int Get() const;
+			public:
+				int Get() const;
 		};
 	}
 }
