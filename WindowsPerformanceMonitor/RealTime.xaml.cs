@@ -25,6 +25,7 @@ namespace WindowsPerformanceMonitor
         public RealTime()
         {
             InitializeComponent();
+            ConfigureComboBox();
         }
 
         // Get a reference to main windows when it is available.
@@ -32,6 +33,33 @@ namespace WindowsPerformanceMonitor
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
+        }
+
+        private void ConfigureComboBox()
+        {
+            comboBox1.Items.Add("System");
+            
+            for (var i = 0; i < 5; i++)
+            {
+                comboBox1.Items.Add($"Process {i}");
+            }
+
+            comboBox1.SelectedItem = "System";
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

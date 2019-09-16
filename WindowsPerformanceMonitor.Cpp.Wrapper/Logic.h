@@ -11,15 +11,16 @@ namespace PerformanceMonitor
 			// Wrapper
 			public ref class Logic
 			{
-			public:
-				Logic();
-				~Logic();
-				!Logic();
-				int Get();
-				void Destroy(); // Helper function
-			private:
-				// Pointer to our implementation
-				Cpp::Logic* _impl;
+				public:
+					Logic();
+					~Logic();
+					!Logic();
+					int Get();
+					void Destroy(); // Helper function
+
+				private:
+					// Pointer to our implementation
+					Cpp::Logic* _impl;
 			};
 		}
 	}

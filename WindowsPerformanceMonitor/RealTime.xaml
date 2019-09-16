@@ -3,7 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Loaded="OnControlLoaded"
              >
-    <Grid>
-        <TextBlock Text="Data on realtime" Name="txtData1" />
-    </Grid>
+    <Canvas Height="425" Width="775">
+        <CheckBox Content="Detailed View" Canvas.Left="10" Canvas.Top="23" Height="15" Width="99" IsChecked="True"/>
+        <ComboBox Name="comboBox1" Canvas.Left="10" Canvas.Top="59" Width="120" SelectionChanged="ComboBox_SelectionChanged" MaxDropDownHeight="100">
+        </ComboBox>
+        <GroupBox Header="Graph Type" Height="106" Canvas.Left="10" Canvas.Top="99" Width="120"/>
+        <StackPanel Height="81" Canvas.Left="22" Canvas.Top="124" Width="99">
+            <RadioButton Content="CPU" IsChecked="True"></RadioButton>
+            <RadioButton Content="GPU"></RadioButton>
+            <RadioButton Content="Memory"></RadioButton>
+            <RadioButton Content="Disk"></RadioButton>
+            <RadioButton Content="Network"/>
+        </StackPanel>
+        <ListView Height="157" Canvas.Left="10" Canvas.Top="222" Width="755">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Canvas>
 </UserControl>
