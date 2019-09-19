@@ -4,7 +4,7 @@
              xmlns:graph="clr-namespace:WindowsPerformanceMonitor.Graphs"
              Loaded="OnControlLoaded"
              >
-    <Grid ShowGridLines="True" Height="Auto" Width="Auto">
+    <Grid ShowGridLines="False" Height="Auto" Width="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="1*"></ColumnDefinition>
@@ -67,7 +67,7 @@
         </StackPanel>
 
         <!-- Bottom Left (Log List)-->
-        <ListView Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10,10,10,10">
+        <ListView Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10,10,10,10" PreviewMouseLeftButtonUp="logList_Click">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Stored Logs" 
