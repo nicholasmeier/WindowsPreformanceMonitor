@@ -35,6 +35,7 @@ namespace WindowsPerformanceMonitor
         }
 
         #region Initialization
+
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
@@ -55,6 +56,7 @@ namespace WindowsPerformanceMonitor
         #endregion
 
         #region Events
+
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // TODO
@@ -71,7 +73,5 @@ namespace WindowsPerformanceMonitor
         }
 
         #endregion
-
-  
     }
 }
