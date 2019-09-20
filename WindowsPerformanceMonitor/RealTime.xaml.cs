@@ -18,6 +18,7 @@ using LiveCharts;
 using LiveCharts.Configurations;
 using LiveCharts.Wpf;
 using WindowsPerformanceMonitor.Models;
+using OpenHardwareMonitor.Hardware;
 
 namespace WindowsPerformanceMonitor
 {
@@ -32,6 +33,13 @@ namespace WindowsPerformanceMonitor
         {
             InitializeComponent();
             InitializeComboBox();
+            HardwareObserver observer = new HardwareObserver(updateValues);
+            Globals.provider.Subscribe(observer);
+        }
+
+        public void updateValues(Computer comp)
+        {
+            return;
         }
 
         #region Initialization

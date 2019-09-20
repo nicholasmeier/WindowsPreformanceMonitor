@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OpenHardwareMonitor.Hardware;
+using System.Threading;
 
 namespace WindowsPerformanceMonitor
 {
@@ -21,11 +22,13 @@ namespace WindowsPerformanceMonitor
     {
         public MainWindow()
         {
+            
+            ComputerStatsMonitor provider = new ComputerStatsMonitor();
+            Thread computerStatsThread = new Thread(new ThreadStart(provider.getComputerInformation));
+            computerStatsThread.IsBackground = true;
+            computerStatsThread.Start();
+            Globals.setProvider(provider);
             InitializeComponent();
-            while (true)
-            {
-                GetSystemInfo();
-            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -35,43 +38,6 @@ namespace WindowsPerformanceMonitor
                 MessageBox.Show("The answer is " + wrapper.Get());
             }
         }
-        public class UpdateVisitor : IVisitor
-        {
-            public void VisitComputer(IComputer computer)
-            {
-                computer.Traverse(this);
-            }
-            public void VisitHardware(IHardware hardware)
-            {
-                hardware.Update();
-                foreach (IHardware subHardware in hardware.SubHardware) subHardware.Accept(this);
-            }
-            public void VisitSensor(ISensor sensor) { }
-            public void VisitParameter(IParameter parameter) { }
-        }
-        static void GetSystemInfo()
-        {
-            UpdateVisitor updateVisitor = new UpdateVisitor();
-            Computer computer = new Computer();
-            computer.Open();
-            computer.CPUEnabled = true;
-            computer.GPUEnabled = true;
-            computer.RAMEnabled = true;
-            computer.HDDEnabled = true;
-            computer.FanControllerEnabled = true;
-            computer.Accept(updateVisitor);
-            for (int i = 0; i < computer.Hardware.Length; i++)
-            {
-                if (computer.Hardware[i].HardwareType == HardwareType.CPU)
-                {
-                    for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
-                    {
-                        if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
-                            Console.WriteLine(computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\r");
-                    }
-                }
-            }
-            computer.Close();
-        }
+      
     }
 }
