@@ -14,7 +14,7 @@ namespace WindowsPerformanceMonitor
         {
             get { return _provider; }
         }
-        public static void setProvider(ComputerStatsMonitor csm)
+        public static void SetProvider(ComputerStatsMonitor csm)
         {
             _provider = csm;
         }

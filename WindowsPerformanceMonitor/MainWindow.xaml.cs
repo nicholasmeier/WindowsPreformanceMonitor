@@ -27,7 +27,7 @@ namespace WindowsPerformanceMonitor
             Thread computerStatsThread = new Thread(new ThreadStart(provider.getComputerInformation));
             computerStatsThread.IsBackground = true;
             computerStatsThread.Start();
-            Globals.setProvider(provider);
+            Globals.SetProvider(provider);
             InitializeComponent();
         }
 

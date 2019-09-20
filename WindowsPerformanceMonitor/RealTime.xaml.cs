@@ -33,11 +33,11 @@ namespace WindowsPerformanceMonitor
         {
             InitializeComponent();
             InitializeComboBox();
-            HardwareObserver observer = new HardwareObserver(updateValues);
+            HardwareObserver observer = new HardwareObserver(UpdateValues);
             Globals.provider.Subscribe(observer);
         }
 
-        public void updateValues(Computer comp)
+        public void UpdateValues(Computer comp)
         {
             return;
         }
