@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using OpenHardwareMonitor.Hardware;
+using System.Threading;
 
 namespace WindowsPerformanceMonitor
 {
@@ -20,6 +22,12 @@ namespace WindowsPerformanceMonitor
     {
         public MainWindow()
         {
+            
+            ComputerStatsMonitor provider = new ComputerStatsMonitor();
+            Thread computerStatsThread = new Thread(new ThreadStart(provider.getComputerInformation));
+            computerStatsThread.IsBackground = true;
+            computerStatsThread.Start();
+            Globals.SetProvider(provider);
             InitializeComponent();
         }
 
@@ -30,5 +38,6 @@ namespace WindowsPerformanceMonitor
                 MessageBox.Show("The answer is " + wrapper.Get());
             }
         }
+      
     }
 }
