@@ -1,24 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using LiveCharts;
-using LiveCharts.Configurations;
-using LiveCharts.Wpf;
-using WindowsPerformanceMonitor.Models;
 using OpenHardwareMonitor.Hardware;
+using PerformanceMonitor.Cpp.CLI;
+using WindowsPerformanceMonitor.Backend;
+using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor
 {
@@ -33,8 +21,13 @@ namespace WindowsPerformanceMonitor
         {
             InitializeComponent();
             InitializeComboBox();
-            HardwareObserver observer = new HardwareObserver(UpdateValues);
-            Globals.provider.Subscribe(observer);
+            Processes p = new Processes();
+            List<ProcessEntry> list = p.GetProcesses();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                processList.Items.Add(list[i]);
+            }
         }
 
         public void UpdateValues(Computer comp)

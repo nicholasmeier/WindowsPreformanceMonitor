@@ -19,7 +19,6 @@ namespace WindowsPerformanceMonitor
     /// Interaction logic for Logging.xaml
     /// </summary>
     /// 
-    
     public partial class Logging : UserControl
     {
         private MainWindow mainWindow = null;

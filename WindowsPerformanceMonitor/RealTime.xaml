@@ -16,21 +16,27 @@
         </Grid.RowDefinitions>
         
         <!-- Top Left (View type, graph type, process to graph)-->
-        <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10">
+        <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10" x:Name="processList">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Process" 
-                                    Width="100"/>
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="CPU" 
-                                    Width="100"/>
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding Cpu}"/>
                     <GridViewColumn Header="GPU" 
-                                    Width="100"/>
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding Gpu}"/>
                     <GridViewColumn Header="Memory" 
-                                    Width="100"/>
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding Memory}"/>
                     <GridViewColumn Header="Disk" 
-                                    Width="100"/>
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding Disk}"/>
                     <GridViewColumn Header="Network" 
-                                    Width="100"/>
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding Network}"/>
                 </GridView>
             </ListView.View>
         </ListView>
