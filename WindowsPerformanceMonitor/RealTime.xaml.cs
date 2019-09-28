@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using OpenHardwareMonitor.Hardware;
@@ -16,23 +19,38 @@ namespace WindowsPerformanceMonitor
     public partial class RealTime : UserControl
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
+        public ObservableCollection<ProcessEntry> procList { get; set; }
 
         public RealTime()
         {
             InitializeComponent();
             InitializeComboBox();
-            Processes p = new Processes();
-            List<ProcessEntry> list = p.GetProcesses();
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                processList.Items.Add(list[i]);
-            }
+            HardwareObserver observer = new HardwareObserver(UpdateValues);
+            Globals.provider.Subscribe(observer);
+            procList = new ObservableCollection<ProcessEntry>();
+            this.DataContext = this;
         }
 
-        public void UpdateValues(Computer comp)
+        public void UpdateValues(ComputerObj comp)
         {
+            UpdateList(comp.ProcessList);
             return;
+        }
+
+        public void UpdateList(ObservableCollection<ProcessEntry> procs)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                // For some reason, just doing procList = procs won't work.
+                Console.WriteLine("Updating process list");
+                procList.Clear();
+                for (int i = 0; i < procs.Count; i++)
+                {
+                    procList.Add(procs[i]);
+                }
+
+            });
+
         }
 
         #region Initialization
@@ -65,12 +83,20 @@ namespace WindowsPerformanceMonitor
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // TODO
         }
 
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // TODO
+        }
+
+        private void CheckBoxChanged(object sender, RoutedEventArgs e)
+        {
+            if (procList != null)
+            {
+                procList.Add(new ProcessEntry() { Name = "Name" });
+
+            }
         }
 
         #endregion

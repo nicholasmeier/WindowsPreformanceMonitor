@@ -21,7 +21,11 @@ namespace WindowsPerformanceMonitor
     {
         public MainWindow()
         {
-
+            ComputerStatsMonitor provider = new ComputerStatsMonitor();
+            Thread computerStatsThread = new Thread(new ThreadStart(provider.getComputerInformation));
+            computerStatsThread.IsBackground = true;
+            computerStatsThread.Start();
+            Globals.SetProvider(provider);
             InitializeComponent();
         }
 

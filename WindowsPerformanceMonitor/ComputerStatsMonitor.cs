@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using OpenHardwareMonitor.Hardware;
+using WindowsPerformanceMonitor.Backend;
+using WindowsPerformanceMonitor.Models;
 
-    public class ComputerStatsMonitor : IObservable<Computer>
+// Subscriber
+public class ComputerStatsMonitor : IObservable<ComputerObj>
     {
-    List<IObserver<Computer>> observers;
+    List<IObserver<ComputerObj>> observers;
     public ComputerStatsMonitor()
     {
-        observers = new List<IObserver<Computer>>();
+        observers = new List<IObserver<ComputerObj>>();
     }
     private class Unsubscriber : IDisposable
     {
-        private List<IObserver<Computer>> _observers;
-        private IObserver<Computer> _observer;
-        public Unsubscriber(List<IObserver<Computer>> observers, IObserver<Computer> observer)
+        private List<IObserver<ComputerObj>> _observers;
+        private IObserver<ComputerObj> _observer;
+        public Unsubscriber(List<IObserver<ComputerObj>> observers, IObserver<ComputerObj> observer)
         {
             this._observers = observers;
             this._observer = observer;
@@ -27,7 +32,7 @@ using OpenHardwareMonitor.Hardware;
             if (!(_observer == null)) _observers.Remove(_observer);
         }
     }
-    public IDisposable Subscribe(IObserver<Computer> observer)
+    public IDisposable Subscribe(IObserver<ComputerObj> observer)
     {
         if (!observers.Contains(observer))
             observers.Add(observer);
@@ -54,6 +59,13 @@ using OpenHardwareMonitor.Hardware;
     {
         UpdateVisitor updateVisitor = new UpdateVisitor();
         Computer computer = new Computer();
+        ComputerObj obj = new ComputerObj();
+
+        ObservableCollection<ProcessEntry> plist = null;
+        Processes processes = new Processes();
+        obj.Computer = computer;
+        obj.ProcessList = plist;
+
         computer.Open();
         computer.CPUEnabled = true;
         computer.GPUEnabled = true;
@@ -62,9 +74,10 @@ using OpenHardwareMonitor.Hardware;
         computer.FanControllerEnabled = true;
         while (true)
         {
-           //sleep thread here to reduce information refreshing
+            obj.ProcessList = new ObservableCollection<ProcessEntry>(processes.GetProcesses() as List<ProcessEntry>);
             computer.Accept(updateVisitor);
-            foreach (var observer in observers) observer.OnNext(computer);
+            foreach (var observer in observers) observer.OnNext(obj);
+            Thread.Sleep(250);
         }
     }
 }

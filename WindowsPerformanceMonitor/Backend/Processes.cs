@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WindowsPerformanceMonitor.Models;
 
@@ -32,35 +33,109 @@ namespace WindowsPerformanceMonitor.Backend
             }
 
             return processEntries;
-        } 
+        }
+
+        private static DateTime lastTime;
+        private static TimeSpan lastTotalProcessorTime;
+        private static DateTime curTime;
+        private static TimeSpan curTotalProcessorTime;
 
         public double GetCpu(int pid)
         {
             return 0;
+
+/*            bool t = true;
+            double CPUUsage = 0;
+
+            // This needs to run async or something because its slow as fuck.
+            Process p = null;
+
+            try
+            {
+                while (t)
+                {
+                    p = Process.GetProcessById(pid);
+                    if (lastTime == null || lastTime == new DateTime())
+                    {
+                        lastTime = DateTime.Now;
+                        lastTotalProcessorTime = p.TotalProcessorTime;
+
+                    }
+                    else
+                    {
+                        curTime = DateTime.Now;
+                        curTotalProcessorTime = p.TotalProcessorTime;
+
+                        CPUUsage = (curTotalProcessorTime.TotalMilliseconds - lastTotalProcessorTime.TotalMilliseconds) / curTime.Subtract(lastTime).TotalMilliseconds / Convert.ToDouble(Environment.ProcessorCount);
+
+                        lastTime = curTime;
+                        lastTotalProcessorTime = curTotalProcessorTime;
+                        t = false;
+                    }
+
+                    Thread.Sleep(250);
+                }
+
+                Console.WriteLine(p.ProcessName + CPUUsage * 100 );
+                return CPUUsage * 100;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }*/
+           
         }
 
         public double GetGpu(int pid)
         {
-            Process p = Process.GetProcessById(pid);
-            return 0;
+            try
+            {
+                Process p = Process.GetProcessById(pid);
+                return 0;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
         }
 
         public double GetMemory(int pid)
         {
-            Process p = Process.GetProcessById(pid);
-            return 0;
+            try
+            {
+                Process p = Process.GetProcessById(pid);
+                return 0;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
         }
 
         public double GetDisk(int pid)
         {
-            Process p = Process.GetProcessById(pid);
-            return 0;
+            try
+            {
+                Process p = Process.GetProcessById(pid);
+                return 0;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
         }
 
         public double GetNetwork(int pid)
         {
-            Process p = Process.GetProcessById(pid);
-            return 0;
+            try
+            {
+                Process p = Process.GetProcessById(pid);
+                return 0;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
         }
     }
 }

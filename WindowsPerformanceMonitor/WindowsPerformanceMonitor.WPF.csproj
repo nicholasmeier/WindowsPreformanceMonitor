@@ -82,6 +82,7 @@
     <Compile Include="Logging.xaml.cs">
       <DependentUpon>Logging.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\ComputerObj.cs" />
     <Compile Include="Models\MeasureModel.cs" />
     <Compile Include="Models\ProcessEntry.cs" />
     <Compile Include="Options.xaml.cs">

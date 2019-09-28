@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         
         <!-- Top Left (View type, graph type, process to graph)-->
-        <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10" x:Name="processList">
+        <ListView ItemsSource="{Binding procList}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Process" 
@@ -46,7 +46,7 @@
         
         <!-- Bottom Row (Process List) -->
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-            <CheckBox HorizontalAlignment="Left" Height="20" Width="100" Grid.Row="0" Content="Detailed View" IsChecked="True" Margin="20,10,20,0"/>
+            <CheckBox HorizontalAlignment="Left" Height="20" Width="100" Grid.Row="0" Content="Detailed View" IsChecked="True" Checked="CheckBoxChanged" Margin="20,10,20,0"/>
             <ComboBox HorizontalAlignment="Stretch" Name="comboBox1" Height="20" SelectionChanged="ComboBox_SelectionChanged" MaxDropDownHeight="100" Margin="20,5,20,0"/>
             <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="127" Margin="20,5,20,10">
                 <StackPanel>
