@@ -76,7 +76,20 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         while (true)
         {
             obj.ProcessList = new ObservableCollection<ProcessEntry>(processes.GetProcesses() as List<ProcessEntry>);
-            updateCpu(obj.ProcessList);
+
+            // Ideally, we let these fire off on their own and it just gets updated in UI when the processEntry updates, but for now I'm just
+            // going to await them all.
+
+            List<Task> tasks = new List<Task>();
+            tasks.Add(new Task(() =>
+            {
+                updateCpu(obj.ProcessList);
+                // updateMem, etc.
+            }));
+
+            Parallel.ForEach(tasks, task => task.Start());
+            Task.WaitAll(tasks.ToArray());
+
             computer.Accept(updateVisitor);
             foreach (var observer in observers) observer.OnNext(obj);
             Thread.Sleep(1000);
