@@ -11,7 +11,7 @@ using PerformanceMonitor.Cpp.CLI;
 using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Models;
 using System.ComponentModel;
-
+using System.Linq;
 
 namespace WindowsPerformanceMonitor
 {
@@ -21,8 +21,20 @@ namespace WindowsPerformanceMonitor
     public partial class RealTime : UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
-
+        public int selectedPid;
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private ProcessEntry _selectedProcessEntry;
+        public ProcessEntry selectedProcessEntry
+        {
+            get { return _selectedProcessEntry; }
+            set
+            {
+                _selectedProcessEntry = value;
+                OnSelectedItemChanged(nameof(selectedProcessEntry));
+            }
+        }
+
         public ObservableCollection<ProcessEntry> _procList { get; set; }
         public ObservableCollection<ProcessEntry> procList
         {
@@ -46,20 +58,36 @@ namespace WindowsPerformanceMonitor
 
         public void UpdateValues(ComputerObj comp)
         {
-            UpdateList(comp.ProcessList);
+            UpdateList(comp);
             return;
         }
 
-        public void UpdateList(ObservableCollection<ProcessEntry> procs)
+        public void UpdateList(ComputerObj comp)
         {
-            // It would be nice if we could make the ComputerObj.procList some global variable in
-            // computerStatsMonitor that this listView could reference. Then we wouldn't
-            // need to keep copys of it on different pages. I think it would update itself
-            // automatically.
             this.Dispatcher.Invoke(() =>
             {
-                procList = procs;
+                ProcessEntry selected = selectedProcessEntry;
+                procList = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
+                if (selected != null)
+                {
+                    if (procList.FirstOrDefault(p => p.Pid == selected.Pid) != null)
+                    {
+                        selectedProcessEntry = procList.First(p => p.Pid == selected.Pid);
+                    }
+                }
+
+                UpdateColumnHeaders(comp);
             });
+        }
+
+        public void UpdateColumnHeaders(ComputerObj comp)
+        {
+            listView_gridView.Columns[0].Header = $"Process {comp.ProcessList.Count}";
+            listView_gridView.Columns[1].Header = $"CPU {Math.Round(comp.TotalCpu, 2)}%";
+            listView_gridView.Columns[2].Header = $"GPU {Math.Round(comp.TotalGpu, 2)}%";
+            listView_gridView.Columns[3].Header = $"Memory {Math.Round(comp.TotalMemory, 2)}%";
+            listView_gridView.Columns[4].Header = $"Disk {Math.Round(comp.TotalDisk, 2)}%";
+            listView_gridView.Columns[5].Header = $"Network {Math.Round(comp.TotalNetwork, 2)}%";
         }
 
         #region Initialization
@@ -101,13 +129,14 @@ namespace WindowsPerformanceMonitor
 
         private void CheckBoxChanged(object sender, RoutedEventArgs e)
         {
-            if (procList != null)
-            {
-                procList.Add(new ProcessEntry() { Name = "Name" });
 
-            }
         }
         private void OnProccessListChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private void OnSelectedItemChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
