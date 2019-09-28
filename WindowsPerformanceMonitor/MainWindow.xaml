@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tabData="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" ResizeMode="NoResize">
+        Title="Windows Performance Monitor" Height="450" Width="800" ResizeMode="NoResize">
     <TabControl>
         <TabItem Header="Real Time">
-            <tabData:RealTime x:Name="ucTab1Data1" Margin="0,-5,0,5" />
+            <tabData:RealTime x:Name="ucTab1Data1" />
         </TabItem>
         <TabItem Header="Logging">
             <tabData:Logging x:Name="ucTab1Data2" />

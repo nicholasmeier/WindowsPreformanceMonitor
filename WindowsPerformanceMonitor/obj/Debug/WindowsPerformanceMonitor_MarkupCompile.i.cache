@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-E:\Downloads\WindowsPreformanceMonitor-feature-realtime-ui\WindowsPreformanceMonitor-feature-realtime-ui\WindowsPerformanceMonitor\obj\Debug\
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\
 WindowsPerformanceMonitor
 none
 false
 DEBUG;TRACE
-E:\Downloads\WindowsPreformanceMonitor-feature-realtime-ui\WindowsPreformanceMonitor-feature-realtime-ui\WindowsPerformanceMonitor\App.xaml
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\App.xaml
 7-2145015421
 
-13-634177954
-18-1172389326
+202065835124
+19-51337994
 Graphs\LiveLineGraph.xaml;HardwareDetails.xaml;Logging.xaml;MainWindow.xaml;Options.xaml;RealTime.xaml;Startup.xaml;
 
 True

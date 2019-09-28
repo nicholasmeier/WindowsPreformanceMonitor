@@ -17,12 +17,10 @@ using System.Threading;
 
 namespace WindowsPerformanceMonitor
 {
-    using PerformanceMonitor.Cpp.CLI;
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
-            
             ComputerStatsMonitor provider = new ComputerStatsMonitor();
             Thread computerStatsThread = new Thread(new ThreadStart(provider.getComputerInformation));
             computerStatsThread.IsBackground = true;
@@ -33,11 +31,12 @@ namespace WindowsPerformanceMonitor
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            using (var wrapper = new Logic())
-            {
-                MessageBox.Show("The answer is " + wrapper.Get());
-            }
+
         }
-      
+
+        private void Uc1Tab1Data1_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

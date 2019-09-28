@@ -1,24 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using LiveCharts;
-using LiveCharts.Configurations;
-using LiveCharts.Wpf;
-using WindowsPerformanceMonitor.Models;
 using OpenHardwareMonitor.Hardware;
+using PerformanceMonitor.Cpp.CLI;
+using WindowsPerformanceMonitor.Backend;
+using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor
 {
@@ -28,6 +19,7 @@ namespace WindowsPerformanceMonitor
     public partial class RealTime : UserControl
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
+        public ObservableCollection<ProcessEntry> procList { get; set; }
 
         public RealTime()
         {
@@ -35,14 +27,34 @@ namespace WindowsPerformanceMonitor
             InitializeComboBox();
             HardwareObserver observer = new HardwareObserver(UpdateValues);
             Globals.provider.Subscribe(observer);
+            procList = new ObservableCollection<ProcessEntry>();
+            this.DataContext = this;
         }
 
-        public void UpdateValues(Computer comp)
+        public void UpdateValues(ComputerObj comp)
         {
+            UpdateList(comp.ProcessList);
             return;
         }
 
+        public void UpdateList(ObservableCollection<ProcessEntry> procs)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                // For some reason, just doing procList = procs won't work.
+                Console.WriteLine("Updating process list");
+                procList.Clear();
+                for (int i = 0; i < procs.Count; i++)
+                {
+                    procList.Add(procs[i]);
+                }
+
+            });
+
+        }
+
         #region Initialization
+
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
@@ -63,6 +75,7 @@ namespace WindowsPerformanceMonitor
         #endregion
 
         #region Events
+
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // TODO
@@ -70,7 +83,6 @@ namespace WindowsPerformanceMonitor
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // TODO
         }
 
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -78,8 +90,15 @@ namespace WindowsPerformanceMonitor
             // TODO
         }
 
-        #endregion
+        private void CheckBoxChanged(object sender, RoutedEventArgs e)
+        {
+            if (procList != null)
+            {
+                procList.Add(new ProcessEntry() { Name = "Name" });
 
-  
+            }
+        }
+
+        #endregion
     }
 }
