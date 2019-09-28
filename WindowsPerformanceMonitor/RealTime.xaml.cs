@@ -10,16 +10,29 @@ using OpenHardwareMonitor.Hardware;
 using PerformanceMonitor.Cpp.CLI;
 using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Models;
+using System.ComponentModel;
+
 
 namespace WindowsPerformanceMonitor
 {
     /// <summary>
     /// Interaction logic for RealTime.xaml
     /// </summary>
-    public partial class RealTime : UserControl
+    public partial class RealTime : UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
-        public ObservableCollection<ProcessEntry> procList { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public ObservableCollection<ProcessEntry> _procList { get; set; }
+        public ObservableCollection<ProcessEntry> procList
+        {
+            get { return _procList; }
+            set
+            {
+                _procList = value;
+                OnProccessListChanged(nameof(procList));
+            }
+        }
 
         public RealTime()
         {
@@ -39,18 +52,14 @@ namespace WindowsPerformanceMonitor
 
         public void UpdateList(ObservableCollection<ProcessEntry> procs)
         {
+            // It would be nice if we could make the ComputerObj.procList some global variable in
+            // computerStatsMonitor that this listView could reference. Then we wouldn't
+            // need to keep copys of it on different pages. I think it would update itself
+            // automatically.
             this.Dispatcher.Invoke(() =>
             {
-                // For some reason, just doing procList = procs won't work.
-                Console.WriteLine("Updating process list");
-                procList.Clear();
-                for (int i = 0; i < procs.Count; i++)
-                {
-                    procList.Add(procs[i]);
-                }
-
+                procList = procs;
             });
-
         }
 
         #region Initialization
@@ -97,6 +106,10 @@ namespace WindowsPerformanceMonitor
                 procList.Add(new ProcessEntry() { Name = "Name" });
 
             }
+        }
+        private void OnProccessListChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         #endregion

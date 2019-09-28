@@ -77,8 +77,9 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             obj.ProcessList = new ObservableCollection<ProcessEntry>(processes.GetProcesses() as List<ProcessEntry>);
             computer.Accept(updateVisitor);
             foreach (var observer in observers) observer.OnNext(obj);
-            Thread.Sleep(250);
+            Thread.Sleep(1000);
         }
     }
+
 }
 
