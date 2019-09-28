@@ -36,7 +36,7 @@ namespace WindowsPerformanceMonitor.Backend
             return processEntries;
         }
 
-        public void updateCpu(ObservableCollection<ProcessEntry> procList)
+        public double updateCpu(ObservableCollection<ProcessEntry> procList)
         {
             List<DateTime> lastTimes = new List<DateTime>(new DateTime[procList.Count]);
             List<TimeSpan> lastTotalProcessorTime = new List<TimeSpan>(new TimeSpan[procList.Count]);
@@ -72,6 +72,7 @@ namespace WindowsPerformanceMonitor.Backend
             }
 
             Thread.Sleep(250);
+            double totalCpu = 0;
 
             /* Get the current time and total process usage
                 for each process, calculate cpu usage
@@ -102,7 +103,10 @@ namespace WindowsPerformanceMonitor.Backend
 
                 double cpuUsage = (currTotalProcessorTime.TotalMilliseconds - lastTotalProcessorTime[i].TotalMilliseconds) / currTime.Subtract(lastTimes[i]).TotalMilliseconds / Convert.ToDouble(Environment.ProcessorCount);
                 procList[i].Cpu = cpuUsage * 100;
+                totalCpu += cpuUsage;
             }
+
+            return totalCpu * 100;
         }
     }
 }

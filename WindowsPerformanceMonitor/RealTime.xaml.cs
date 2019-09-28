@@ -58,24 +58,36 @@ namespace WindowsPerformanceMonitor
 
         public void UpdateValues(ComputerObj comp)
         {
-            UpdateList(comp.ProcessList);
+            UpdateList(comp);
             return;
         }
 
-        public void UpdateList(ObservableCollection<ProcessEntry> procs)
+        public void UpdateList(ComputerObj comp)
         {
             this.Dispatcher.Invoke(() =>
             {
-                ProcessEntry selected = selectedProcessEntry; // Save selected item.
-                procList = new ObservableCollection<ProcessEntry>(procs.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
-                if (selected != null) // Item was selected.
+                ProcessEntry selected = selectedProcessEntry;
+                procList = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
+                if (selected != null)
                 {
-                    if (procList.FirstOrDefault(p => p.Pid == selected.Pid) != null) // Item is in updated list.
+                    if (procList.FirstOrDefault(p => p.Pid == selected.Pid) != null)
                     {
-                        selectedProcessEntry = procList.First(p => p.Pid == selected.Pid); // Reselect the item.
+                        selectedProcessEntry = procList.First(p => p.Pid == selected.Pid);
                     }
                 }
+
+                UpdateColumnHeaders(comp);
             });
+        }
+
+        public void UpdateColumnHeaders(ComputerObj comp)
+        {
+            listView_gridView.Columns[0].Header = $"Process {comp.ProcessList.Count}";
+            listView_gridView.Columns[1].Header = $"CPU {Math.Round(comp.TotalCpu, 2)}%";
+            listView_gridView.Columns[2].Header = $"GPU {Math.Round(comp.TotalGpu, 2)}%";
+            listView_gridView.Columns[3].Header = $"Memory {Math.Round(comp.TotalMemory, 2)}%";
+            listView_gridView.Columns[4].Header = $"Disk {Math.Round(comp.TotalDisk, 2)}%";
+            listView_gridView.Columns[5].Header = $"Network {Math.Round(comp.TotalNetwork, 2)}%";
         }
 
         #region Initialization
@@ -117,11 +129,7 @@ namespace WindowsPerformanceMonitor
 
         private void CheckBoxChanged(object sender, RoutedEventArgs e)
         {
-            if (procList != null)
-            {
-                procList.Add(new ProcessEntry() { Name = "Name" });
 
-            }
         }
         private void OnProccessListChanged(string name)
         {
@@ -131,7 +139,6 @@ namespace WindowsPerformanceMonitor
         private void OnSelectedItemChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
         }
 
         #endregion

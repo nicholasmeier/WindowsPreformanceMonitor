@@ -18,7 +18,7 @@
         <!-- Top Left (View type, graph type, process to graph)-->
         <ListView ItemsSource="{Binding procList}" SelectedItem="{Binding selectedProcessEntry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10" x:Name="listView_ProcList">
             <ListView.View>
-                <GridView>
+                <GridView x:Name="listView_gridView">
                     <GridViewColumn Header="Process" 
                                     Width="100"
                                     DisplayMemberBinding="{Binding Name}"/>
