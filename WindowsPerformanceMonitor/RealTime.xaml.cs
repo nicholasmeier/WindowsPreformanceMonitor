@@ -21,17 +21,27 @@ namespace WindowsPerformanceMonitor
     public partial class RealTime : UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
-        public int selectedPid;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private ProcessEntry _selectedProcessEntry;
-        public ProcessEntry selectedProcessEntry
+        private ProcessEntry _selectedProcessListView;
+        public ProcessEntry selectedProcessListView
         {
-            get { return _selectedProcessEntry; }
+            get { return _selectedProcessListView; }
             set
             {
-                _selectedProcessEntry = value;
-                OnSelectedItemChanged(nameof(selectedProcessEntry));
+                _selectedProcessListView = value;
+                OnPropertyChanged(nameof(selectedProcessListView));
+            }
+        }
+
+        private ProcessEntry _selectedProcessComboBox;
+        public ProcessEntry selectedProcessComboBox
+        {
+            get { return _selectedProcessComboBox; }
+            set
+            {
+                _selectedProcessComboBox = value;
+                OnPropertyChanged(nameof(selectedProcessComboBox));
             }
         }
 
@@ -42,7 +52,7 @@ namespace WindowsPerformanceMonitor
             set
             {
                 _procList = value;
-                OnProccessListChanged(nameof(procList));
+                OnPropertyChanged(nameof(procList));
             }
         }
 
@@ -56,6 +66,8 @@ namespace WindowsPerformanceMonitor
             this.DataContext = this;
         }
 
+        #region Observer Update Functions
+
         public void UpdateValues(ComputerObj comp)
         {
             UpdateList(comp);
@@ -66,18 +78,29 @@ namespace WindowsPerformanceMonitor
         {
             this.Dispatcher.Invoke(() =>
             {
-                ProcessEntry selected = selectedProcessEntry;
+                ProcessEntry selectedListView = selectedProcessListView;
+                ProcessEntry selectedComboBox = selectedProcessComboBox;
+
                 procList = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
-                if (selected != null)
-                {
-                    if (procList.FirstOrDefault(p => p.Pid == selected.Pid) != null)
-                    {
-                        selectedProcessEntry = procList.First(p => p.Pid == selected.Pid);
-                    }
-                }
+
+                selectedProcessListView = Find(selectedListView);
+                selectedProcessComboBox = Find(selectedComboBox);
 
                 UpdateColumnHeaders(comp);
             });
+        }
+
+        public ProcessEntry Find(ProcessEntry proc)
+        {
+            if (proc != null)
+            {
+                if (procList.FirstOrDefault(p => p.Pid == proc.Pid) != null)
+                {
+                    return procList.First(p => p.Pid == proc.Pid);
+                }
+            }
+
+            return null;
         }
 
         public void UpdateColumnHeaders(ComputerObj comp)
@@ -90,6 +113,8 @@ namespace WindowsPerformanceMonitor
             listView_gridView.Columns[5].Header = $"Network {Math.Round(comp.TotalNetwork, 2)}%";
         }
 
+        #endregion
+
         #region Initialization
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -99,14 +124,6 @@ namespace WindowsPerformanceMonitor
 
         private void InitializeComboBox()
         {
-            comboBox1.Items.Add("System");
-
-            for (var i = 0; i < 5; i++)
-            {
-                comboBox1.Items.Add($"Process {i}");
-            }
-
-            comboBox1.SelectedItem = "System";
         }
 
         #endregion
@@ -131,12 +148,7 @@ namespace WindowsPerformanceMonitor
         {
 
         }
-        private void OnProccessListChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        private void OnSelectedItemChanged(string name)
+        private void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
