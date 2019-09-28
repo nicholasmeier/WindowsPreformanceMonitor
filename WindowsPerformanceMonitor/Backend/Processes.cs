@@ -40,57 +40,5 @@ namespace WindowsPerformanceMonitor.Backend
             return 0;
        
         }
-
-        public double GetGpu(int pid)
-        {
-            try
-            {
-                Process p = Process.GetProcessById(pid);
-                return 0;
-            }
-            catch (Exception e)
-            {
-                return 0;
-            }
-        }
-
-        public double GetMemory(int pid)
-        {
-            try
-            {
-                Process p = Process.GetProcessById(pid);
-                return 0;
-            }
-            catch (Exception e)
-            {
-                return 0;
-            }
-        }
-
-        public double GetDisk(int pid)
-        {
-            try
-            {
-                Process p = Process.GetProcessById(pid);
-                return 0;
-            }
-            catch (Exception e)
-            {
-                return 0;
-            }
-        }
-
-        public double GetNetwork(int pid)
-        {
-            try
-            {
-                Process p = Process.GetProcessById(pid);
-                return 0;
-            }
-            catch (Exception e)
-            {
-                return 0;
-            }
-        }
     }
 }

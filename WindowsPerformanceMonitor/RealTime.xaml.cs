@@ -67,7 +67,7 @@ namespace WindowsPerformanceMonitor
             this.Dispatcher.Invoke(() =>
             {
                 ProcessEntry selected = selectedProcessEntry; // Save selected item.
-                procList = procs;
+                procList = new ObservableCollection<ProcessEntry>(procs.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
                 if (selected != null) // Item was selected.
                 {
                     if (procList.FirstOrDefault(p => p.Pid == selected.Pid) != null) // Item is in updated list.
