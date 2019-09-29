@@ -105,8 +105,74 @@ namespace WindowsPerformanceMonitor.Backend
                 procList[i].Cpu = cpuUsage * 100;
                 totalCpu += cpuUsage;
             }
-
             return totalCpu * 100;
         }
+
+        public double updateMem(ObservableCollection<ProcessEntry> procList)
+        {
+            List<long> memoryUsages = new List<long>(new long[procList.Count]);
+
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    memoryUsages.Insert(i, -1);
+                    continue;
+                }
+
+                if (memoryUsages[i] != -1)
+                {
+                    memoryUsages.Insert(i, 0);
+                    try
+                    {
+                        memoryUsages.Insert(i, p.WorkingSet64);
+                    }
+                    catch (Exception)       // The platform is Windows 98 or Windows Millennium Edition which is not supported
+                    {
+                        memoryUsages.Insert(i, 0);
+                    }
+                }
+            }
+
+            Thread.Sleep(250);
+            ulong totalMem = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
+
+            /* Get the current time and total process usage
+                for each process, calculate Mem usage
+                based on previous */
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    procList[i].Memory = -1;
+                    continue;
+                }
+                if(memoryUsages[i] == 0)
+                {
+                    procList[i].Memory = 0;
+                }
+                else if(memoryUsages[i] > 0)
+                {
+                    procList[i].Memory = ((ulong)memoryUsages[i] / totalMem) * 100;
+                }
+                else
+                {
+                    procList[i].Memory = -1;
+                }
+            }
+
+            return totalMem;
+        }
+
     }
 }
