@@ -15,11 +15,14 @@ namespace WindowsPerformanceMonitor.Graphs
         private double _axisMax;
         private double _axisMin;
         private double _trend;
+        private string _chartColor;
+
         public ChartValues<MeasureModel> ChartValues { get; set; }
         public Func<double, string> DateTimeFormatter { get; set; }
         public double AxisStep { get; set; }
         public double AxisUnit { get; set; }
         public int ProcessPid { get; set; }
+        public string StatToGraph { get; set; }
 
         public LiveLineGraph()
         {
@@ -50,6 +53,8 @@ namespace WindowsPerformanceMonitor.Graphs
             // AxisUnit forces lets the axis know that we are plotting seconds
             AxisUnit = TimeSpan.TicksPerSecond;
 
+            ChartColor = "Red";
+
             SetAxisLimits(DateTime.Now);
         }
 
@@ -77,22 +82,23 @@ namespace WindowsPerformanceMonitor.Graphs
             }
         }
 
+        public string ChartColor
+        {
+            get { return _chartColor; }
+            set
+            {
+                _chartColor = value;
+                OnPropertyChanged("ChartColor");
+            }
+        }
+
         public bool IsReading { get; set; }
 
         private void Read(ComputerObj comp)
         {
             var now = DateTime.Now;
 
-
-            if (ProcessPid != 0)
-            {
-                _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Cpu;
-            }
-            else
-            {
-                _trend = comp.TotalCpu;
-
-            }
+            _trend = GetTrend(comp);
 
             ChartValues.Add(new MeasureModel
             {
@@ -102,9 +108,87 @@ namespace WindowsPerformanceMonitor.Graphs
 
             SetAxisLimits(now);
 
-            //lets only use the last 150 values
             if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
        
+        }
+
+        private double GetTrend(ComputerObj comp)
+        {
+            // Probably not the best way, but it works.
+            double _trend = 0;
+
+            if (ProcessPid != 0)
+            {
+                if (StatToGraph == "CPU")
+                {
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Cpu;
+                    ChartColor = "Red";
+
+                }
+                else if (StatToGraph == "GPU")
+                {
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Gpu;
+                    ChartColor = "Orange";
+
+                }
+                else if (StatToGraph == "Memory")
+                {
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Memory;
+                    ChartColor = "Green";
+
+                }
+                else if (StatToGraph == "Disk")
+                {
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Disk;
+                    ChartColor = "Blue";
+
+                }
+                else if (StatToGraph == "Network")
+                {
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Network;
+                    ChartColor = "Purple";
+
+                }
+            }
+            else
+            {
+                if (StatToGraph == "CPU")
+                {
+                    _trend = comp.TotalCpu;
+                    ChartColor = "Red";
+
+                }
+                else if (StatToGraph == "GPU")
+                {
+                    _trend = comp.TotalGpu;
+                    ChartColor = "Orange";
+
+                }
+                else if (StatToGraph == "Memory")
+                {
+                    _trend = comp.TotalMemory;
+                    ChartColor = "Green";
+
+                }
+                else if (StatToGraph == "Disk")
+                {
+                    _trend = comp.TotalDisk;
+                    ChartColor = "Blue";
+
+                }
+                else if (StatToGraph == "Network")
+                {
+                    _trend = comp.TotalNetwork;
+                    ChartColor = "Purple";
+                }
+            }
+
+            return _trend;
+        }
+
+        public void Clear()
+        {
+            ChartValues.Clear();
         }
 
         private void SetAxisLimits(DateTime now)

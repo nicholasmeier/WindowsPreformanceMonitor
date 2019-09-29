@@ -13,5 +13,6 @@ namespace WindowsPerformanceMonitor.Models
         public double Memory { get; set; }
         public double Disk { get; set; }
         public double Network { get; set; }
+        public bool IsApplication { get; set; }
     }
 }

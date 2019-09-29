@@ -12,7 +12,7 @@
                                 PointGeometry="{x:Null}" 
                                 LineSmoothness=".5"
                                 StrokeThickness="1" 
-                                Stroke="#F34336"
+                                Stroke="{Binding ChartColor}"
                                 Fill="Transparent"/>
         </lvc:CartesianChart.Series>
         <lvc:CartesianChart.AxisX>

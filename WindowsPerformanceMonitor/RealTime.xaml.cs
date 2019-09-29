@@ -89,15 +89,36 @@ namespace WindowsPerformanceMonitor
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("Combobox " + comboBox1.SelectedItem);
-            // Change live graph PID to the one selected.
+            ProcessEntry selected = (ProcessEntry) comboBox1.SelectedItem;
+
+            if (selected != null)
+            {
+                int selectedPid = selected.Pid;
+                int currentPid = liveGraph.ProcessPid;
+                if (selectedPid == currentPid)
+                {
+                    return;
+                }
+                else
+                {
+                    liveGraph.ProcessPid = selectedPid;
+                }
+            }
+            else
+            {
+                liveGraph.ProcessPid = 0;
+            }
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             var radioButton = sender as RadioButton;
             if (radioButton == null)
+            {
                 return;
-            Console.WriteLine(radioButton.Content.ToString());
+            }
+
+            liveGraph.StatToGraph = radioButton.Content.ToString();
          }
 
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)

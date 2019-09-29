@@ -12,6 +12,9 @@ namespace WindowsPerformanceMonitor.Backend
 {
     class Processes
     {
+        /// <summary>
+        /// Get list of processes of type ProcessEntry
+        /// </summary>
         public List<ProcessEntry> GetProcesses()
         {
             List<ProcessEntry> processEntries = new List<ProcessEntry>();
@@ -27,7 +30,8 @@ namespace WindowsPerformanceMonitor.Backend
                     Memory = 0,
                     Gpu = 0,
                     Disk = 0,
-                    Network = 0
+                    Network = 0,
+                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
                 };
 
                 processEntries.Add(p);
@@ -36,6 +40,9 @@ namespace WindowsPerformanceMonitor.Backend
             return processEntries;
         }
 
+        /// <summary>
+        /// Update CPU usage for a process list
+        /// </summary>
         public double updateCpu(ObservableCollection<ProcessEntry> procList)
         {
             List<DateTime> lastTimes = new List<DateTime>(new DateTime[procList.Count]);
@@ -105,9 +112,13 @@ namespace WindowsPerformanceMonitor.Backend
                 procList[i].Cpu = cpuUsage * 100;
                 totalCpu += cpuUsage;
             }
-            return totalCpu * 100;
+
+            return Math.Round(totalCpu * 100, 2);
         }
 
+        /// <summary>
+        /// Update memory usage for a process list
+        /// </summary>
         public double updateMem(ObservableCollection<ProcessEntry> procList)
         {
             List<long> memoryUsages = new List<long>(new long[procList.Count]);
@@ -171,7 +182,7 @@ namespace WindowsPerformanceMonitor.Backend
                     procList[i].Memory = -1;
                 }
             }
-            return ((double)totalUsed / (double)totalMem) * 100;
+            return Math.Round(((double)totalUsed / (double)totalMem) * 100, 2);
         }
     }
 }
