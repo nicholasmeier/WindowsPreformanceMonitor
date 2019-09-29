@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -14,10 +15,21 @@ namespace WindowsPerformanceMonitor.Graphs
         private double _axisMax;
         private double _axisMin;
         private double _trend;
+        public ChartValues<MeasureModel> ChartValues { get; set; }
+        public Func<double, string> DateTimeFormatter { get; set; }
+        public double AxisStep { get; set; }
+        public double AxisUnit { get; set; }
+        public int ProcessPid { get; set; }
 
         public LiveLineGraph()
         {
             InitializeComponent();
+
+            HardwareObserver observer = new HardwareObserver(UpdateValues);
+            Globals.provider.Subscribe(observer);
+            this.DataContext = this;
+
+            ProcessPid = 0;
 
             var mapper = Mappers.Xy<MeasureModel>()
                 .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
@@ -39,17 +51,12 @@ namespace WindowsPerformanceMonitor.Graphs
             AxisUnit = TimeSpan.TicksPerSecond;
 
             SetAxisLimits(DateTime.Now);
-
-            // Simulate data changes every 300 ms
-            IsReading = true;
-            DataContext = this;
-            Task.Factory.StartNew(Read);
         }
 
-        public ChartValues<MeasureModel> ChartValues { get; set; }
-        public Func<double, string> DateTimeFormatter { get; set; }
-        public double AxisStep { get; set; }
-        public double AxisUnit { get; set; }
+        public void UpdateValues(ComputerObj comp)
+        {
+            Read(comp);
+        }
 
         public double AxisMax
         {
@@ -72,30 +79,32 @@ namespace WindowsPerformanceMonitor.Graphs
 
         public bool IsReading { get; set; }
 
-        private void Read()
+        private void Read(ComputerObj comp)
         {
-            var r = new Random();
+            var now = DateTime.Now;
 
-            while (IsReading)
+
+            if (ProcessPid != 0)
             {
-                Thread.Sleep(150);
-                var now = DateTime.Now;
-
-                // TODO: Make an API call to get data for the select graph, add to plot.
-
-                _trend += r.Next(-8, 10);
-
-                ChartValues.Add(new MeasureModel
-                {
-                    DateTime = now,
-                    Value = _trend
-                });
-
-                SetAxisLimits(now);
-
-                //lets only use the last 150 values
-                if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
+                _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Cpu;
             }
+            else
+            {
+                _trend = comp.TotalCpu;
+
+            }
+
+            ChartValues.Add(new MeasureModel
+            {
+                DateTime = now,
+                Value = _trend
+            });
+
+            SetAxisLimits(now);
+
+            //lets only use the last 150 values
+            if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
+       
         }
 
         private void SetAxisLimits(DateTime now)

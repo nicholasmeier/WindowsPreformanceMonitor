@@ -42,7 +42,7 @@
         </ListView>
         
         <!-- Top Right (Graph) -->
-        <graph:LiveLineGraph Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="10,10,10,10"/>
+        <graph:LiveLineGraph Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="10,10,10,10" x:Name="liveGraph"/>
         
         <!-- Bottom Row (Process List) -->
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
@@ -59,17 +59,17 @@
                 Margin="20,5,20,0"
                 />
             <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="127" Margin="20,5,20,10">
-                <StackPanel>
+                <StackPanel x:Name="radioButtons">
                     <StackPanel.Resources>
                         <Style TargetType="{x:Type RadioButton}">
                             <Setter Property="Margin" Value="5,5,0,0"/>
                         </Style>
                     </StackPanel.Resources>
-                    <RadioButton Content="CPU" IsChecked="True"></RadioButton>
-                    <RadioButton Content="GPU"></RadioButton>
-                    <RadioButton Content="Memory"></RadioButton>
-                    <RadioButton Content="Disk"></RadioButton>
-                    <RadioButton Content="Network"/>
+                    <RadioButton Content="CPU" IsChecked="True" Checked="RadioButton_Checked"></RadioButton>
+                    <RadioButton Content="GPU" Checked="RadioButton_Checked"></RadioButton>
+                    <RadioButton Content="Memory" Checked="RadioButton_Checked"></RadioButton>
+                    <RadioButton Content="Disk" Checked="RadioButton_Checked"></RadioButton>
+                    <RadioButton Content="Network" Checked="RadioButton_Checked"/>
                 </StackPanel>
             </GroupBox>
         </StackPanel>
