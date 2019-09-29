@@ -12,6 +12,9 @@ namespace WindowsPerformanceMonitor.Backend
 {
     class Processes
     {
+        /// <summary>
+        /// Get list of processes of type ProcessEntry
+        /// </summary>
         public List<ProcessEntry> GetProcesses()
         {
             List<ProcessEntry> processEntries = new List<ProcessEntry>();
@@ -27,7 +30,8 @@ namespace WindowsPerformanceMonitor.Backend
                     Memory = 0,
                     Gpu = 0,
                     Disk = 0,
-                    Network = 0
+                    Network = 0,
+                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
                 };
 
                 processEntries.Add(p);
@@ -36,6 +40,9 @@ namespace WindowsPerformanceMonitor.Backend
             return processEntries;
         }
 
+        /// <summary>
+        /// Update CPU usage for a process list
+        /// </summary>
         public double updateCpu(ObservableCollection<ProcessEntry> procList)
         {
             List<DateTime> lastTimes = new List<DateTime>(new DateTime[procList.Count]);
@@ -106,7 +113,76 @@ namespace WindowsPerformanceMonitor.Backend
                 totalCpu += cpuUsage;
             }
 
-            return totalCpu * 100;
+            return Math.Round(totalCpu * 100, 2);
+        }
+
+        /// <summary>
+        /// Update memory usage for a process list
+        /// </summary>
+        public double updateMem(ObservableCollection<ProcessEntry> procList)
+        {
+            List<long> memoryUsages = new List<long>(new long[procList.Count]);
+
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    memoryUsages.Insert(i, -1);
+                    continue;
+                }
+
+                if (memoryUsages[i] != -1)
+                {
+                    memoryUsages.Insert(i, 0);
+                    try
+                    {
+                        memoryUsages.Insert(i, p.WorkingSet64);
+                    }
+                    catch (Exception)       // The platform is Windows 98 or Windows Millennium Edition which is not supported
+                    {
+                        memoryUsages.Insert(i, 0);
+                    }
+                }
+            }
+
+            Thread.Sleep(250);
+            ulong totalMem = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
+            ulong totalUsed = 0;
+            /* Get the current time and total process usage
+                for each process, calculate Mem usage
+                based on previous */
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    procList[i].Memory = -1;
+                    continue;
+                }
+                if(memoryUsages[i] == 0)
+                {
+                    procList[i].Memory = 0;
+                }
+                else if(memoryUsages[i] > 0)
+                {
+                    procList[i].Memory = ((double)memoryUsages[i] / (double)totalMem) * 100;
+                    totalUsed += (ulong)memoryUsages[i];
+                }
+                else
+                {
+                    procList[i].Memory = -1;
+                }
+            }
+            return Math.Round(((double)totalUsed / (double)totalMem) * 100, 2);
         }
     }
 }

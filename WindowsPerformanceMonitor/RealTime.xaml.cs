@@ -12,6 +12,7 @@ using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Models;
 using System.ComponentModel;
 using System.Linq;
+using System.Globalization;
 
 namespace WindowsPerformanceMonitor
 {
@@ -21,40 +22,31 @@ namespace WindowsPerformanceMonitor
     public partial class RealTime : UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
-        public int selectedPid;
-        public event PropertyChangedEventHandler PropertyChanged;
+        private ProcessEntry _selectedProcessListView;
+        private ProcessEntry _selectedProcessComboBox;
+        public ObservableCollection<ProcessEntry> _procListListView { get; set; }
+        public ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
 
-        private ProcessEntry _selectedProcessEntry;
-        public ProcessEntry selectedProcessEntry
-        {
-            get { return _selectedProcessEntry; }
-            set
-            {
-                _selectedProcessEntry = value;
-                OnSelectedItemChanged(nameof(selectedProcessEntry));
-            }
-        }
 
-        public ObservableCollection<ProcessEntry> _procList { get; set; }
-        public ObservableCollection<ProcessEntry> procList
-        {
-            get { return _procList; }
-            set
-            {
-                _procList = value;
-                OnProccessListChanged(nameof(procList));
-            }
-        }
+        #region Initialization
 
         public RealTime()
         {
             InitializeComponent();
-            InitializeComboBox();
             HardwareObserver observer = new HardwareObserver(UpdateValues);
             Globals.provider.Subscribe(observer);
-            procList = new ObservableCollection<ProcessEntry>();
+            _procListListView = new ObservableCollection<ProcessEntry>();
+            _procListComboBox = new ObservableCollection<ProcessEntry>();
             this.DataContext = this;
         }
+        private void OnControlLoaded(object sender, RoutedEventArgs e)
+        {
+            mainWindow = Window.GetWindow(this) as MainWindow;
+        }
+
+        #endregion
+
+        #region Hardware Observer Updates
 
         public void UpdateValues(ComputerObj comp)
         {
@@ -66,15 +58,15 @@ namespace WindowsPerformanceMonitor
         {
             this.Dispatcher.Invoke(() =>
             {
-                ProcessEntry selected = selectedProcessEntry;
-                procList = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
-                if (selected != null)
-                {
-                    if (procList.FirstOrDefault(p => p.Pid == selected.Pid) != null)
-                    {
-                        selectedProcessEntry = procList.First(p => p.Pid == selected.Pid);
-                    }
-                }
+                ProcessEntry selectedListView = selectedProcessListView;
+                ProcessEntry selectedComboBox = selectedProcessComboBox;
+
+                procListListView = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
+                procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
+                procListComboBox.Insert(0, new ProcessEntry() { Name = "SYSTEM", Pid = -1});
+
+                selectedProcessListView = Find(selectedListView, procListListView);
+                selectedProcessComboBox = Find(selectedComboBox, procListComboBox);
 
                 UpdateColumnHeaders(comp);
             });
@@ -90,28 +82,9 @@ namespace WindowsPerformanceMonitor
             listView_gridView.Columns[5].Header = $"Network {Math.Round(comp.TotalNetwork, 2)}%";
         }
 
-        #region Initialization
-
-        private void OnControlLoaded(object sender, RoutedEventArgs e)
-        {
-            mainWindow = Window.GetWindow(this) as MainWindow;
-        }
-
-        private void InitializeComboBox()
-        {
-            comboBox1.Items.Add("System");
-
-            for (var i = 0; i < 5; i++)
-            {
-                comboBox1.Items.Add($"Process {i}");
-            }
-
-            comboBox1.SelectedItem = "System";
-        }
-
         #endregion
 
-        #region Events
+        #region UI Events
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -120,25 +93,105 @@ namespace WindowsPerformanceMonitor
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            Console.WriteLine("Combobox " + comboBox1.SelectedItem);
+            ProcessEntry selected = (ProcessEntry) comboBox1.SelectedItem;
+
+            if (selected != null)
+            {
+               liveGraph.ProcessPid = selected.Pid;
+            }
+            else
+            {
+                liveGraph.ProcessPid = -1;
+            }
         }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var radioButton = sender as RadioButton;
+            if (radioButton == null)
+            {
+                return;
+            }
+
+            liveGraph.StatToGraph = radioButton.Content.ToString();
+         }
 
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // TODO
+
         }
 
         private void CheckBoxChanged(object sender, RoutedEventArgs e)
         {
 
         }
-        private void OnProccessListChanged(string name)
+
+        #endregion
+
+        #region INotifyPropertyChanged Events
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        private void OnSelectedItemChanged(string name)
+        public ProcessEntry selectedProcessListView
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            get { return _selectedProcessListView; }
+            set
+            {
+                _selectedProcessListView = value;
+                OnPropertyChanged(nameof(selectedProcessListView));
+            }
+        }
+
+        public ProcessEntry selectedProcessComboBox
+        {
+            get { return _selectedProcessComboBox; }
+            set
+            {
+                _selectedProcessComboBox = value;
+                OnPropertyChanged(nameof(selectedProcessComboBox));
+            }
+        }
+
+        public ObservableCollection<ProcessEntry> procListListView
+        {
+            get { return _procListListView; }
+            set
+            {
+                _procListListView = value;
+                OnPropertyChanged(nameof(procListListView));
+            }
+        }
+
+        public ObservableCollection<ProcessEntry> procListComboBox
+        {
+            get { return _procListComboBox; }
+            set
+            {
+                _procListComboBox = value;
+                OnPropertyChanged(nameof(procListComboBox));
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+        public ProcessEntry Find(ProcessEntry proc, ObservableCollection<ProcessEntry> list)
+        {
+            if (proc != null)
+            {
+                if (list.FirstOrDefault(p => p.Pid == proc.Pid) != null)
+                {
+                    return list.First(p => p.Pid == proc.Pid);
+                }
+            }
+
+            return null;
         }
 
         #endregion

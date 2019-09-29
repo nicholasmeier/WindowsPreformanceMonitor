@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -14,10 +15,24 @@ namespace WindowsPerformanceMonitor.Graphs
         private double _axisMax;
         private double _axisMin;
         private double _trend;
+        private string _chartColor;
+
+        public ChartValues<MeasureModel> ChartValues { get; set; }
+        public Func<double, string> DateTimeFormatter { get; set; }
+        public double AxisStep { get; set; }
+        public double AxisUnit { get; set; }
+        public int ProcessPid { get; set; }
+        public string StatToGraph { get; set; }
 
         public LiveLineGraph()
         {
             InitializeComponent();
+
+            HardwareObserver observer = new HardwareObserver(UpdateValues);
+            Globals.provider.Subscribe(observer);
+            this.DataContext = this;
+
+            ProcessPid = 0;
 
             var mapper = Mappers.Xy<MeasureModel>()
                 .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
@@ -38,18 +53,15 @@ namespace WindowsPerformanceMonitor.Graphs
             // AxisUnit forces lets the axis know that we are plotting seconds
             AxisUnit = TimeSpan.TicksPerSecond;
 
-            SetAxisLimits(DateTime.Now);
+            ChartColor = "Red";
 
-            // Simulate data changes every 300 ms
-            IsReading = true;
-            DataContext = this;
-            Task.Factory.StartNew(Read);
+            SetAxisLimits(DateTime.Now);
         }
 
-        public ChartValues<MeasureModel> ChartValues { get; set; }
-        public Func<double, string> DateTimeFormatter { get; set; }
-        public double AxisStep { get; set; }
-        public double AxisUnit { get; set; }
+        public void UpdateValues(ComputerObj comp)
+        {
+            Read(comp);
+        }
 
         public double AxisMax
         {
@@ -70,32 +82,113 @@ namespace WindowsPerformanceMonitor.Graphs
             }
         }
 
+        public string ChartColor
+        {
+            get { return _chartColor; }
+            set
+            {
+                _chartColor = value;
+                OnPropertyChanged("ChartColor");
+            }
+        }
+
         public bool IsReading { get; set; }
 
-        private void Read()
+        private void Read(ComputerObj comp)
         {
-            var r = new Random();
+            var now = DateTime.Now;
 
-            while (IsReading)
+            _trend = GetTrend(comp);
+
+            ChartValues.Add(new MeasureModel
             {
-                Thread.Sleep(150);
-                var now = DateTime.Now;
+                DateTime = now,
+                Value = _trend
+            });
 
-                // TODO: Make an API call to get data for the select graph, add to plot.
+            SetAxisLimits(now);
 
-                _trend += r.Next(-8, 10);
+            if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
+       
+        }
 
-                ChartValues.Add(new MeasureModel
+        private double GetTrend(ComputerObj comp)
+        {
+            // Probably not the best way, but it works.
+            double _trend = 0;
+
+            if (ProcessPid > 0)
+            {
+                if (StatToGraph == "CPU")
                 {
-                    DateTime = now,
-                    Value = _trend
-                });
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Cpu;
+                    ChartColor = "Red";
 
-                SetAxisLimits(now);
+                }
+                else if (StatToGraph == "GPU")
+                {
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Gpu;
+                    ChartColor = "Orange";
 
-                //lets only use the last 150 values
-                if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
+                }
+                else if (StatToGraph == "Memory")
+                {
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Memory;
+                    ChartColor = "Green";
+
+                }
+                else if (StatToGraph == "Disk")
+                {
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Disk;
+                    ChartColor = "Blue";
+
+                }
+                else if (StatToGraph == "Network")
+                {
+                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Network;
+                    ChartColor = "Purple";
+
+                }
             }
+            else
+            {
+                if (StatToGraph == "CPU")
+                {
+                    _trend = comp.TotalCpu;
+                    ChartColor = "Red";
+
+                }
+                else if (StatToGraph == "GPU")
+                {
+                    _trend = comp.TotalGpu;
+                    ChartColor = "Orange";
+
+                }
+                else if (StatToGraph == "Memory")
+                {
+                    _trend = comp.TotalMemory;
+                    ChartColor = "Green";
+
+                }
+                else if (StatToGraph == "Disk")
+                {
+                    _trend = comp.TotalDisk;
+                    ChartColor = "Blue";
+
+                }
+                else if (StatToGraph == "Network")
+                {
+                    _trend = comp.TotalNetwork;
+                    ChartColor = "Purple";
+                }
+            }
+
+            return _trend;
+        }
+
+        public void Clear()
+        {
+            ChartValues.Clear();
         }
 
         private void SetAxisLimits(DateTime now)

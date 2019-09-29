@@ -43,6 +43,7 @@
     <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="OpenHardwareMonitorLib">
       <HintPath>Dependency\OpenHardwareMonitorLib.dll</HintPath>
     </Reference>
@@ -69,7 +70,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Backend\Processes.cs" />
-    <Compile Include="Backend\System.cs" />
     <Compile Include="ComputerStatsMonitor.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Graphs\LiveLineGraph.xaml.cs">
@@ -164,6 +164,7 @@
       <Name>WindowsPerformanceMonitor.Cpp.Wrapper</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"
