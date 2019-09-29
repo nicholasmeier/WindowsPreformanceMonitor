@@ -171,7 +171,6 @@ namespace WindowsPerformanceMonitor.Backend
                     procList[i].Memory = -1;
                 }
             }
-
             return totalUsed / totalMem;
         }
     }
