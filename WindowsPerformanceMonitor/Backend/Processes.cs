@@ -163,7 +163,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
                 else if(memoryUsages[i] > 0)
                 {
-                    procList[i].Memory = ((ulong)memoryUsages[i] / totalMem) * 100;
+                    procList[i].Memory = ((double)memoryUsages[i] / (double)totalMem) * 100;
                     totalUsed += (ulong)memoryUsages[i];
                 }
                 else
@@ -171,7 +171,7 @@ namespace WindowsPerformanceMonitor.Backend
                     procList[i].Memory = -1;
                 }
             }
-            return (double)totalUsed / (double)totalMem;
+            return ((double)totalUsed / (double)totalMem) * 100;
         }
     }
 }
