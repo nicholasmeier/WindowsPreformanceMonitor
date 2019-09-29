@@ -1,9 +1,59 @@
 ﻿<UserControl x:Class="WindowsPerformanceMonitor.HardwareDetails"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Loaded="OnControlLoaded"
+             Loaded="OnControlLoaded" Height="393.2" Width="787.6"
              >
-    <Grid>
-        <TextBlock Text="Data on hardware page" Name="txtData2" />
+    <Grid ShowGridLines="False" Height="Auto" Width="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+
+
+        <!-- Bottom Row (Process List) -->
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+            <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="127" Margin="20,5,20,10">
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type RadioButton}">
+                            <Setter Property="Margin" Value="5,5,0,0"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <RadioButton Content="CPU" IsChecked="True" Checked="RadioButton_Checked"></RadioButton>
+                    <RadioButton Content="GPU" Checked="RadioButton_Checked"></RadioButton>
+                    <RadioButton Content="Memory" Checked="RadioButton_Checked"></RadioButton>
+                    <RadioButton Content="Disk" Checked="RadioButton_Checked"></RadioButton>
+                    <RadioButton Content="Network" Checked="RadioButton_Checked"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical">
+            <GroupBox Name="groupBoxDetails" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="CPU Details" Height="127" Margin="20,5,20,10">
+                <StackPanel>
+                    <ListBox Height="100" Name="lbDetailList">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Margin="0,0,15,0" FontWeight="Bold"  Text="{Binding Title}"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Value}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+ 
+
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+
     </Grid>
 </UserControl>
