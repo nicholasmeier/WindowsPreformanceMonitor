@@ -84,6 +84,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             tasks.Add(new Task(() =>
             {
                 obj.TotalCpu = processes.updateCpu(obj.ProcessList);
+                obj.TotalMemory = processes.updateMem(obj.ProcessList);
                 // updateMem, etc.
             }));
 
