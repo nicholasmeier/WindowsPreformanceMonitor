@@ -24,7 +24,9 @@ namespace WindowsPerformanceMonitor
         private MainWindow mainWindow = null; // Reference to the MainWindow
         private ProcessEntry _selectedProcessListView;
         private ProcessEntry _selectedProcessComboBox;
-        public ObservableCollection<ProcessEntry> _procList { get; set; }
+        public ObservableCollection<ProcessEntry> _procListListView { get; set; }
+        public ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
+
 
         #region Initialization
 
@@ -33,7 +35,8 @@ namespace WindowsPerformanceMonitor
             InitializeComponent();
             HardwareObserver observer = new HardwareObserver(UpdateValues);
             Globals.provider.Subscribe(observer);
-            procList = new ObservableCollection<ProcessEntry>();
+            _procListListView = new ObservableCollection<ProcessEntry>();
+            _procListComboBox = new ObservableCollection<ProcessEntry>();
             this.DataContext = this;
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -58,10 +61,12 @@ namespace WindowsPerformanceMonitor
                 ProcessEntry selectedListView = selectedProcessListView;
                 ProcessEntry selectedComboBox = selectedProcessComboBox;
 
-                procList = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
+                procListListView = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
+                procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
+                procListComboBox.Insert(0, new ProcessEntry() { Name = "SYSTEM", Pid = -1});
 
-                selectedProcessListView = Find(selectedListView);
-                selectedProcessComboBox = Find(selectedComboBox);
+                selectedProcessListView = Find(selectedListView, procListListView);
+                selectedProcessComboBox = Find(selectedComboBox, procListComboBox);
 
                 UpdateColumnHeaders(comp);
             });
@@ -93,20 +98,11 @@ namespace WindowsPerformanceMonitor
 
             if (selected != null)
             {
-                int selectedPid = selected.Pid;
-                int currentPid = liveGraph.ProcessPid;
-                if (selectedPid == currentPid)
-                {
-                    return;
-                }
-                else
-                {
-                    liveGraph.ProcessPid = selectedPid;
-                }
+               liveGraph.ProcessPid = selected.Pid;
             }
             else
             {
-                liveGraph.ProcessPid = 0;
+                liveGraph.ProcessPid = -1;
             }
         }
 
@@ -123,7 +119,7 @@ namespace WindowsPerformanceMonitor
 
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // TODO
+
         }
 
         private void CheckBoxChanged(object sender, RoutedEventArgs e)
@@ -162,26 +158,36 @@ namespace WindowsPerformanceMonitor
             }
         }
 
-        public ObservableCollection<ProcessEntry> procList
+        public ObservableCollection<ProcessEntry> procListListView
         {
-            get { return _procList; }
+            get { return _procListListView; }
             set
             {
-                _procList = value;
-                OnPropertyChanged(nameof(procList));
+                _procListListView = value;
+                OnPropertyChanged(nameof(procListListView));
+            }
+        }
+
+        public ObservableCollection<ProcessEntry> procListComboBox
+        {
+            get { return _procListComboBox; }
+            set
+            {
+                _procListComboBox = value;
+                OnPropertyChanged(nameof(procListComboBox));
             }
         }
 
         #endregion
 
         #region Helpers
-        public ProcessEntry Find(ProcessEntry proc)
+        public ProcessEntry Find(ProcessEntry proc, ObservableCollection<ProcessEntry> list)
         {
             if (proc != null)
             {
-                if (procList.FirstOrDefault(p => p.Pid == proc.Pid) != null)
+                if (list.FirstOrDefault(p => p.Pid == proc.Pid) != null)
                 {
-                    return procList.First(p => p.Pid == proc.Pid);
+                    return list.First(p => p.Pid == proc.Pid);
                 }
             }
 

@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         
         <!-- Top Left (View type, graph type, process to graph)-->
-        <ListView ItemsSource="{Binding procList}" SelectedItem="{Binding selectedProcessListView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10" x:Name="listView_ProcList">
+        <ListView ItemsSource="{Binding procListListView}" SelectedItem="{Binding selectedProcessListView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10" x:Name="listView_ProcList">
             <ListView.View>
                 <GridView x:Name="listView_gridView">
                     <GridViewColumn Header="Process" 
@@ -48,7 +48,7 @@
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
             <CheckBox HorizontalAlignment="Left" Height="20" Width="100" Grid.Row="0" Content="Detailed View" IsChecked="True" Checked="CheckBoxChanged" Margin="20,10,20,0"/>
             <ComboBox 
-                ItemsSource="{Binding procList}"
+                ItemsSource="{Binding procListComboBox}"
                 DisplayMemberPath="Name"
                 SelectedItem="{Binding selectedProcessComboBox}"
                 HorizontalAlignment="Stretch" 

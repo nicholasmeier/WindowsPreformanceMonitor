@@ -117,7 +117,7 @@ namespace WindowsPerformanceMonitor.Graphs
             // Probably not the best way, but it works.
             double _trend = 0;
 
-            if (ProcessPid != 0)
+            if (ProcessPid > 0)
             {
                 if (StatToGraph == "CPU")
                 {
