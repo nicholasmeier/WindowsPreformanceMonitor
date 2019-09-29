@@ -40,10 +40,24 @@ namespace WindowsPerformanceMonitor.Backend
             return processEntries;
         }
 
+        public void Kill(int pid)
+        {
+            Process p;
+            try
+            {
+                p = Process.GetProcessById(pid);
+                p.Kill();
+            }
+            catch (ArgumentException)
+            {
+                //
+            }
+        }
+
         /// <summary>
         /// Update CPU usage for a process list
         /// </summary>
-        public double updateCpu(ObservableCollection<ProcessEntry> procList)
+        public double UpdateCpu(ObservableCollection<ProcessEntry> procList)
         {
             List<DateTime> lastTimes = new List<DateTime>(new DateTime[procList.Count]);
             List<TimeSpan> lastTotalProcessorTime = new List<TimeSpan>(new TimeSpan[procList.Count]);
@@ -119,7 +133,7 @@ namespace WindowsPerformanceMonitor.Backend
         /// <summary>
         /// Update memory usage for a process list
         /// </summary>
-        public double updateMem(ObservableCollection<ProcessEntry> procList)
+        public double UpdateMem(ObservableCollection<ProcessEntry> procList)
         {
             List<long> memoryUsages = new List<long>(new long[procList.Count]);
 
@@ -182,6 +196,7 @@ namespace WindowsPerformanceMonitor.Backend
                     procList[i].Memory = -1;
                 }
             }
+
             return Math.Round(((double)totalUsed / (double)totalMem) * 100, 2);
         }
     }

@@ -123,31 +123,26 @@ namespace WindowsPerformanceMonitor.Graphs
                 {
                     _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Cpu;
                     ChartColor = "Red";
-
                 }
                 else if (StatToGraph == "GPU")
                 {
                     _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Gpu;
                     ChartColor = "Orange";
-
                 }
                 else if (StatToGraph == "Memory")
                 {
                     _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Memory;
                     ChartColor = "Green";
-
                 }
                 else if (StatToGraph == "Disk")
                 {
                     _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Disk;
                     ChartColor = "Blue";
-
                 }
                 else if (StatToGraph == "Network")
                 {
                     _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Network;
                     ChartColor = "Purple";
-
                 }
             }
             else
@@ -156,25 +151,21 @@ namespace WindowsPerformanceMonitor.Graphs
                 {
                     _trend = comp.TotalCpu;
                     ChartColor = "Red";
-
                 }
                 else if (StatToGraph == "GPU")
                 {
                     _trend = comp.TotalGpu;
                     ChartColor = "Orange";
-
                 }
                 else if (StatToGraph == "Memory")
                 {
                     _trend = comp.TotalMemory;
                     ChartColor = "Green";
-
                 }
                 else if (StatToGraph == "Disk")
                 {
                     _trend = comp.TotalDisk;
                     ChartColor = "Blue";
-
                 }
                 else if (StatToGraph == "Network")
                 {
@@ -194,7 +185,7 @@ namespace WindowsPerformanceMonitor.Graphs
         private void SetAxisLimits(DateTime now)
         {
             AxisMax = now.Ticks + TimeSpan.FromSeconds(1).Ticks; // lets force the axis to be 1 second ahead
-            AxisMin = now.Ticks - TimeSpan.FromSeconds(8).Ticks; // and 8 seconds behind
+            AxisMin = now.Ticks - TimeSpan.FromSeconds(30).Ticks; // and 30 seconds behind
         }
 
         #region INotifyPropertyChanged implementation
