@@ -123,7 +123,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
 
                 double cpuUsage = (currTotalProcessorTime.TotalMilliseconds - lastTotalProcessorTime[i].TotalMilliseconds) / currTime.Subtract(lastTimes[i]).TotalMilliseconds / Convert.ToDouble(Environment.ProcessorCount);
-                procList[i].Cpu = cpuUsage * 100;
+                procList[i].Cpu = Math.Round(cpuUsage * 100, 2);
                 totalCpu += cpuUsage;
             }
 
@@ -188,7 +188,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
                 else if(memoryUsages[i] > 0)
                 {
-                    procList[i].Memory = ((double)memoryUsages[i] / (double)totalMem) * 100;
+                    procList[i].Memory = Math.Round((memoryUsages[i] / (double)totalMem) * 100, 2);
                     totalUsed += (ulong)memoryUsages[i];
                 }
                 else

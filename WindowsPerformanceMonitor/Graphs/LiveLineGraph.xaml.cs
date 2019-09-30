@@ -48,7 +48,7 @@ namespace WindowsPerformanceMonitor.Graphs
             DateTimeFormatter = value => new DateTime((long)value).ToString("mm:ss");
 
             // AxisStep forces the distance between each separator in the X axis
-            AxisStep = TimeSpan.FromSeconds(1).Ticks;
+            AxisStep = TimeSpan.FromSeconds(10).Ticks;
 
             // AxisUnit forces lets the axis know that we are plotting seconds
             AxisUnit = TimeSpan.TicksPerSecond;
@@ -58,7 +58,7 @@ namespace WindowsPerformanceMonitor.Graphs
             SetAxisLimits(DateTime.Now);
         }
 
-        public void UpdateValues(ComputerObj comp)
+        private void UpdateValues(ComputerObj comp)
         {
             Read(comp);
         }
@@ -94,7 +94,7 @@ namespace WindowsPerformanceMonitor.Graphs
 
         public bool IsReading { get; set; }
 
-        private void Read(ComputerObj comp)
+        public void Read(ComputerObj comp)
         {
             var now = DateTime.Now;
 
@@ -117,62 +117,72 @@ namespace WindowsPerformanceMonitor.Graphs
             // Probably not the best way, but it works.
             double _trend = 0;
 
-            if (ProcessPid > 0)
+            // TODO: Fix error where we delete the process while its trying to get the next trend.
+
+            try
             {
-                if (StatToGraph == "CPU")
+                if (ProcessPid > 0)
                 {
-                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Cpu;
-                    ChartColor = "Red";
+                    if (StatToGraph == "CPU")
+                    {
+                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Cpu;
+                        ChartColor = "Red";
+                    }
+                    else if (StatToGraph == "GPU")
+                    {
+                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Gpu;
+                        ChartColor = "Orange";
+                    }
+                    else if (StatToGraph == "Memory")
+                    {
+                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Memory;
+                        ChartColor = "Green";
+                    }
+                    else if (StatToGraph == "Disk")
+                    {
+                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Disk;
+                        ChartColor = "Blue";
+                    }
+                    else if (StatToGraph == "Network")
+                    {
+                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Network;
+                        ChartColor = "Purple";
+                    }
                 }
-                else if (StatToGraph == "GPU")
+                else
                 {
-                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Gpu;
-                    ChartColor = "Orange";
-                }
-                else if (StatToGraph == "Memory")
-                {
-                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Memory;
-                    ChartColor = "Green";
-                }
-                else if (StatToGraph == "Disk")
-                {
-                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Disk;
-                    ChartColor = "Blue";
-                }
-                else if (StatToGraph == "Network")
-                {
-                    _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Network;
-                    ChartColor = "Purple";
+                    if (StatToGraph == "CPU")
+                    {
+                        _trend = comp.TotalCpu;
+                        ChartColor = "Red";
+                    }
+                    else if (StatToGraph == "GPU")
+                    {
+                        _trend = comp.TotalGpu;
+                        ChartColor = "Orange";
+                    }
+                    else if (StatToGraph == "Memory")
+                    {
+                        _trend = comp.TotalMemory;
+                        ChartColor = "Green";
+                    }
+                    else if (StatToGraph == "Disk")
+                    {
+                        _trend = comp.TotalDisk;
+                        ChartColor = "Blue";
+                    }
+                    else if (StatToGraph == "Network")
+                    {
+                        _trend = comp.TotalNetwork;
+                        ChartColor = "Purple";
+                    }
                 }
             }
-            else
+            catch (Exception) // Process was killed but still trying to graph.
             {
-                if (StatToGraph == "CPU")
-                {
-                    _trend = comp.TotalCpu;
-                    ChartColor = "Red";
-                }
-                else if (StatToGraph == "GPU")
-                {
-                    _trend = comp.TotalGpu;
-                    ChartColor = "Orange";
-                }
-                else if (StatToGraph == "Memory")
-                {
-                    _trend = comp.TotalMemory;
-                    ChartColor = "Green";
-                }
-                else if (StatToGraph == "Disk")
-                {
-                    _trend = comp.TotalDisk;
-                    ChartColor = "Blue";
-                }
-                else if (StatToGraph == "Network")
-                {
-                    _trend = comp.TotalNetwork;
-                    ChartColor = "Purple";
-                }
+                _trend = 0;
             }
+           
 
             return _trend;
         }
@@ -185,7 +195,7 @@ namespace WindowsPerformanceMonitor.Graphs
         private void SetAxisLimits(DateTime now)
         {
             AxisMax = now.Ticks + TimeSpan.FromSeconds(1).Ticks; // lets force the axis to be 1 second ahead
-            AxisMin = now.Ticks - TimeSpan.FromSeconds(30).Ticks; // and 30 seconds behind
+            AxisMin = now.Ticks - TimeSpan.FromSeconds(30).Ticks; // and  seconds behind
         }
 
         #region INotifyPropertyChanged implementation
