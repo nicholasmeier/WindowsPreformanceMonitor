@@ -373,9 +373,10 @@ namespace WindowsPerformanceMonitor.Backend
                     diskUsages.Insert(i, 0);
                     try
                     {
-                        diskUsages.Insert(i, p.WorkingSet64);
+                        //TODO : change this to something that actually works --> hard to find good way to list this for some reason
+                        //diskUsages.Insert(i, p.WorkingSet64);
                     }
-                    catch (Exception)       // The platform is Windows 98 or Windows Millennium Edition which is not supported
+                    catch (Exception)       
                     {
                         diskUsages.Insert(i, 0);
                     }
