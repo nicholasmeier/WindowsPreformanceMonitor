@@ -81,6 +81,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             {
                 obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
                 obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
+                obj.TotalGpu = processes.UpdateGpu(obj.ProcessList);
             }));
 
             Parallel.ForEach(tasks, task => task.Start());

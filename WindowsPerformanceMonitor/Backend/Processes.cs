@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WindowsPerformanceMonitor.Models;
+using System.Runtime.InteropServices;
 
 namespace WindowsPerformanceMonitor.Backend
 {
@@ -167,9 +168,6 @@ namespace WindowsPerformanceMonitor.Backend
             Thread.Sleep(250);
             ulong totalMem = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
             ulong totalUsed = 0;
-            /* Get the current time and total process usage
-                for each process, calculate Mem usage
-                based on previous */
             for (int i = 0; i < procList.Count; i++)
             {
                 Process p;
@@ -198,6 +196,22 @@ namespace WindowsPerformanceMonitor.Backend
             }
 
             return Math.Round(((double)totalUsed / (double)totalMem) * 100, 2);
+        }
+
+
+        /// <summary>
+        /// Update gpu usage for a process list
+        /// </summary>
+        [DllImport(@"GpuzShMem.dll")]
+        private static extern double GetSensorValue(int index);
+        public double UpdateGpu(ObservableCollection<ProcessEntry> procList)
+        {
+            Thread.Sleep(250);
+            double totalLoad = 0;
+            //TODO: GetSensorValue for total load from Gpuz
+            //totalLoad = GetSensorValue(4); wasn't working
+
+            return totalLoad;
         }
     }
 }
