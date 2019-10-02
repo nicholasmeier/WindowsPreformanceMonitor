@@ -3,7 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Loaded="OnControlLoaded"
              >
-    <Grid>
-        <TextBlock Text="Data on startup tab" Name="txtData2" />
+    <Grid ShowGridLines="False" Height="Auto" Width="Auto">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="8.5*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Applications that can run on startup" Name="txtData2" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <ListView ItemsSource="{Binding startupListView}" SelectedItem="{Binding startupProcessListView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10" x:Name="listView_StartupList">
+            <ListView.View>
+                <GridView x:Name="listView_gridView">
+                    <GridViewColumn Header="Name" 
+                                    Width="350"
+                                    DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Publisher" 
+                                    Width="250"
+                                    DisplayMemberBinding="{Binding Publisher}"/>
+                    <GridViewColumn Header="Status" 
+                                    Width="130"
+                                    DisplayMemberBinding="{Binding Status}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </UserControl>
