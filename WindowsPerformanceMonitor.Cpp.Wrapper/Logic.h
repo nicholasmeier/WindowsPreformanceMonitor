@@ -22,7 +22,7 @@ namespace PerformanceMonitor
 				std::string getCPUFrequency();
 				std::vector<PROCESSENTRY32> getProcessList();
 				void Destroy(); // Helper function
-
+				DWORD getppid(int pid);
 			private:
 				// Pointer to our implementation
 				Cpp::Logic* _impl;
