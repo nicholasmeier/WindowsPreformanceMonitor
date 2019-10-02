@@ -79,8 +79,9 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             List<Task> tasks = new List<Task>();
             tasks.Add(new Task(() =>
             {
-                obj.TotalCpu = processes.updateCpu(obj.ProcessList);
-                obj.TotalMemory = processes.updateMem(obj.ProcessList);
+                obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
+                obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
+                obj.TotalGpu = processes.UpdateGpu(obj.ProcessList);
             }));
 
             Parallel.ForEach(tasks, task => task.Start());
@@ -91,19 +92,6 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         }
     }
 
-/*    public void test()
-    {
-        while (true)
-        {
-            ComputerObj comp = new ComputerObj();
-            PerformanceCounter cpuCounter;
-            cpuCounter = new PerformanceCounter();
-            cpuCounter.CategoryName = "Processor";
-            cpuCounter.CounterName = "% Processor Time";
-            cpuCounter.InstanceName = "_Total";
-            comp.TotalCpu = cpuCounter.NextValue();
-            foreach (var observer in observers) observer.OnNext(comp);
-        }
-    }*/
+    // Maybe put graph data in its own subscriber fnc so we can loop quicker?
 }
 

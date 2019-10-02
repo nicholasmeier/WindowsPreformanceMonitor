@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -14,5 +15,7 @@ namespace WindowsPerformanceMonitor.Models
         public double Disk { get; set; }
         public double Network { get; set; }
         public bool IsApplication { get; set; }
+        public uint Ppid { get; set; }
+        public ObservableCollection<ProcessEntry> ChildProcesses { get; set; }
     }
 }

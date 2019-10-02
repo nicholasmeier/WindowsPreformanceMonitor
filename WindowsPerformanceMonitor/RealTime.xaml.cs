@@ -26,6 +26,7 @@ namespace WindowsPerformanceMonitor
         private ProcessEntry _selectedProcessComboBox;
         public ObservableCollection<ProcessEntry> _procListListView { get; set; }
         public ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
+        public ProcessEntry system = new ProcessEntry { Name = "SYSTEM", Pid = -1 };
 
 
         #region Initialization
@@ -37,6 +38,7 @@ namespace WindowsPerformanceMonitor
             Globals.provider.Subscribe(observer);
             _procListListView = new ObservableCollection<ProcessEntry>();
             _procListComboBox = new ObservableCollection<ProcessEntry>();
+            selectedProcessComboBox = system;
             this.DataContext = this;
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -63,7 +65,7 @@ namespace WindowsPerformanceMonitor
 
                 procListListView = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
                 procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
-                procListComboBox.Insert(0, new ProcessEntry() { Name = "SYSTEM", Pid = -1});
+                procListComboBox.Insert(0, system);
 
                 selectedProcessListView = Find(selectedListView, procListListView);
                 selectedProcessComboBox = Find(selectedComboBox, procListComboBox);
@@ -98,7 +100,7 @@ namespace WindowsPerformanceMonitor
 
             if (selected != null)
             {
-               liveGraph.ProcessPid = selected.Pid;
+                liveGraph.ProcessPid = selected.Pid;
             }
             else
             {
@@ -191,7 +193,7 @@ namespace WindowsPerformanceMonitor
                 }
             }
 
-            return null;
+            return system;
         }
 
         #endregion

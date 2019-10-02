@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WindowsPerformanceMonitor.Models;
+using System.Runtime.InteropServices;
 
 namespace WindowsPerformanceMonitor.Backend
 {
@@ -40,10 +41,24 @@ namespace WindowsPerformanceMonitor.Backend
             return processEntries;
         }
 
+        public void Kill(int pid)
+        {
+            Process p;
+            try
+            {
+                p = Process.GetProcessById(pid);
+                p.Kill();
+            }
+            catch (ArgumentException)
+            {
+                //
+            }
+        }
+
         /// <summary>
         /// Update CPU usage for a process list
         /// </summary>
-        public double updateCpu(ObservableCollection<ProcessEntry> procList)
+        public double UpdateCpu(ObservableCollection<ProcessEntry> procList)
         {
             List<DateTime> lastTimes = new List<DateTime>(new DateTime[procList.Count]);
             List<TimeSpan> lastTotalProcessorTime = new List<TimeSpan>(new TimeSpan[procList.Count]);
@@ -109,7 +124,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
 
                 double cpuUsage = (currTotalProcessorTime.TotalMilliseconds - lastTotalProcessorTime[i].TotalMilliseconds) / currTime.Subtract(lastTimes[i]).TotalMilliseconds / Convert.ToDouble(Environment.ProcessorCount);
-                procList[i].Cpu = cpuUsage * 100;
+                procList[i].Cpu = Math.Round(cpuUsage * 100, 2);
                 totalCpu += cpuUsage;
             }
 
@@ -119,7 +134,7 @@ namespace WindowsPerformanceMonitor.Backend
         /// <summary>
         /// Update memory usage for a process list
         /// </summary>
-        public double updateMem(ObservableCollection<ProcessEntry> procList)
+        public double UpdateMem(ObservableCollection<ProcessEntry> procList)
         {
             List<long> memoryUsages = new List<long>(new long[procList.Count]);
 
@@ -153,9 +168,6 @@ namespace WindowsPerformanceMonitor.Backend
             Thread.Sleep(250);
             ulong totalMem = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
             ulong totalUsed = 0;
-            /* Get the current time and total process usage
-                for each process, calculate Mem usage
-                based on previous */
             for (int i = 0; i < procList.Count; i++)
             {
                 Process p;
@@ -174,7 +186,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
                 else if(memoryUsages[i] > 0)
                 {
-                    procList[i].Memory = ((double)memoryUsages[i] / (double)totalMem) * 100;
+                    procList[i].Memory = Math.Round((memoryUsages[i] / (double)totalMem) * 100, 2);
                     totalUsed += (ulong)memoryUsages[i];
                 }
                 else
@@ -182,7 +194,24 @@ namespace WindowsPerformanceMonitor.Backend
                     procList[i].Memory = -1;
                 }
             }
+
             return Math.Round(((double)totalUsed / (double)totalMem) * 100, 2);
+        }
+
+
+        /// <summary>
+        /// Update gpu usage for a process list
+        /// </summary>
+        [DllImport(@"GpuzShMem.dll")]
+        private static extern double GetSensorValue(int index);
+        public double UpdateGpu(ObservableCollection<ProcessEntry> procList)
+        {
+            Thread.Sleep(250);
+            double totalLoad = 0;
+            //TODO: GetSensorValue for total load from Gpuz
+            //totalLoad = GetSensorValue(4); wasn't working
+
+            return totalLoad;
         }
     }
 }
