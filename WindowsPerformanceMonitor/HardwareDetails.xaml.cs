@@ -29,6 +29,7 @@ namespace WindowsPerformanceMonitor
         public int _coresCPU { get; set; }
         public int _logicalCoresCPU { get; set; }
         public Boolean _virtualizationCPU { get; set; }
+        public List<uint> _cacheSizesCPU { get; set; }
 
         public ListBox List { get; set; }
 
@@ -58,13 +59,16 @@ namespace WindowsPerformanceMonitor
             setCores();
             setVirtualization();
             setClockSpeed();
+            setCacheSize();
             var _clockSpeed = _clockSpeedCPU.ToString() + "GHz";
             List<DetailItem> items = new List<DetailItem>();
             items.Add(new DetailItem() { Title = "Base Speed:", Value = _clockSpeed });
             items.Add(new DetailItem() { Title = "Cores:", Value = _coresCPU.ToString() });
             items.Add(new DetailItem() { Title = "Logical Cores:", Value = _logicalCoresCPU.ToString() });
             items.Add(new DetailItem() { Title = "Virtualization:", Value = _virtualizationCPU.ToString() });
-
+            items.Add(new DetailItem() { Title = "L1 Cache:", Value = _cacheSizesCPU[0].ToString() + " KB" });
+            items.Add(new DetailItem() { Title = "L2 Cache:", Value = _cacheSizesCPU[1].ToString() + " KB" });
+            items.Add(new DetailItem() { Title = "L3 Cache:", Value = _cacheSizesCPU[2].ToString() + " KB" });
             listBox.ItemsSource = items;
             groupBoxDetails.Header = "CPU Details";
         }
@@ -100,6 +104,21 @@ namespace WindowsPerformanceMonitor
             double dp = sp / 1000.00;
             Mo.Dispose();
             _clockSpeedCPU = dp;
+        }
+        private void setCacheSize()
+        {
+            ManagementClass mc = new ManagementClass("Win32_CacheMemory");
+            ManagementObjectCollection moc = mc.GetInstances();
+            List<uint> cacheSizes = new List<uint>(moc.Count);
+            for (int i = 3; i <= 5; i++)
+            {
+                cacheSizes.AddRange(moc
+                  .Cast<ManagementObject>()
+                  .Where(p => (ushort)(p.Properties["Level"].Value) == (ushort)i)
+                  .Select(p => (uint)(p.Properties["MaxCacheSize"].Value)));
+            }
+
+            _cacheSizesCPU = cacheSizes;
         }
         #endregion
         #region GPU Details
