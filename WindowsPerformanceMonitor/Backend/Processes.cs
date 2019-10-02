@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using WindowsPerformanceMonitor.Models;
 using System.Runtime.InteropServices;
+using System.Management;
+using PerformanceMonitor.Cpp.CLI;
 
 namespace WindowsPerformanceMonitor.Backend
 {
@@ -23,6 +25,11 @@ namespace WindowsPerformanceMonitor.Backend
             Process[] processes = Process.GetProcesses();
             for (int i = 0; i < processes.Length; i++)
             {
+                uint ppid;
+                using (var wrapper = new Logic())
+                {
+                    ppid = wrapper.getppid(processes[i].Id);
+                }
                 ProcessEntry p = new ProcessEntry()
                 {
                     Name = processes[i].ProcessName,
@@ -32,9 +39,10 @@ namespace WindowsPerformanceMonitor.Backend
                     Gpu = 0,
                     Disk = 0,
                     Network = 0,
+                    Ppid = ppid,
+                    ChildProcesses = GetChildProcesses(processes[i].Id),
                     IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
                 };
-
                 processEntries.Add(p);
             }
 
@@ -53,6 +61,50 @@ namespace WindowsPerformanceMonitor.Backend
             {
                 //
             }
+        }
+        /// <summary>
+        /// Get the child processes for a given process
+        /// </summary>
+        /// <param name="process"></param>
+        public ObservableCollection<ProcessEntry> GetChildProcesses(int pid)
+        {
+            ObservableCollection<ProcessEntry> childProcesses = new ObservableCollection<ProcessEntry>();
+            var results = new List<Process>();
+            // query the management system objects for any process that has the current
+            // process listed as it's parent
+            string queryText = string.Format("select processid from win32_process where parentprocessid = {0}", pid);
+            using (var searcher = new ManagementObjectSearcher(queryText))
+            {
+                foreach (var obj in searcher.Get())
+                {
+                    object data = obj.Properties["processid"].Value;
+                    if (data != null)
+                    {
+                        // retrieve the process
+                        var childId = Convert.ToInt32(data);
+                        var childProcess = Process.GetProcessById(childId);
+
+                        // ensure the current process is still live
+                        if (childProcess != null)
+                        {
+                            ProcessEntry p = new ProcessEntry()
+                            {
+                                Name = childProcess.ProcessName,
+                                Pid = childProcess.Id,
+                                Cpu = 0,
+                                Memory = 0,
+                                Gpu = 0,
+                                Disk = 0,
+                                Network = 0,
+                                IsApplication = childProcess.MainWindowHandle != IntPtr.Zero ? true : false
+                            };
+                            childProcesses.Add(p);
+                            results.Add(childProcess);
+                        }
+                    }
+                }
+            }
+            return childProcesses;
         }
 
         /// <summary>
