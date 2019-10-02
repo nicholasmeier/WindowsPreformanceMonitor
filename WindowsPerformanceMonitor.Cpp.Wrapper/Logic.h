@@ -1,4 +1,6 @@
 #pragma once
+#include "..\WindowsPerformanceMonitor.Cpp\Logic.h"
+#include <vector>
 
 namespace PerformanceMonitor
 {
@@ -11,16 +13,19 @@ namespace PerformanceMonitor
 			// Wrapper
 			public ref class Logic
 			{
-				public:
-					Logic();
-					~Logic();
-					!Logic();
-					int Get();
-					void Destroy(); // Helper function
+			public:
+				Logic();
+				~Logic();
+				!Logic();
+				int getCPULogicalProcessorCores();
+				int getCPUPhysicalCores();
+				std::string getCPUFrequency();
+				std::vector<PROCESSENTRY32> getProcessList();
+				void Destroy(); // Helper function
 
-				private:
-					// Pointer to our implementation
-					Cpp::Logic* _impl;
+			private:
+				// Pointer to our implementation
+				Cpp::Logic* _impl;
 			};
 		}
 	}

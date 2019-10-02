@@ -14,6 +14,9 @@ Class PerformanceMonitor.Cpp.CLI.Logic: AutoLayout, AnsiClass, Class, Public, Be
   Interfaces:
     System.IDisposable
   Methods:
-    Get(): PrivateScope, Public, HideBySig
+    getCPULogicalProcessorCores(): PrivateScope, Public, HideBySig
+    getCPUPhysicalCores(): PrivateScope, Public, HideBySig
+    getCPUFrequency(basic_string<char\,std::char_traits<char>\,std::allocator<char> >*): PrivateScope, Public, HideBySig
+    getProcessList(vector<tagPROCESSENTRY32\,std::allocator<tagPROCESSENTRY32> >*): PrivateScope, Public, HideBySig
     Destroy(): PrivateScope, Public, HideBySig
     Dispose(): PrivateScope, Public, Final, Virtual, HideBySig

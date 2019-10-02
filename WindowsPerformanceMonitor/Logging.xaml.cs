@@ -18,20 +18,53 @@ namespace WindowsPerformanceMonitor
     /// <summary>
     /// Interaction logic for Logging.xaml
     /// </summary>
+    /// 
     public partial class Logging : UserControl
     {
-        private MainWindow mainWindow = null; // Reference to the MainWindow
+        private MainWindow mainWindow = null;
 
         public Logging()
         {
             InitializeComponent();
         }
 
-        // Get a reference to main windows when it is available.
-        // The Loaded Event is set in the XAML code above.
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
+        }
+
+        private void InitializeComboBox()
+        {
+            // TODO
+        }
+
+        private void StartLog_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO
+        }
+
+        private void StopLog_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO
+        }
+
+        private void DeleteLog_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO
+        }
+
+        private void ComboBox_Graph_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void logList_Click(object sender, RoutedEventArgs e)
+        {
+            var item = (sender as ListView).SelectedItem;
+            if (item != null)
+            {
+                // TODO
+            }
         }
     }
 }

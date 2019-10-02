@@ -12,7 +12,7 @@
                                 PointGeometry="{x:Null}" 
                                 LineSmoothness=".5"
                                 StrokeThickness="1" 
-                                Stroke="#F34336"
+                                Stroke="{Binding ChartColor}"
                                 Fill="Transparent"/>
         </lvc:CartesianChart.Series>
         <lvc:CartesianChart.AxisX>
@@ -20,10 +20,14 @@
                           MaxValue="{Binding AxisMax}" 
                           MinValue="{Binding AxisMin}"
                           Unit="{Binding AxisUnit}">
+                                  
                 <lvc:Axis.Separator>
                     <lvc:Separator Step="{Binding AxisStep}" />
                 </lvc:Axis.Separator>
             </lvc:Axis>
         </lvc:CartesianChart.AxisX>
+        <lvc:CartesianChart.AxisY>
+            <lvc:Axis MinValue="-1" MaxValue="100"/>
+        </lvc:CartesianChart.AxisY>
     </lvc:CartesianChart>
 </UserControl>

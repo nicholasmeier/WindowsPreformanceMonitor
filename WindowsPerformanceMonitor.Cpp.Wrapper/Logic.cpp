@@ -1,7 +1,4 @@
 #include "Logic.h"
-#include "..\WindowsPerformanceMonitor.Cpp\Logic.h"
-#include <string>
-#include <Windows.h>
 
 using namespace std;
 
@@ -11,9 +8,24 @@ PerformanceMonitor::Cpp::CLI::Logic::Logic()
 {
 }
 
-int PerformanceMonitor::Cpp::CLI::Logic::Get()
+std::vector<PROCESSENTRY32> PerformanceMonitor::Cpp::CLI::Logic::getProcessList()
 {
-	return _impl->Get(); // Call native Get
+	return _impl->getProcessList();
+}
+
+int PerformanceMonitor::Cpp::CLI::Logic::getCPULogicalProcessorCores()
+{
+	return _impl->getCPULogicalProcessorCores();
+}
+
+int PerformanceMonitor::Cpp::CLI::Logic::getCPUPhysicalCores()
+{
+	return _impl->getCPUPhysicalCores();
+}
+
+std::string PerformanceMonitor::Cpp::CLI::Logic::getCPUFrequency()
+{
+	return _impl->getCPUClock();
 }
 
 void PerformanceMonitor::Cpp::CLI::Logic::Destroy()
