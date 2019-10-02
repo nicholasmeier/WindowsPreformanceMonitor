@@ -16,7 +16,6 @@ using System.Diagnostics;
 using System.Windows.Shapes;
 using System.Management;
 using System.Collections.ObjectModel;
-using System.Management;
 
 namespace WindowsPerformanceMonitor
 {
