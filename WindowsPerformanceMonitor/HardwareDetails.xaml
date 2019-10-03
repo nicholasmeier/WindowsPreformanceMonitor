@@ -33,9 +33,9 @@
             </GroupBox>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical">
-            <GroupBox Name="groupBoxDetails" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="CPU Details" Height="127" Margin="20,5,20,10">
+            <GroupBox Name="groupBoxDetails" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="CPU Details" Height="227" Margin="20,5,20,10">
                 <StackPanel>
-                    <ListBox Height="100" Name="lbDetailList">
+                    <ListBox Height="200" Name="lbDetailList">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,2">
@@ -49,7 +49,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
- 
+
 
                 </StackPanel>
             </GroupBox>
