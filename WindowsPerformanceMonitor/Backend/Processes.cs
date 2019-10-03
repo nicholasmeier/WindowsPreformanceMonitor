@@ -375,6 +375,7 @@ namespace WindowsPerformanceMonitor.Backend
                     {
                         //TODO : change this to something that actually works --> hard to find good way to list this for some reason
                         //diskUsages.Insert(i, p.WorkingSet64);
+                        //likely need to use c++ 
                     }
                     catch (Exception)       
                     {
