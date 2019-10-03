@@ -77,6 +77,12 @@ namespace WindowsPerformanceMonitor
         public void UpdateColumnHeaders(ComputerObj comp)
         {
             listView_gridView.Columns[0].Header = $"Process {comp.ProcessList.Count}";
+
+            if (Math.Round(comp.TotalCpu, 2) > 100)
+            {
+                listView_gridView.Columns[1].Header = $"CPU 100%";
+            }
+
             listView_gridView.Columns[1].Header = $"CPU {Math.Round(comp.TotalCpu, 2)}%";
             listView_gridView.Columns[2].Header = $"GPU {Math.Round(comp.TotalGpu, 2)}%";
             listView_gridView.Columns[3].Header = $"Memory {Math.Round(comp.TotalMemory, 2)}%";
