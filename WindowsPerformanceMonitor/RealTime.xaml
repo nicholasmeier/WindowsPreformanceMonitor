@@ -3,7 +3,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WindowsPerformanceMonitor" x:Class="WindowsPerformanceMonitor.RealTime"
-             Loaded="OnControlLoaded"
+             Loaded="OnControlLoaded" Height="393.2" Width="787.6"
              >
     <Grid ShowGridLines="False" Height="Auto" Width="Auto">
         <Grid.ColumnDefinitions>
@@ -32,20 +32,46 @@
                                     Width="100"
                                     DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="CPU" 
-                                    Width="100"
-                                    DisplayMemberBinding="{Binding Cpu}"/>
+                                    Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Cpu, StringFormat={}{0} %}" TextAlignment="Right" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="GPU" 
-                                    Width="100"
-                                    DisplayMemberBinding="{Binding Gpu}"/>
+                                    Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Gpu, StringFormat={}{0} %}" TextAlignment="Right" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Memory" 
-                                    Width="100"
-                                    DisplayMemberBinding="{Binding Memory}"/>
+                                    Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Memory, StringFormat={}{0} MB}" TextAlignment="Right" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Disk" 
-                                    Width="100"
-                                    DisplayMemberBinding="{Binding Disk}"/>
+                                    Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Disk, StringFormat={}{0} %}" TextAlignment="Right" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+
+                    </GridViewColumn>
                     <GridViewColumn Header="Network" 
-                                    Width="100"
-                                    DisplayMemberBinding="{Binding Network}"/>
+                                    Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Network, StringFormat={}{0} MB}" TextAlignment="Right" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
