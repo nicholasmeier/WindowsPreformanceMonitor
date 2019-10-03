@@ -37,6 +37,10 @@ void PerformanceMonitor::Cpp::CLI::Logic::Destroy()
 	}
 }
 
+DWORD PerformanceMonitor::Cpp::CLI::Logic::getppid(int pid) {
+	return _impl->getppid(pid);
+}
+
 PerformanceMonitor::Cpp::CLI::Logic::~Logic()
 {
 	Destroy(); // Clean-up any native resources 
