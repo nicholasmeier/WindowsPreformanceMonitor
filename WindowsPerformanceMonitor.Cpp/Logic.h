@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <stdio.h>
 #include <sstream>
 #include <tchar.h>
 #include <iostream>
@@ -41,6 +42,7 @@ namespace PerformanceMonitor
 			std::string getCPUClock();
 			int getCPULogicalProcessorCores();
 			int getCPUPhysicalCores();
+			DWORD getppid(int pid);
 		private:
 		};
 	}
