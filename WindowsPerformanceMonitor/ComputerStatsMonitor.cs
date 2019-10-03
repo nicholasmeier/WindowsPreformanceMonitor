@@ -93,14 +93,15 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         computer.FanControllerEnabled = true;
         while (true)
         {
-            obj.ProcessList = new ObservableCollection<ProcessEntry>(processes.GetProcesses() as List<ProcessEntry>);
+            List<ProcessEntry> list = processes.GetProcesses();
+            obj.ProcessList = new ObservableCollection<ProcessEntry>(new List<ProcessEntry>(list));
             List<Task> tasks = new List<Task>();
             tasks.Add(new Task(() =>
             {
                 obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
                 obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
                 obj.TotalGpu = getTotalGpuLoad(computer);
-                obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(processes.GetProcesses()));
+                obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)));
             }));
 
             Parallel.ForEach(tasks, task => task.Start());
