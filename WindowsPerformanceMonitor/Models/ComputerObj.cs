@@ -12,6 +12,7 @@ namespace WindowsPerformanceMonitor.Models
     {
         public Computer Computer { get; set; }
         public ObservableCollection<ProcessEntry> ProcessList { get; set; }
+        public ObservableCollection<ProcessEntry> ProcessTree { get; set; }
         public double TotalCpu { get; set; }
         public double TotalGpu { get; set; }
         public double TotalMemory { get; set; }

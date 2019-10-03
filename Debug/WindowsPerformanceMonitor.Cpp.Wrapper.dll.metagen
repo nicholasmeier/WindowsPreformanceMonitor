@@ -19,4 +19,5 @@ Class PerformanceMonitor.Cpp.CLI.Logic: AutoLayout, AnsiClass, Class, Public, Be
     getCPUFrequency(basic_string<char\,std::char_traits<char>\,std::allocator<char> >*): PrivateScope, Public, HideBySig
     getProcessList(vector<tagPROCESSENTRY32\,std::allocator<tagPROCESSENTRY32> >*): PrivateScope, Public, HideBySig
     Destroy(): PrivateScope, Public, HideBySig
+    getppid(Int32): PrivateScope, Public, HideBySig
     Dispose(): PrivateScope, Public, Final, Virtual, HideBySig
