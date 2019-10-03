@@ -14,7 +14,7 @@
             <StackPanel Orientation="Horizontal" Margin="0,0,0,35">
                 <Label Content="Log File Location:" HorizontalAlignment="Left"/>
                 <Rectangle Fill="#FFF4F4F5" StrokeThickness="1" Margin="10,0,0,0" Width="250" Stroke="Black"/>
-                <Button Content=" ... " Margin="10,0,0,0" Click="Button_Click"/>
+                <Button Content=" ... " Margin="10,0,0,0" Click="File_Button_Click"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="5,0,0,35">
@@ -22,7 +22,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="5,0,0,35">
-                <Button Content=" Save Settings " HorizontalAlignment="Left"/>
+                <Button Content=" Save Settings " HorizontalAlignment="Left" Click="Save_Button_Click"/>
                 <Button Content=" Clear Settings " Margin="50,0,0,0"/>
             </StackPanel>
         </StackPanel>
