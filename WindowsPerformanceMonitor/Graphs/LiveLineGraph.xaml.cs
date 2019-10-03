@@ -117,8 +117,6 @@ namespace WindowsPerformanceMonitor.Graphs
             // Probably not the best way, but it works.
             double _trend = 0;
 
-            // TODO: Fix error where we delete the process while its trying to get the next trend.
-
             try
             {
                 if (ProcessPid > 0)

@@ -106,7 +106,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             Task.WaitAll(tasks.ToArray());
             computer.Accept(updateVisitor);
             foreach (var observer in observers) observer.OnNext(obj);
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
         }
     }
 

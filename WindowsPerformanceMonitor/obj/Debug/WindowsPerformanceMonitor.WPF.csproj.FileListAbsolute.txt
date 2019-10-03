@@ -91,3 +91,5 @@ C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csproj.CopyComplete
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.exe
 C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.pdb
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\SummaryView.g.cs
+C:\Users\Darren\source\repos\WindowsPerformanceMonitor\WindowsPerformanceMonitor\obj\Debug\SummaryView.baml
