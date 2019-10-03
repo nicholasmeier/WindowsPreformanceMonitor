@@ -46,33 +46,10 @@ namespace WindowsPerformanceMonitor.Backend
                 processEntries.Add(p);
             }
 
-            for (int i = 0; i < processEntries.Count; i++)
-            {
-                if (processEntries[i].Pid == 11740 || processEntries[i].Pid == 5548 || processEntries[i].Pid == 12276 || processEntries[i].Pid == 7108 || processEntries[i].Pid == 10904)
-                {
-                    Console.WriteLine(i + " " + processEntries[i].Ppid);
-                }
-            }
-
-            fixList2(processEntries);
-
-            // Count process for testing
-            int count = 0;
-            for (int i = 0; i < processEntries.Count; i++)
-            {
-                count++;
-                count += processEntries[i].ChildProcesses.Count;
-                if (processEntries[i].Name == "Spotify")
-                {
-                    Console.WriteLine(i);
-                }
-            }
-
-
             return processEntries;
         }
 
-        public void fixList2(List<ProcessEntry> list)
+        public List<ProcessEntry> BuildProcessTree(List<ProcessEntry> list)
         {
             Dictionary<int, ProcessEntry> dict = new Dictionary<int, ProcessEntry>();
             for (int i = 0; i < list.Count; i++)
@@ -109,6 +86,8 @@ namespace WindowsPerformanceMonitor.Backend
             {
                 list.Add(entry.Value);
             }
+
+            return list;
         }
 
         public void Kill(int pid)

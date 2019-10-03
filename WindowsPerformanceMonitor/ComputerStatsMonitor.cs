@@ -100,6 +100,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
                 obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
                 obj.TotalGpu = getTotalGpuLoad(computer);
+                obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(processes.GetProcesses()));
             }));
 
             Parallel.ForEach(tasks, task => task.Start());
