@@ -56,6 +56,24 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         public void VisitParameter(IParameter parameter) { }
     }
     
+    public double getTotalGpuLoad(Computer computer)
+    {
+        double load = 0;
+        for (int i = 0; i < computer.Hardware.Length; i++)
+        {
+            if (computer.Hardware[i].HardwareType == HardwareType.GpuAti || computer.Hardware[i].HardwareType == HardwareType.GpuNvidia)
+            {
+                for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                {
+                    if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Load)
+                        load = (double)computer.Hardware[i].Sensors[j].Value;
+                }
+            }
+        }
+
+        return load;
+    }
+
     public void getComputerInformation() //this should only be called one time on initialization in its own background thread.
     {
         UpdateVisitor updateVisitor = new UpdateVisitor();
@@ -81,7 +99,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             {
                 obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
                 obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
-                obj.TotalGpu = processes.UpdateGpu(obj.ProcessList);
+                obj.TotalGpu = getTotalGpuLoad(computer);
             }));
 
             Parallel.ForEach(tasks, task => task.Start());
@@ -91,6 +109,8 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             Thread.Sleep(1000);
         }
     }
+
+
 
     // Maybe put graph data in its own subscriber fnc so we can loop quicker?
 }

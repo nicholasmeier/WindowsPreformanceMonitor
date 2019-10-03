@@ -254,14 +254,10 @@ namespace WindowsPerformanceMonitor.Backend
         /// <summary>
         /// Update gpu usage for a process list
         /// </summary>
-        [DllImport(@"GpuzShMem.dll")]
-        private static extern double GetSensorValue(int index);
         public double UpdateGpu(ObservableCollection<ProcessEntry> procList)
         {
             Thread.Sleep(250);
             double totalLoad = 0;
-            //TODO: GetSensorValue for total load from Gpuz
-            //totalLoad = GetSensorValue(4); wasn't working
 
             return totalLoad;
         }
