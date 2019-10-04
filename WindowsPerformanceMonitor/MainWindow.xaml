@@ -6,13 +6,6 @@
         xmlns:tabData="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
         Title="Windows Performance Monitor" Height="450" Width="800" ResizeMode="NoResize">
-    <Window.ContextMenu>
-            <ContextMenu >
-                <MenuItem Header="Summary View" Click="SummarayView_Click">
-                </MenuItem>
-            </ContextMenu>
-    </Window.ContextMenu>
-
     <TabControl>
         <TabItem Header="Real Time">
             <tabData:RealTime x:Name="ucTab1Data1" />

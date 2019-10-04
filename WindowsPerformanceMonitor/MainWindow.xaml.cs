@@ -29,16 +29,9 @@ namespace WindowsPerformanceMonitor
             InitializeComponent();
         }
 
-        private void SummarayView_Click(object sender, System.EventArgs e)
-        {
-            SummaryView wind = new SummaryView();
-            wind.Show();
-            this.Close();
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-           
+
         }
 
         private void Uc1Tab1Data1_Loaded(object sender, RoutedEventArgs e)
