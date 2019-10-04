@@ -33,5 +33,18 @@ namespace WindowsPerformanceMonitor
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
         }
+
+        private void File_Button_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+            }
+        }
+
+        private void Save_Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Hello");
+        }
     }
 }

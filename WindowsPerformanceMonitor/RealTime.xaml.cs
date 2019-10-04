@@ -124,7 +124,6 @@ namespace WindowsPerformanceMonitor
             liveGraph.StatToGraph = radioButton.Content.ToString();
          }
 
-
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
 

@@ -8,7 +8,7 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="8.5*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ListView ItemsSource="{Binding startupListView}" SelectedItem="{Binding startupProcessListView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="20,10,20,10" x:Name="listView_StartupList">
+        <ListView ItemsSource="{Binding Rows}" SelectedItem="{Binding startupProcessListView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10" x:Name="listView_StartupList">
             <ListView.View>
                 <GridView x:Name="listView_gridView">
                     <GridViewColumn Header="Name" 
@@ -23,5 +23,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Button Content="Test" HorizontalAlignment="Left" Margin="665,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
     </Grid>
 </UserControl>

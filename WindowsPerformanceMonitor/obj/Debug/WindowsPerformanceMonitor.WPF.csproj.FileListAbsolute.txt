@@ -117,7 +117,6 @@ C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Options.g.cs
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\RealTime.g.cs
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Startup.g.cs
-C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\SummaryView.g.cs
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\App.g.cs
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor_MarkupCompile.cache
@@ -125,7 +124,6 @@ C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\Logging.baml
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\MainWindow.baml
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\RealTime.baml
-C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\SummaryView.baml
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.g.resources
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.Properties.Resources.resources
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csproj.GenerateResource.cache
