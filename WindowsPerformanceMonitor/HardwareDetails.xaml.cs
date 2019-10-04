@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -166,12 +167,25 @@ namespace WindowsPerformanceMonitor
 
         private void setDiskValues(ListBox listBox)
         {
-            List<DetailItem> items = new List<DetailItem>();
-            items.Add(new DetailItem() { Title = "Base Speed:", Value = "1.8GHz" });
-            items.Add(new DetailItem() { Title = "Cores:", Value = "2" });
-            items.Add(new DetailItem() { Title = "Logical Cores:", Value = "4" });
-            items.Add(new DetailItem() { Title = "Virtualization:", Value = "True" });
+            DriveInfo[] drivelist = DriveInfo.GetDrives();
 
+            List<DetailItem> items = new List<DetailItem>();
+            items.Add(new DetailItem() { Title = "Number of Disk: ", Value = drivelist.Length.ToString() });
+            int cnt = 0;
+            foreach (DriveInfo d in drivelist)
+            {
+                items.Add(new DetailItem() { Title = String.Concat("Drive ", cnt, " - ", d.Name, " - Disk Type : "), Value = d.DriveType.ToString() });
+                if (d.IsReady)
+                {
+                    items.Add(new DetailItem() { Title = String.Concat("Drive ", cnt, " - ", d.Name, " - Total Size : "), Value = String.Concat(d.TotalSize.ToString(), " bytes") });
+                    items.Add(new DetailItem() { Title = String.Concat("Drive ", cnt, " - ", d.Name, " - Free Space : "), Value = String.Concat(d.TotalFreeSpace.ToString(), " bytes") });
+                }
+                else
+                {
+                    items.Add(new DetailItem() { Title = String.Concat("Drive ", cnt, " - ", d.Name, " - Total Size : "), Value = "N/A" });
+                }
+                cnt++;
+            }
             listBox.ItemsSource = items;
         }
 
