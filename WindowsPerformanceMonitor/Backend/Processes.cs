@@ -355,7 +355,7 @@ namespace WindowsPerformanceMonitor.Backend
 
         public double updateDisk(ObservableCollection<ProcessEntry> procList)
         {
-            List<long> diskUsages = new List<long>(new long[procList.Count]);
+            List<float> diskUsages = new List<float>(new float[procList.Count]);
 
             for (int i = 0; i < procList.Count; i++)
             {
@@ -372,13 +372,11 @@ namespace WindowsPerformanceMonitor.Backend
 
                 if (diskUsages[i] != -1)
                 {
-                    diskUsages.Insert(i, 0);
+
                     try
                     {
-                        //TODO : change this to something that actually works --> hard to find good way to list this for some reason
-                        //diskUsages.Insert(i, p.WorkingSet64);
-                        //likely need to use c++ 
-
+                        PerformanceCounter pc = new PerformanceCounter("Process", "IO Data Bytes/sec", p.ProcessName);
+                        diskUsages.Insert(i, pc.NextValue());
                     }
                     catch (Exception)       
                     {
@@ -387,11 +385,14 @@ namespace WindowsPerformanceMonitor.Backend
                 }
             }
 
-            Thread.Sleep(250);
+            Thread.Sleep(50);
             ulong totalDisk = 0;
             foreach (DriveInfo d in DriveInfo.GetDrives())
             {
-                totalDisk = totalDisk + (ulong)d.TotalSize;
+                if (d.IsReady)
+                {
+                    totalDisk = totalDisk + (ulong)d.TotalSize;
+                }
             }
             ulong totalUsed = 0;
             /* Get the current time and total process usage
@@ -415,7 +416,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
                 else if (diskUsages[i] > 0)
                 {
-                    procList[i].Disk = ((double)diskUsages[i] / (double)totalDisk) * 100;
+                    procList[i].Disk = diskUsages[i] * 0.000001;
                     totalUsed += (ulong)diskUsages[i];
                 }
                 else

@@ -127,7 +127,7 @@ namespace WindowsPerformanceMonitor
 
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
+            
         }
 
         private void CheckBoxChanged(object sender, RoutedEventArgs e)
