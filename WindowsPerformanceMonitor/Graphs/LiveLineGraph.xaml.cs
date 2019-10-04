@@ -154,10 +154,65 @@ namespace WindowsPerformanceMonitor.Graphs
                         _trend = comp.TotalCpu;
                         ChartColor = "Red";
                     }
+                    if (StatToGraph == "CPU Temperature")
+                    {
+                        int cpuindex = 0;
+                        for (int i = 0; i < comp.Computer.Hardware.Length; i++)
+                        {
+                            if (comp.Computer.Hardware[i].HardwareType.ToString().Equals("CPU"))
+                            {
+                                cpuindex = i;
+                            }
+                        }
+                        var mycpu = comp.Computer.Hardware[cpuindex];
+                        double tempTotal = 0;
+                        int numTotal = 0;
+                        for (int i = 0; i < mycpu.Sensors.Length; i++)
+                        {
+                            if (mycpu.Sensors[i].SensorType.ToString().Equals("Temperature"))
+                            {
+                                if (mycpu.Sensors[i].Value != null)
+                                {
+                                    numTotal++;
+                                    tempTotal += Convert.ToDouble(mycpu.Sensors[i].Value.ToString());
+                                }
+                            }
+                        }
+                        _trend = tempTotal / numTotal;
+                        ChartColor = "Yellow";
+                    }
                     else if (StatToGraph == "GPU")
                     {
                         _trend = comp.TotalGpu;
                         ChartColor = "Orange";
+                    }
+                    else if (StatToGraph == "GPU Temperature")
+                    {
+                        int gpuindex = 0;
+                        for (int i = 0; i < comp.Computer.Hardware.Length; i++)
+                        {
+                            String tempGPU = comp.Computer.Hardware[i].HardwareType.ToString();
+                            if (tempGPU.Contains("gpu") || tempGPU.Contains("Gpu") || tempGPU.Contains("GPU"))
+                            {
+                                gpuindex = i;
+                            }
+                        }
+                        var mygpu = comp.Computer.Hardware[gpuindex];
+                        double tempTotal = 0;
+                        int numTotal = 0;
+                        for (int i = 0; i < mygpu.Sensors.Length; i++)
+                        {
+                            if (mygpu.Sensors[i].SensorType.ToString().Equals("Temperature"))
+                            {
+                                if (mygpu.Sensors[i].Value != null)
+                                {
+                                    numTotal++;
+                                    tempTotal += Convert.ToDouble(mygpu.Sensors[i].Value.ToString());
+                                }
+                            }
+                        }
+                        _trend = tempTotal / numTotal;
+                        ChartColor = "Pink";
                     }
                     else if (StatToGraph == "Memory")
                     {
