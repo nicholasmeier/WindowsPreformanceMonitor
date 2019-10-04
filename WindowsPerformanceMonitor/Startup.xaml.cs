@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,9 +47,9 @@ namespace WindowsPerformanceMonitor
         // Class for startup applications
         public class WindowsViewModel
         {
-            private ObservableCollection<ProcessEntry> m_Rows;
+            private ObservableCollection<ApplicationStartup> m_Rows;
 
-            public ObservableCollection<ProcessEntry> Rows
+            public ObservableCollection<ApplicationStartup> Rows
             {
                 get { return m_Rows; }
                 set { m_Rows = value; }
@@ -55,7 +57,7 @@ namespace WindowsPerformanceMonitor
 
             public WindowsViewModel()
             {
-                Rows = new ObservableCollection<ProcessEntry>();
+                Rows = new ObservableCollection<ApplicationStartup>();
 
                 RegistryKey localKey;
                 if (Environment.Is64BitOperatingSystem)
@@ -63,24 +65,64 @@ namespace WindowsPerformanceMonitor
                 else
                     localKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
 
-                string[] apps = localKey.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false).GetValueNames();
+                /*string[] apps = localKey.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false).GetValueNames();
 
                 for (int i=0;i<apps.Length;i++)
                 {
-                    Rows.Add(new ProcessEntry
+                    Rows.Add(new ApplicationStartup
                     {
-                        Name = (string)apps.GetValue(i)
+                        Name = (string)apps.GetValue(i),
+                        Status = "Enabled"
+                    });
+                }*/
+
+                string path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
+                RegistryKey subkey = localKey.OpenSubKey(path, false);
+                string[] app_names = subkey.GetValueNames();
+
+                for (int k = 0; k < app_names.Length; k++)
+                {
+                    string final_appname = "";
+                    string app_path = (string)subkey.GetValue((string)app_names.GetValue(k));
+                    string finalpath = app_path;
+
+                    try
+                    {
+                        var result = from Match match in Regex.Matches(app_path, "\"([^\"]*)\"")
+                                     select match.ToString();
+                        foreach (var item in result)
+                        {
+                            finalpath = item.ToString();
+                            finalpath = finalpath.Trim('"');
+                        }
+
+                        // Print the file description.
+                        FileVersionInfo myFileVersionInfo = FileVersionInfo.GetVersionInfo(finalpath);
+                        final_appname = myFileVersionInfo.FileDescription;
+                        //MessageBox.Show(hi);
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //MessageBox.Show((string)app_names.GetValue(k));
+                        final_appname = (string)app_names.GetValue(k);
+                    }
+
+                    Rows.Add(new ApplicationStartup
+                    {
+                        Name = final_appname,
+                        Status = "Enabled"
                     });
                 }
 
-             
             }
         }
 
         // Testing stuff
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            /*
+            
             RegistryKey localKey;
             if (Environment.Is64BitOperatingSystem)
                 localKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
@@ -88,21 +130,37 @@ namespace WindowsPerformanceMonitor
                 localKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
 
             string path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
-            string[] subkey = localKey.OpenSubKey(path, false).GetValueNames();
-            
-            for (int k=0;k<subkey.Length;k++)
+            RegistryKey subkey = localKey.OpenSubKey(path, false);
+
+            string[] app_names = subkey.GetValueNames();
+
+            for (int k=0;k<app_names.Length;k++)
             {
-                //string temp = "TEMP******: ";
-                string temp = (string)localKey.GetValue("StartCN");
-              
-                //(string)subkey.GetValue(k)
-                Console.WriteLine("$$$$: " + temp);
+                string app_path = (string)subkey.GetValue((string)app_names.GetValue(k));
+                string finalpath = app_path;
+
+                try
+                {
+                    var result = from Match match in Regex.Matches(app_path, "\"([^\"]*)\"")
+                                 select match.ToString();
+                    foreach (var item in result)
+                    {
+                        finalpath = item.ToString();
+                        finalpath = finalpath.Trim('"');
+                    }
+
+                    // Print the file description.
+                    FileVersionInfo myFileVersionInfo = FileVersionInfo.GetVersionInfo(finalpath); 
+                    string hi = "File description: " + myFileVersionInfo.FileDescription;
+                    MessageBox.Show(hi);
+
+
+                } catch (Exception ex)
+                {
+                    MessageBox.Show((string)app_names.GetValue(k));
+                }
             }
 
-            //MessageBox.Show("Value: " + subkey.GetValue(0));
-            //Console.Write("Value: " + str_val.ToString());
-            //MessageBox.Show(RegKeys64Bits.ToString());
-            */
         }
     }
 }
