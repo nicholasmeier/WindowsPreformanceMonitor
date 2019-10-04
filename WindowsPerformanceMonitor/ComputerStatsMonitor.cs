@@ -101,6 +101,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
                 obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
                 obj.TotalGpu = getTotalGpuLoad(computer);
+                obj.TotalDisk = processes.updateDisk(obj.ProcessList);
                 obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)));
             }));
 
