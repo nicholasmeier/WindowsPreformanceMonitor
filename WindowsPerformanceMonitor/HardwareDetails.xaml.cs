@@ -34,11 +34,13 @@ namespace WindowsPerformanceMonitor
         public ListBox List { get; set; }
 
         #region Initialization
+
         public HardwareDetails()
         {
             InitializeComponent();
             this.DataContext = this;
-
+            List = lbDetailList;
+            //setCPUValues(lbDetailList);
         }
 
         // Get a reference to main windows when it is available.
@@ -46,13 +48,16 @@ namespace WindowsPerformanceMonitor
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
-
-            List = lbDetailList;
-            setCPUValues(lbDetailList);
         }
+
         #endregion
 
+        // TODO: If we make each of these items their own object, we dont have to worry
+                // about overwriting them when they change. Then we only need to call each one
+                // on load.
+
         #region CPU Details
+
         private void setCPUValues(ListBox listBox)
         {   
             setLogicalCores();
@@ -77,6 +82,7 @@ namespace WindowsPerformanceMonitor
         {
             _logicalCoresCPU = Environment.ProcessorCount;
         }
+
         private void setCores()
         {
             int coreCount = 0;
@@ -86,6 +92,7 @@ namespace WindowsPerformanceMonitor
             }
             _coresCPU = coreCount;
         }
+
         private void setVirtualization()
         {
             if (_logicalCoresCPU > 0)
@@ -97,6 +104,7 @@ namespace WindowsPerformanceMonitor
                 _virtualizationCPU = false;
             }
         }
+
         private void setClockSpeed() // This is stored as Ghz
         {
             ManagementObject Mo = new ManagementObject("Win32_Processor.DeviceID='CPU0'");
@@ -105,6 +113,7 @@ namespace WindowsPerformanceMonitor
             Mo.Dispose();
             _clockSpeedCPU = dp;
         }
+
         private void setCacheSize()
         {
             ManagementClass mc = new ManagementClass("Win32_CacheMemory");
@@ -120,8 +129,11 @@ namespace WindowsPerformanceMonitor
 
             _cacheSizesCPU = cacheSizes;
         }
+
         #endregion
+
         #region GPU Details
+
         private void setGPUValues(ListBox listBox)
         {
             List<DetailItem> items = new List<DetailItem>();
@@ -131,10 +143,12 @@ namespace WindowsPerformanceMonitor
             items.Add(new DetailItem() { Title = "Virtualization:", Value = "True" });
 
             listBox.ItemsSource = items;
-            groupBoxDetails.Header = "GPU Details";
         }
+
         #endregion
+
         #region Memory Details
+
         private void setMemoryValues(ListBox listBox)
         {
             List<DetailItem> items = new List<DetailItem>();
@@ -144,10 +158,12 @@ namespace WindowsPerformanceMonitor
             items.Add(new DetailItem() { Title = "Virtualization:", Value = "False" });
 
             listBox.ItemsSource = items;
-            groupBoxDetails.Header = "Memory Details";
         }
+
         #endregion
+
         #region Disk Details
+
         private void setDiskValues(ListBox listBox)
         {
             List<DetailItem> items = new List<DetailItem>();
@@ -157,10 +173,12 @@ namespace WindowsPerformanceMonitor
             items.Add(new DetailItem() { Title = "Virtualization:", Value = "True" });
 
             listBox.ItemsSource = items;
-            groupBoxDetails.Header = "Disk Details";
         }
+
         #endregion
+
         #region Network Details
+
         private void setNetworkValues(ListBox listBox)
         {
             List<DetailItem> items = new List<DetailItem>();
@@ -170,10 +188,12 @@ namespace WindowsPerformanceMonitor
             items.Add(new DetailItem() { Title = "Virtualization:", Value = "True" });
 
             listBox.ItemsSource = items;
-            groupBoxDetails.Header = "Network Details";
         }
+
         #endregion
+
         #region UI Events
+
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             var radioButton = sender as RadioButton;
@@ -181,18 +201,23 @@ namespace WindowsPerformanceMonitor
             switch (radioButton.Content.ToString())
             {
                 case "CPU":
-                    setCPUValues(List);
+                    setCPUValues(lbDetailList);
+                    groupBoxDetails.Header = "CPU Details";
                     break;
                 case "GPU":
+                    groupBoxDetails.Header = "GPU Details";
                     setGPUValues(List);
                     break;
                 case "Memory":
+                    groupBoxDetails.Header = "Memory Details";
                     setMemoryValues(List);
                     break;
                 case "Disk":
+                    groupBoxDetails.Header = "Disk Details";
                     setDiskValues(List);
                     break;
                 case "Network":
+                    groupBoxDetails.Header = "Network Details";
                     setNetworkValues(List);
                     break;
                 default:
