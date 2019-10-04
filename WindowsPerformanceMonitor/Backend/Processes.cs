@@ -26,11 +26,11 @@ namespace WindowsPerformanceMonitor.Backend
             Process[] processes = Process.GetProcesses();
             for (int i = 0; i < processes.Length; i++)
             {
-                uint ppid;
+/*                uint ppid;
                 using (var wrapper = new Logic())
                 {
                     ppid = wrapper.getppid(processes[i].Id);
-                }
+                }*/
                 ProcessEntry p = new ProcessEntry()
                 {
                     Name = processes[i].ProcessName,
@@ -40,7 +40,7 @@ namespace WindowsPerformanceMonitor.Backend
                     Gpu = 0,
                     Disk = 0,
                     Network = 0,
-                    Ppid = GetParentProcess(processes[i].Id),
+                    Ppid = 0, // change
                     ChildProcesses = new List<ProcessEntry>(),
                     IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
                 };
@@ -385,7 +385,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
             }
 
-            Thread.Sleep(50);
+            Thread.Sleep(100);
             ulong totalDisk = 0;
             foreach (DriveInfo d in DriveInfo.GetDrives())
             {
@@ -424,7 +424,7 @@ namespace WindowsPerformanceMonitor.Backend
                     procList[i].Disk = -1;
                 }
             }
-            return Math.Round(((double)totalUsed / (double)totalDisk) * 100, 2);
+            return totalUsed / (double)totalDisk;
         }
     }
 }

@@ -102,14 +102,14 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
                 obj.TotalGpu = getTotalGpuLoad(computer);
                 obj.TotalDisk = processes.updateDisk(obj.ProcessList);
-                obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)));
+                //obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)));
             }));
 
             Parallel.ForEach(tasks, task => task.Start());
             Task.WaitAll(tasks.ToArray());
             computer.Accept(updateVisitor);
             foreach (var observer in observers) observer.OnNext(obj);
-            Thread.Sleep(500);
+            Thread.Sleep(300);
         }
     }
 
