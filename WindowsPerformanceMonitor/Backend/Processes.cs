@@ -248,6 +248,7 @@ namespace WindowsPerformanceMonitor.Backend
             return Math.Round(((double)totalUsed / (double)totalMem) * 100, 2);
         }
 
+
         /// <summary>
         /// Update gpu usage for a process list
         /// </summary>
@@ -351,6 +352,7 @@ namespace WindowsPerformanceMonitor.Backend
                 return -1;
             }
         }
+
         public double updateDisk(ObservableCollection<ProcessEntry> procList)
         {
             List<long> diskUsages = new List<long>(new long[procList.Count]);
@@ -376,6 +378,7 @@ namespace WindowsPerformanceMonitor.Backend
                         //TODO : change this to something that actually works --> hard to find good way to list this for some reason
                         //diskUsages.Insert(i, p.WorkingSet64);
                         //likely need to use c++ 
+
                     }
                     catch (Exception)       
                     {
