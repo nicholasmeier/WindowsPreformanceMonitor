@@ -131,3 +131,5 @@ C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csproj.CopyComplete
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.exe
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.pdb
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\bin\Debug\System.Diagnostics.PerformanceCounter.dll
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\bin\Debug\System.Diagnostics.PerformanceCounter.xml
