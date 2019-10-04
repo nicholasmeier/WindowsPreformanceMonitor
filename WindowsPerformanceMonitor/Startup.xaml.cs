@@ -80,6 +80,7 @@ namespace WindowsPerformanceMonitor
         // Testing stuff
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            /*
             RegistryKey localKey;
             if (Environment.Is64BitOperatingSystem)
                 localKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
@@ -101,7 +102,7 @@ namespace WindowsPerformanceMonitor
             //MessageBox.Show("Value: " + subkey.GetValue(0));
             //Console.Write("Value: " + str_val.ToString());
             //MessageBox.Show(RegKeys64Bits.ToString());
-
+            */
         }
     }
 }
