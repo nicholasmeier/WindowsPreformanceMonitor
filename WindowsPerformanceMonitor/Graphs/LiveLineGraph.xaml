@@ -6,7 +6,7 @@
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <lvc:CartesianChart Grid.Row="1" AnimationsSpeed="0:0:0.5" Hoverable="False" DataTooltip="{x:Null}">
+    <lvc:CartesianChart Grid.Row="1" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}">
         <lvc:CartesianChart.Series>
             <lvc:LineSeries Values="{Binding ChartValues}" 
                                 PointGeometry="{x:Null}" 
