@@ -13,6 +13,7 @@ using WindowsPerformanceMonitor.Models;
 using System.ComponentModel;
 using System.Linq;
 using System.Globalization;
+using WindowsPerformanceMonitor.Graphs;
 
 namespace WindowsPerformanceMonitor
 {
@@ -121,9 +122,57 @@ namespace WindowsPerformanceMonitor
                 return;
             }
 
-            liveGraph.StatToGraph = radioButton.Content.ToString();
-         }
+            string button = radioButton.Content.ToString();
+            if (radioButton.Content.ToString() == "All")
+            {
+                liveGraph.SeriesVisibility[(int)Series.Cpu] = true;
+                liveGraph.SeriesVisibility[(int)Series.Gpu] = true;
+                liveGraph.SeriesVisibility[(int)Series.Memory] = true;
+                liveGraph.SeriesVisibility[(int)Series.Disk] = true;
+                liveGraph.SeriesVisibility[(int)Series.Network] = true;
+                liveGraph.SeriesVisibility[(int)Series.CpuTemp] = false;
+                liveGraph.SeriesVisibility[(int)Series.GpuTemp] = false;
+            }
+            else if (button == "CPU")
+            {
+                SetVisibilityToFalseExecept((int)Series.Cpu);
+                liveGraph.SeriesVisibility[(int)Series.Cpu] = true;
+            }
+            else if (button == "GPU")
+            {
+                SetVisibilityToFalseExecept((int)Series.Gpu);
+                liveGraph.SeriesVisibility[(int)Series.Gpu] = true;
+            }
+            else if (button == "Memory")
+            {
+                SetVisibilityToFalseExecept((int)Series.Memory);
+                liveGraph.SeriesVisibility[(int)Series.Memory] = true;
+            }
+            else if (button == "Disk")
+            {
+                SetVisibilityToFalseExecept((int)Series.Disk);
+                liveGraph.SeriesVisibility[(int)Series.Disk] = true;
 
+            }
+            else if (button == "GPU Temperature")
+            {
+                SetVisibilityToFalseExecept((int)Series.GpuTemp);
+                liveGraph.SeriesVisibility[(int)Series.GpuTemp] = true;
+            }
+            else if (button == "CPU Temperature")
+            {
+                SetVisibilityToFalseExecept((int)Series.CpuTemp);
+                liveGraph.SeriesVisibility[(int)Series.CpuTemp] = true;
+            }
+        }
+        private void SetVisibilityToFalseExecept(int statIndex)
+        {
+            for (int k = 0; k < 7; k++)
+            {
+                if (statIndex == k) continue;
+                liveGraph.SeriesVisibility[k] = false;
+            }
+        }
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             
