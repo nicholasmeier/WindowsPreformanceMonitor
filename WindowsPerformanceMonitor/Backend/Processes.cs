@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,11 +26,11 @@ namespace WindowsPerformanceMonitor.Backend
             Process[] processes = Process.GetProcesses();
             for (int i = 0; i < processes.Length; i++)
             {
-                uint ppid;
+/*                uint ppid;
                 using (var wrapper = new Logic())
                 {
                     ppid = wrapper.getppid(processes[i].Id);
-                }
+                }*/
                 ProcessEntry p = new ProcessEntry()
                 {
                     Name = processes[i].ProcessName,
@@ -39,7 +40,7 @@ namespace WindowsPerformanceMonitor.Backend
                     Gpu = 0,
                     Disk = 0,
                     Network = 0,
-                    Ppid = GetParentProcess(processes[i].Id),
+                    Ppid = 0, // change
                     ChildProcesses = new List<ProcessEntry>(),
                     IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
                 };
@@ -344,11 +345,86 @@ namespace WindowsPerformanceMonitor.Backend
             {
                 return parentProc.Id;
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 return -1;
             }
+        }
+
+        public double updateDisk(ObservableCollection<ProcessEntry> procList)
+        {
+            List<float> diskUsages = new List<float>(new float[procList.Count]);
+
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    diskUsages.Insert(i, -1);
+                    continue;
+                }
+
+                if (diskUsages[i] != -1)
+                {
+
+                    try
+                    {
+                        PerformanceCounter pc = new PerformanceCounter("Process", "IO Data Bytes/sec", p.ProcessName);
+                        diskUsages.Insert(i, pc.NextValue());
+                    }
+                    catch (Exception)       
+                    {
+                        diskUsages.Insert(i, 0);
+                    }
+                }
+            }
+
+            Thread.Sleep(100);
+            ulong totalDisk = 0;
+            foreach (DriveInfo d in DriveInfo.GetDrives())
+            {
+                if (d.IsReady)
+                {
+                    totalDisk = totalDisk + (ulong)d.TotalSize;
+                }
+            }
+            ulong totalUsed = 0;
+            /* Get the current time and total process usage
+                for each process, calculate Mem usage
+                based on previous */
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    procList[i].Disk = -1;
+                    continue;
+                }
+                if (diskUsages[i] == 0)
+                {
+                    procList[i].Disk = 0;
+                }
+                else if (diskUsages[i] > 0)
+                {
+                    procList[i].Disk = diskUsages[i] * 0.000001;
+                    totalUsed += (ulong)diskUsages[i];
+                }
+                else
+                {
+                    procList[i].Disk = -1;
+                }
+            }
+            return totalUsed / (double)totalDisk;
         }
     }
 }

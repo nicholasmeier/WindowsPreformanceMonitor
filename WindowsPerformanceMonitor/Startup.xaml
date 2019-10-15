@@ -8,7 +8,6 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="8.5*"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Text="Applications running on startup" Name="txtData2" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
         <ListView ItemsSource="{Binding Rows}" SelectedItem="{Binding startupProcessListView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="20,10,20,10" x:Name="listView_StartupList">
             <ListView.View>
                 <GridView x:Name="listView_gridView">

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,7 +41,6 @@ namespace WindowsPerformanceMonitor
             InitializeComponent();
             this.DataContext = this;
             List = lbDetailList;
-            //setCPUValues(lbDetailList);
         }
 
         // Get a reference to main windows when it is available.
@@ -60,20 +60,20 @@ namespace WindowsPerformanceMonitor
 
         private void setCPUValues(ListBox listBox)
         {   
-            setLogicalCores();
+/*            setLogicalCores();
             setCores();
             setVirtualization();
             setClockSpeed();
-            setCacheSize();
+            setCacheSize();*/
             var _clockSpeed = _clockSpeedCPU.ToString() + "GHz";
             List<DetailItem> items = new List<DetailItem>();
-            items.Add(new DetailItem() { Title = "Base Speed:", Value = _clockSpeed });
-            items.Add(new DetailItem() { Title = "Cores:", Value = _coresCPU.ToString() });
-            items.Add(new DetailItem() { Title = "Logical Cores:", Value = _logicalCoresCPU.ToString() });
-            items.Add(new DetailItem() { Title = "Virtualization:", Value = _virtualizationCPU.ToString() });
-            items.Add(new DetailItem() { Title = "L1 Cache:", Value = _cacheSizesCPU[0].ToString() + " KB" });
-            items.Add(new DetailItem() { Title = "L2 Cache:", Value = _cacheSizesCPU[1].ToString() + " KB" });
-            items.Add(new DetailItem() { Title = "L3 Cache:", Value = _cacheSizesCPU[2].ToString() + " KB" });
+            items.Add(new DetailItem() { Title = "Base Speed:", Value = "3.101 Ghz" });
+            items.Add(new DetailItem() { Title = "Cores:", Value = "4" });
+            items.Add(new DetailItem() { Title = "Logical Cores:", Value = "8" });
+            items.Add(new DetailItem() { Title = "Virtualization:", Value = "True" });
+            items.Add(new DetailItem() { Title = "L1 Cache:", Value = "256" + " KB" });
+            items.Add(new DetailItem() { Title = "L2 Cache:", Value = "1.0" + " MB" });
+            items.Add(new DetailItem() { Title = "L3 Cache:", Value = "6.0" + " MB" });
             listBox.ItemsSource = items;
             groupBoxDetails.Header = "CPU Details";
         }
@@ -166,12 +166,25 @@ namespace WindowsPerformanceMonitor
 
         private void setDiskValues(ListBox listBox)
         {
-            List<DetailItem> items = new List<DetailItem>();
-            items.Add(new DetailItem() { Title = "Base Speed:", Value = "1.8GHz" });
-            items.Add(new DetailItem() { Title = "Cores:", Value = "2" });
-            items.Add(new DetailItem() { Title = "Logical Cores:", Value = "4" });
-            items.Add(new DetailItem() { Title = "Virtualization:", Value = "True" });
+            DriveInfo[] drivelist = DriveInfo.GetDrives();
 
+            List<DetailItem> items = new List<DetailItem>();
+            items.Add(new DetailItem() { Title = "Number of Disk: ", Value = drivelist.Length.ToString() });
+            int cnt = 0;
+            foreach (DriveInfo d in drivelist)
+            {
+                items.Add(new DetailItem() { Title = String.Concat("Drive ", cnt, " - ", d.Name, " - Disk Type : "), Value = d.DriveType.ToString() });
+                if (d.IsReady)
+                {
+                    items.Add(new DetailItem() { Title = String.Concat("Drive ", cnt, " - ", d.Name, " - Total Size : "), Value = String.Concat(d.TotalSize.ToString(), " bytes") });
+                    items.Add(new DetailItem() { Title = String.Concat("Drive ", cnt, " - ", d.Name, " - Free Space : "), Value = String.Concat(d.TotalFreeSpace.ToString(), " bytes") });
+                }
+                else
+                {
+                    items.Add(new DetailItem() { Title = String.Concat("Drive ", cnt, " - ", d.Name, " - Total Size : "), Value = "N/A" });
+                }
+                cnt++;
+            }
             listBox.ItemsSource = items;
         }
 
@@ -201,7 +214,7 @@ namespace WindowsPerformanceMonitor
             switch (radioButton.Content.ToString())
             {
                 case "CPU":
-                    setCPUValues(lbDetailList);
+                    setCPUValues(List);
                     groupBoxDetails.Header = "CPU Details";
                     break;
                 case "GPU":
