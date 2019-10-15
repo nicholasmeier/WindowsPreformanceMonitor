@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using LiveCharts;
 using LiveCharts.Configurations;
+using LiveCharts.Wpf;
+using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor.Graphs
@@ -16,16 +21,34 @@ namespace WindowsPerformanceMonitor.Graphs
         private double _axisMin;
         private double _trend;
         private string _chartColor;
+        private bool _cpuSeriesVisibility;
+        private bool _gpuSeriesVisibility;
+        private bool _memorySeriesVisibility;
+        private bool _diskSeriesVisibility;
+        private bool _networkSeriesVisibility;
+        private bool _cpuTempSeriesVisibility;
+        private bool _gpuTempSeriesVisibility;
 
-        public ChartValues<MeasureModel> ChartValues { get; set; }
+        private ObservableCollection<bool> _seriesVisibility;
+
+        public SeriesCollection SeriesCollection { get; set; }
+        public AxesCollection AxisYCollection { get; set; }
         public Func<double, string> DateTimeFormatter { get; set; }
         public double AxisStep { get; set; }
         public double AxisUnit { get; set; }
         public int ProcessPid { get; set; }
-        public string StatToGraph { get; set; }
+        public LineSeries CpuSeries { get; set; }
+        public LineSeries GpuSeries { get; set; }
+        public LineSeries MemorySeries { get; set; }
+        public LineSeries DiskSeries { get; set; }
+        public LineSeries NetworkSeries { get; set; }
+        public LineSeries CpuTempSeries { get; set; }
+        public LineSeries GpuTempSeries { get; set; }
+
 
         public LiveLineGraph()
         {
+            InitLineSeries();
             InitializeComponent();
 
             HardwareObserver observer = new HardwareObserver(UpdateValues);
@@ -41,9 +64,6 @@ namespace WindowsPerformanceMonitor.Graphs
             // Save the mapper globally.
             Charting.For<MeasureModel>(mapper);
 
-            // The values property will store our values array
-            ChartValues = new ChartValues<MeasureModel>();
-
             // Set how to display the X Labels
             DateTimeFormatter = value => new DateTime((long)value).ToString("mm:ss");
 
@@ -57,12 +77,59 @@ namespace WindowsPerformanceMonitor.Graphs
 
             SetAxisLimits(DateTime.Now);
         }
+        
+        private void InitLineSeries()
+        {
+            SeriesVisibility = new ObservableCollection<bool>();
+            for (int i = 0; i < 7; i++)
+            {
+                SeriesVisibility.Add(false);
+            }
+
+            SeriesVisibility[(int)Series.Cpu] = true;
+            SeriesVisibility[(int)Series.Gpu] = false;
+            SeriesVisibility[(int)Series.Memory] = false;
+            SeriesVisibility[(int)Series.Disk] = false;
+            SeriesVisibility[(int)Series.Network] = false;
+            SeriesVisibility[(int)Series.CpuTemp] = false;
+            SeriesVisibility[(int)Series.GpuTemp] = false;
+
+            CpuSeries = new LineSeries { Title = "Cpu", Values = new ChartValues<MeasureModel>(), ScalesYAt = 0 };
+            GpuSeries = new LineSeries { Title = "Gpu", Values = new ChartValues<MeasureModel>(), ScalesYAt = 0 };
+            MemorySeries = new LineSeries { Title = "Memory", Values = new ChartValues<MeasureModel>(), ScalesYAt = 0 };
+            DiskSeries = new LineSeries { Title = "Disk", Values = new ChartValues<MeasureModel>(), ScalesYAt = 0 };
+            NetworkSeries = new LineSeries { Title = "Network", Values = new ChartValues<MeasureModel>(), ScalesYAt = 0 };
+            CpuTempSeries = new LineSeries { Title = "CpuTemp", Values = new ChartValues<MeasureModel>(), ScalesYAt = 0 };
+            GpuTempSeries = new LineSeries { Title = "GpuTemp", Values = new ChartValues<MeasureModel>(), ScalesYAt = 0 };
+
+            SeriesCollection = new SeriesCollection
+            {
+                CpuSeries,
+                GpuSeries,
+                MemorySeries,
+                DiskSeries,
+                NetworkSeries,
+                CpuTempSeries,
+                GpuTempSeries
+            };
+        }
 
         private void UpdateValues(ComputerObj comp)
         {
             Read(comp);
         }
 
+        public int i = 0;
+        public void Read(ComputerObj comp)
+        {
+            var now = DateTime.Now;
+            Trend trend = GetTrend(comp);
+            AddChartValues(trend, now);
+            SetAxisLimits(now);
+            ClearChartValues();
+        }
+
+        #region OnChange Events
         public double AxisMax
         {
             get { return _axisMax; }
@@ -92,157 +159,80 @@ namespace WindowsPerformanceMonitor.Graphs
             }
         }
 
-        public bool IsReading { get; set; }
-
-        public void Read(ComputerObj comp)
+        public ObservableCollection<bool> SeriesVisibility
         {
-            var now = DateTime.Now;
-
-            _trend = GetTrend(comp);
-
-            ChartValues.Add(new MeasureModel
+            get { return _seriesVisibility; }
+            set
             {
-                DateTime = now,
-                Value = _trend
-            });
-
-            SetAxisLimits(now);
-
-            if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
-       
+                _seriesVisibility = value;
+                OnPropertyChanged("SeriesVisibility");
+            }
         }
 
-        private double GetTrend(ComputerObj comp)
+        #endregion
+
+        private void AddChartValues(Trend _trend, DateTime now)
         {
-            // Probably not the best way, but it works.
-            double _trend = 0;
+            Console.WriteLine(CpuSeries);
+            CpuSeries.Values.Add(new MeasureModel { DateTime = now, Value = _trend.Cpu });
+            GpuSeries.Values.Add(new MeasureModel { DateTime = now, Value = _trend.Gpu });
+            MemorySeries.Values.Add(new MeasureModel { DateTime = now, Value = _trend.Memory });
+            DiskSeries.Values.Add(new MeasureModel { DateTime = now, Value = _trend.Disk });
+            NetworkSeries.Values.Add(new MeasureModel { DateTime = now, Value = _trend.Network });
+            CpuTempSeries.Values.Add(new MeasureModel { DateTime = now, Value = _trend.CpuTemp });
+            GpuTempSeries.Values.Add(new MeasureModel { DateTime = now, Value = _trend.GpuTemp });
+        }
+        private void ClearChartValues()
+        {
+            for (int i = 0; i < SeriesCollection.Count; i++)
+            {
+                if (SeriesCollection[i].Values.Count > 25)
+                {
+                    SeriesCollection[i].Values.RemoveAt(0);
+                }
+            }
+        }
+
+        private Trend GetTrend(ComputerObj comp)
+        {
+            Trend _trend = new Trend();
+            Hardware hw = new Hardware();
 
             try
             {
                 if (ProcessPid > 0)
                 {
-                    if (StatToGraph == "CPU")
-                    {
-                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Cpu;
-                        ChartColor = "Red";
-                    }
-                    else if (StatToGraph == "GPU")
-                    {
-                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Gpu;
-                        ChartColor = "Orange";
-                    }
-                    else if (StatToGraph == "Memory")
-                    {
-                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Memory;
-                        ChartColor = "Green";
-                    }
-                    else if (StatToGraph == "Disk")
-                    {
-                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Disk;
-                        ChartColor = "Blue";
-                    }
-                    else if (StatToGraph == "Network")
-                    {
-                        _trend = comp.ProcessList.First(p => p.Pid == ProcessPid).Network;
-                        ChartColor = "Purple";
-                    }
+                        _trend.Cpu = comp.ProcessList.First(p => p.Pid == ProcessPid).Cpu;
+                        _trend.Gpu = comp.ProcessList.First(p => p.Pid == ProcessPid).Gpu;
+                        _trend.Memory = comp.ProcessList.First(p => p.Pid == ProcessPid).Memory;
+                        _trend.Disk = comp.ProcessList.First(p => p.Pid == ProcessPid).Disk;
+                        _trend.Network = comp.ProcessList.First(p => p.Pid == ProcessPid).Network;
+                        _trend.CpuTemp = hw.CpuTemp(comp);
+                        _trend.GpuTemp = hw.GpuTemp(comp);
                 }
                 else
                 {
-                    if (StatToGraph == "CPU")
-                    {
-                        _trend = comp.TotalCpu;
-                        ChartColor = "Red";
-                    }
-                    if (StatToGraph == "CPU Temperature")
-                    {
-                        int cpuindex = 0;
-                        for (int i = 0; i < comp.Computer.Hardware.Length; i++)
-                        {
-                            if (comp.Computer.Hardware[i].HardwareType.ToString().Equals("CPU"))
-                            {
-                                cpuindex = i;
-                            }
-                        }
-                        var mycpu = comp.Computer.Hardware[cpuindex];
-                        double tempTotal = 0;
-                        int numTotal = 0;
-                        for (int i = 0; i < mycpu.Sensors.Length; i++)
-                        {
-                            if (mycpu.Sensors[i].SensorType.ToString().Equals("Temperature"))
-                            {
-                                if (mycpu.Sensors[i].Value != null)
-                                {
-                                    numTotal++;
-                                    tempTotal += Convert.ToDouble(mycpu.Sensors[i].Value.ToString());
-                                }
-                            }
-                        }
-                        _trend = tempTotal / numTotal;
-                        ChartColor = "Yellow";
-                    }
-                    else if (StatToGraph == "GPU")
-                    {
-                        _trend = comp.TotalGpu;
-                        ChartColor = "Orange";
-                    }
-                    else if (StatToGraph == "GPU Temperature")
-                    {
-                        int gpuindex = 0;
-                        for (int i = 0; i < comp.Computer.Hardware.Length; i++)
-                        {
-                            String tempGPU = comp.Computer.Hardware[i].HardwareType.ToString();
-                            if (tempGPU.Contains("gpu") || tempGPU.Contains("Gpu") || tempGPU.Contains("GPU"))
-                            {
-                                gpuindex = i;
-                            }
-                        }
-                        var mygpu = comp.Computer.Hardware[gpuindex];
-                        double tempTotal = 0;
-                        int numTotal = 0;
-                        for (int i = 0; i < mygpu.Sensors.Length; i++)
-                        {
-                            if (mygpu.Sensors[i].SensorType.ToString().Equals("Temperature"))
-                            {
-                                if (mygpu.Sensors[i].Value != null)
-                                {
-                                    numTotal++;
-                                    tempTotal += Convert.ToDouble(mygpu.Sensors[i].Value.ToString());
-                                }
-                            }
-                        }
-                        _trend = tempTotal / numTotal;
-                        ChartColor = "Pink";
-                    }
-                    else if (StatToGraph == "Memory")
-                    {
-                        _trend = comp.TotalMemory;
-                        ChartColor = "Green";
-                    }
-                    else if (StatToGraph == "Disk")
-                    {
-                        _trend = comp.TotalDisk;
-                        ChartColor = "Blue";
-                    }
-                    else if (StatToGraph == "Network")
-                    {
-                        _trend = comp.TotalNetwork;
-                        ChartColor = "Purple";
-                    }
+                    _trend.Cpu = comp.TotalCpu;
+                    _trend.Gpu = comp.TotalGpu;
+                    _trend.Memory = comp.TotalMemory;
+                    _trend.Disk = comp.TotalDisk;
+                    _trend.Network = comp.TotalNetwork;
+                    _trend.CpuTemp = hw.CpuTemp(comp);
+                    _trend.GpuTemp = hw.GpuTemp(comp);
                 }
             }
             catch (Exception) // Process was killed but still trying to graph.
             {
-                _trend = 0;
+                _trend.Cpu = 0;
+                _trend.CpuTemp = 0;
+                _trend.Gpu = 0;
+                _trend.GpuTemp = 0;
+                _trend.Memory = 0;
+                _trend.Disk = 0;
+                _trend.Network = 0;
             }
-           
-
+          
             return _trend;
-        }
-
-        public void Clear()
-        {
-            ChartValues.Clear();
         }
 
         private void SetAxisLimits(DateTime now)

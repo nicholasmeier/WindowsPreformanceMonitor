@@ -96,12 +96,9 @@
             <ScrollViewer Height="140" VerticalScrollBarVisibility="Auto">
                 <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="170" Margin="20,5,20,10">
                     <StackPanel x:Name="radioButtons">
-                        <StackPanel.Resources>
-                            <Style TargetType="{x:Type RadioButton}">
-                                <Setter Property="Margin" Value="5,5,0,0"/>
-                            </Style>
-                        </StackPanel.Resources>
-                        <RadioButton Content="CPU" IsChecked="True" Checked="RadioButton_Checked"/>
+
+                        <RadioButton Content="All" IsChecked="True" Checked="RadioButton_Checked"/>
+                        <RadioButton Content="CPU" IsChecked="False" Checked="RadioButton_Checked"/>
                         <RadioButton Content="GPU" Checked="RadioButton_Checked"/>
                         <RadioButton Content="Memory" Checked="RadioButton_Checked"/>
                         <RadioButton Content="Disk" Checked="RadioButton_Checked"/>
