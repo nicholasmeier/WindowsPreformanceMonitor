@@ -257,15 +257,22 @@ namespace WindowsPerformanceMonitor
 
         #endregion
 
-        private void Show_Click(object sender, RoutedEventArgs e)
+        private void Legend_Click(object sender, RoutedEventArgs e)
         {
             GraphLegend legend = new GraphLegend();
             legend.ShowDialog();
         }
 
-        private void Show_Summary(object sender, RoutedEventArgs e)
+        private void Summary_Click(object sender, RoutedEventArgs e)
         {
             SummaryView summary = new SummaryView(Application.Current.MainWindow);
+            summary.Show();
+            Application.Current.MainWindow.Hide();
+        }
+
+        private void General_Click(object sender, RoutedEventArgs e)
+        {
+            GeneralView summary = new GeneralView(Application.Current.MainWindow);
             summary.Show();
             Application.Current.MainWindow.Hide();
         }

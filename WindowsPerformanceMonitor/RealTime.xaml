@@ -83,10 +83,13 @@
 
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Click="Show_Summary" Margin="20, 5, 0, 0">Summary View</Button>
+                    <Button Click="Summary_Click" Margin="20,5,0,0" Width="75">Summary</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Click="General_Click" Margin="5,5,0,0" Width="75">General</Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Margin="0,5,20,0" Click="Show_Click">View Legend</Button>
+                    <Button Click="Legend_Click" Margin="0,5,20,0" Width="75">Legend</Button>
                 </StackPanel>
             </Grid>
             <ComboBox 

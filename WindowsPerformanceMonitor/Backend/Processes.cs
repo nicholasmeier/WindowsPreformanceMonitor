@@ -26,11 +26,11 @@ namespace WindowsPerformanceMonitor.Backend
             Process[] processes = Process.GetProcesses();
             for (int i = 0; i < processes.Length; i++)
             {
-/*                uint ppid;
-                using (var wrapper = new Logic())
-                {
-                    ppid = wrapper.getppid(processes[i].Id);
-                }*/
+                /*                uint ppid;
+                                using (var wrapper = new Logic())
+                                {
+                                    ppid = wrapper.getppid(processes[i].Id);
+                                }*/
                 ProcessEntry p = new ProcessEntry()
                 {
                     Name = processes[i].ProcessName,
@@ -42,8 +42,18 @@ namespace WindowsPerformanceMonitor.Backend
                     Network = 0,
                     Ppid = 0, // change
                     ChildProcesses = new List<ProcessEntry>(),
-                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
+                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
                 };
+
+                try
+                {
+                    p.ApplicationName = processes[i].MainModule.ModuleName;
+                }
+                catch (Exception)
+                {
+                    p.ApplicationName = "Access Denied";
+                }
+
                 processEntries.Add(p);
             }
 

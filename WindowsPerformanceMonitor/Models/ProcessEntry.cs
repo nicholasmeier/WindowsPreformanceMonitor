@@ -16,9 +16,9 @@ namespace WindowsPerformanceMonitor.Models
         public double Disk { get; set; }
         public double Network { get; set; }
         public bool IsApplication { get; set; }
+        public string ApplicationName { get; set; }
         public int Ppid { get; set; }
         public List<ProcessEntry> ChildProcesses { get; set; }
-
         public int parentPid { get; set; }
     }
 }
