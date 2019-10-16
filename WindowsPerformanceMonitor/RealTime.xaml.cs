@@ -262,5 +262,12 @@ namespace WindowsPerformanceMonitor
             GraphLegend legend = new GraphLegend();
             legend.ShowDialog();
         }
+
+        private void Show_Summary(object sender, RoutedEventArgs e)
+        {
+            SummaryView summary = new SummaryView(Application.Current.MainWindow);
+            summary.Show();
+            Application.Current.MainWindow.Hide();
+        }
     }
 }

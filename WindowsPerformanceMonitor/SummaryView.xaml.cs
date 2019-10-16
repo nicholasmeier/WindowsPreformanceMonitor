@@ -19,9 +19,19 @@ namespace WindowsPerformanceMonitor
     /// </summary>
     public partial class SummaryView : Window
     {
-        public SummaryView()
+
+        public Window mainWindowRef = null;
+
+        public SummaryView(Window window)
         {
             InitializeComponent();
+            mainWindowRef = window;
+        }
+
+        private void DetailedView_Click(object sender, System.EventArgs e)
+        {
+            this.Close();
+            mainWindowRef.Show();
         }
     }
 }

@@ -83,7 +83,7 @@
 
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <CheckBox HorizontalAlignment="Left" Height="20" Width="100" Grid.Row="0" Content="Detailed View" IsChecked="True" Checked="CheckBoxChanged" Margin="20,5,0,0"/>
+                    <Button Click="Show_Summary" Margin="20, 5, 0, 0">Summary View</Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Margin="0,5,20,0" Click="Show_Click">View Legend</Button>
