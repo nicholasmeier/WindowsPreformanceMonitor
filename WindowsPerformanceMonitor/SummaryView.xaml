@@ -17,9 +17,9 @@
         <Rectangle Grid.Row="1" Fill="#FF3255F0" Opacity="0.1"></Rectangle>
         <Rectangle Grid.Row="2" Fill="#FFF33229" Opacity="0.1"></Rectangle>
         <Rectangle Grid.Row="3" Fill="#FF32F03B" Opacity="0.1"></Rectangle>
-        <TextBlock Grid.Row="1" FontSize="15" Padding="20,15" Grid.RowSpan="2">CPU : 5%</TextBlock>
-        <TextBlock Grid.Row="2" FontSize="15" Padding="20,15" Grid.RowSpan="2">GPU : 2%</TextBlock>
-        <TextBlock Grid.Row="3" FontSize="15" Padding="20,15" Grid.RowSpan="2">Disk : 0%</TextBlock>
+        <TextBlock Grid.Row="1" FontSize="15" Padding="20,15" Grid.RowSpan="2" Text="{Binding TotalCpu}"/>
+        <TextBlock Grid.Row="2" FontSize="15" Padding="20,15" Grid.RowSpan="2" Text="{Binding TotalCpu, StringFormat=N2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+        <TextBlock Grid.Row="3" FontSize="15" Padding="20,15" Grid.RowSpan="2" Text="{Binding TotalMemory, StringFormat=N2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
         <graph:LiveLineGraph Grid.Row="1"  Margin="10,10,10,10" x:Name="liveGraph1" Width="250" Height="150"/>
         <graph:LiveLineGraph  Grid.Row="2" Margin="10,10,10,10" x:Name="liveGraph2" Width="250" Height="150"/>
         <graph:LiveLineGraph  Grid.Row="3" Margin="10,10,10,10" x:Name="liveGraph3" Width="250" Height="150"/>

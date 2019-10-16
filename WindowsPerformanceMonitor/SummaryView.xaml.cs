@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WindowsPerformanceMonitor.Graphs;
+using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor
 {
@@ -21,11 +24,49 @@ namespace WindowsPerformanceMonitor
     {
 
         public Window mainWindowRef = null;
+        private double _totalCpu;
+        private double _totalGpu;
+        private double _totalMemory;
 
         public SummaryView(Window window)
         {
             InitializeComponent();
+            HardwareObserver observer = new HardwareObserver(UpdateValues);
+            Globals.provider.Subscribe(observer);
             mainWindowRef = window;
+            InitGraphs();
+        }
+
+        public void InitGraphs()
+        {
+            liveGraph1.ProcessPid = 0;
+            liveGraph2.ProcessPid = 0;
+            liveGraph3.ProcessPid = 0;
+            SetVisibilityToFalseExecept(liveGraph1, (int)Series.Cpu);
+            SetVisibilityToFalseExecept(liveGraph2, (int)Series.Gpu);
+            SetVisibilityToFalseExecept(liveGraph3, (int)Series.Memory);
+            liveGraph1.SeriesVisibility[(int)Series.Cpu] = true;
+            liveGraph2.SeriesVisibility[(int)Series.Gpu] = true;
+            liveGraph3.SeriesVisibility[(int)Series.Memory] = true;
+        }
+
+        private void SetVisibilityToFalseExecept(LiveLineGraph graph, int statIndex)
+        {
+            for (int k = 0; k < 7; k++)
+            {
+                if (statIndex == k) continue;
+                graph.SeriesVisibility[k] = false;
+            }
+        }
+
+        public void UpdateValues(ComputerObj comp)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                TotalCpu = comp.TotalCpu;
+                TotalGpu = comp.TotalGpu;
+                TotalMemory = comp.TotalMemory;
+            });
         }
 
         private void DetailedView_Click(object sender, System.EventArgs e)
@@ -33,5 +74,46 @@ namespace WindowsPerformanceMonitor
             this.Close();
             mainWindowRef.Show();
         }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public double TotalCpu
+        {
+            get { return _totalCpu; }
+            set
+            {
+                _totalCpu = value;
+                OnPropertyChanged(nameof(TotalCpu));
+            }
+        }
+
+        public double TotalGpu
+        {
+            get { return _totalGpu; }
+            set
+            {
+                _totalGpu = value;
+                OnPropertyChanged(nameof(TotalGpu));
+            }
+        }
+
+        public double TotalMemory
+        {
+            get { return _totalMemory; }
+            set
+            {
+                _totalMemory = value;
+                OnPropertyChanged(nameof(TotalMemory));
+            }
+        }
+
+        #endregion
     }
 }
