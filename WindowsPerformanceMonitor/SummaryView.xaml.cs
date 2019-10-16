@@ -34,7 +34,15 @@ namespace WindowsPerformanceMonitor
             HardwareObserver observer = new HardwareObserver(UpdateValues);
             Globals.provider.Subscribe(observer);
             mainWindowRef = window;
+            InitText();
             InitGraphs();
+        }
+
+        public void InitText()
+        {
+            t1.Text = $"CPU: 0%";
+            t2.Text = $"GPU: 0%";
+            t3.Text = $"Memory: 0%";
         }
 
         public void InitGraphs()
@@ -63,8 +71,9 @@ namespace WindowsPerformanceMonitor
         {
             this.Dispatcher.Invoke(() =>
             {
-                TotalCpu = comp.TotalCpu;
-                TotalGpu = comp.TotalGpu;
+                t1.Text = $"CPU: {comp.TotalCpu}%";
+                t2.Text = $"GPU: {comp.TotalGpu}%";
+                t3.Text = $"Memory: {comp.TotalMemory}%";
                 TotalMemory = comp.TotalMemory;
             });
         }
