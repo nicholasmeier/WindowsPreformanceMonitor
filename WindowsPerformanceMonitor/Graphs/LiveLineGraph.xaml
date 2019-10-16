@@ -11,13 +11,13 @@
     </UserControl.Resources>
     <lvc:CartesianChart Grid.Row="1" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}">
         <lvc:CartesianChart.Series>
-            <lvc:LineSeries  Values="{Binding CpuSeries.Values}" Visibility="{Binding SeriesVisibility[0], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent"/>
-            <lvc:LineSeries  Values="{Binding GpuSeries.Values}" Visibility="{Binding SeriesVisibility[1], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent"/>
-            <lvc:LineSeries  Values="{Binding MemorySeries.Values}" Visibility="{Binding SeriesVisibility[2], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent"/>
-            <lvc:LineSeries  Values="{Binding DiskSeries.Values}" Visibility="{Binding SeriesVisibility[3], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent"/>
-            <lvc:LineSeries  Values="{Binding Network.Values}" Visibility="{Binding SeriesVisibility[4], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent"/>
-            <lvc:LineSeries  Values="{Binding CpuTempSeries.Values}" Visibility="{Binding SeriesVisibility[5], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent"/>
-            <lvc:LineSeries  Values="{Binding GpuTempSeries.Values}" Visibility="{Binding SeriesVisibility[6], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent"/>
+            <lvc:LineSeries  Values="{Binding CpuSeries.Values}" Visibility="{Binding SeriesVisibility[0], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent" Stroke="Red"/>
+            <lvc:LineSeries  Values="{Binding GpuSeries.Values}" Visibility="{Binding SeriesVisibility[1], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent" Stroke="Orange"/>
+            <lvc:LineSeries  Values="{Binding MemorySeries.Values}" Visibility="{Binding SeriesVisibility[2], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent" Stroke="Green"/>
+            <lvc:LineSeries  Values="{Binding DiskSeries.Values}" Visibility="{Binding SeriesVisibility[3], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent" Stroke="Blue"/>
+            <lvc:LineSeries  Values="{Binding Network.Values}" Visibility="{Binding SeriesVisibility[4], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent" Stroke="MediumPurple"/>
+            <lvc:LineSeries  Values="{Binding CpuTempSeries.Values}" Visibility="{Binding SeriesVisibility[5], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent" Stroke="Black"/>
+            <lvc:LineSeries  Values="{Binding GpuTempSeries.Values}" Visibility="{Binding SeriesVisibility[6], Converter={StaticResource bvc}}" PointGeometry="{x:Null}" LineSmoothness=".5" StrokeThickness="1" Fill="Transparent" Stroke="Pink"/>
         </lvc:CartesianChart.Series>
         <lvc:CartesianChart.AxisX>
             <lvc:Axis LabelFormatter="{Binding DateTimeFormatter}" 

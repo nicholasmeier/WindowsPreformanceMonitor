@@ -80,7 +80,15 @@
         
         <!-- Bottom Row (Process List) -->
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-            <CheckBox HorizontalAlignment="Left" Height="20" Width="100" Grid.Row="0" Content="Detailed View" IsChecked="True" Checked="CheckBoxChanged" Margin="20,10,20,0"/>
+
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <CheckBox HorizontalAlignment="Left" Height="20" Width="100" Grid.Row="0" Content="Detailed View" IsChecked="True" Checked="CheckBoxChanged" Margin="20,5,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Margin="0,5,20,0" Click="Show_Click">View Legend</Button>
+                </StackPanel>
+            </Grid>
             <ComboBox 
                 ItemsSource="{Binding procListComboBox}"
                 DisplayMemberPath="Name"

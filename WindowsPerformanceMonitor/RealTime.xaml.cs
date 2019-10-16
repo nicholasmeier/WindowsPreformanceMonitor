@@ -148,6 +148,11 @@ namespace WindowsPerformanceMonitor
                 SetVisibilityToFalseExecept((int)Series.Memory);
                 liveGraph.SeriesVisibility[(int)Series.Memory] = true;
             }
+            else if (button == "Network")
+            {
+                SetVisibilityToFalseExecept((int)Series.Network);
+                liveGraph.SeriesVisibility[(int)Series.Network] = true;
+            }
             else if (button == "Disk")
             {
                 SetVisibilityToFalseExecept((int)Series.Disk);
@@ -251,5 +256,11 @@ namespace WindowsPerformanceMonitor
         }
 
         #endregion
+
+        private void Show_Click(object sender, RoutedEventArgs e)
+        {
+            GraphLegend legend = new GraphLegend();
+            legend.ShowDialog();
+        }
     }
 }

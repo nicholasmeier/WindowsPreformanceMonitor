@@ -132,5 +132,7 @@ C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csproj.CopyComplete
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.exe
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.pdb
-C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\SummaryView.g.cs
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\SummaryView.baml
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csprojAssemblyReference.cache
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\GraphLegend.g.cs
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\GraphLegend.baml

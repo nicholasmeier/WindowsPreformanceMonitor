@@ -1,0 +1,55 @@
+﻿<Window x:Class="WindowsPerformanceMonitor.GraphLegend"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WindowsPerformanceMonitor"
+        mc:Ignorable="d"
+        Title="GraphLegend" Height="225" Width="150">
+    <Grid>
+        <StackPanel Margin="5,5,5,5">
+            <Label>
+                <StackPanel Orientation="Horizontal">
+                    <AccessText Text="CPU" />
+                    <Image Source="http://cdn1.iconfinder.com/data/icons/fatcow/16/bullet_red.png" />
+                </StackPanel>
+            </Label>
+            <Label>
+                <StackPanel Orientation="Horizontal">
+                    <AccessText Text="GPU" />
+                    <Image Source="http://cdn1.iconfinder.com/data/icons/fatcow/16/bullet_orange.png" />
+                </StackPanel>
+            </Label>
+            <Label>
+                <StackPanel Orientation="Horizontal">
+                    <AccessText Text="Memory" />
+                    <Image Source="http://cdn1.iconfinder.com/data/icons/fatcow/16/bullet_green.png" />
+                </StackPanel>
+            </Label>
+            <Label>
+                <StackPanel Orientation="Horizontal">
+                    <AccessText Text="Disk" />
+                    <Image Source="http://cdn1.iconfinder.com/data/icons/fatcow/16/bullet_blue.png" />
+                </StackPanel>
+            </Label>
+            <Label>
+                <StackPanel Orientation="Horizontal">
+                    <AccessText Text="Network" />
+                    <Image Source="http://cdn1.iconfinder.com/data/icons/fatcow/16/bullet_purple.png" />
+                </StackPanel>
+            </Label>
+            <Label>
+                <StackPanel Orientation="Horizontal">
+                    <AccessText Text="CPU Temperature" />
+                    <Image Source="http://cdn1.iconfinder.com/data/icons/fatcow/16/bullet_black.png" />
+                </StackPanel>
+            </Label>
+            <Label>
+                <StackPanel Orientation="Horizontal">
+                    <AccessText Text="GPU Temperature" />
+                    <Image Source="http://cdn1.iconfinder.com/data/icons/fatcow/16/bullet_pink.png" />
+                </StackPanel>
+            </Label>
+        </StackPanel>
+    </Grid>
+</Window>

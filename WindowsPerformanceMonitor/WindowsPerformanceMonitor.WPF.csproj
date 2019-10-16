@@ -80,6 +80,9 @@
     <Compile Include="Backend\Processes.cs" />
     <Compile Include="ComputerStatsMonitor.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="GraphLegend.xaml.cs">
+      <DependentUpon>GraphLegend.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graphs\Series.cs" />
     <Compile Include="Graphs\LiveLineGraph.xaml.cs">
       <DependentUpon>LiveLineGraph.xaml</DependentUpon>
@@ -105,6 +108,10 @@
     <Compile Include="Startup.xaml.cs">
       <DependentUpon>Startup.xaml</DependentUpon>
     </Compile>
+    <Page Include="GraphLegend.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Graphs\LiveLineGraph.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
