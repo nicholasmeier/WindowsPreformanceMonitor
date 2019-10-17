@@ -145,8 +145,11 @@ namespace WindowsPerformanceMonitor.Backend
                     if (tree.ContainsKey(entry.Value.Ppid))
                     {
                         tree[entry.Value.Ppid].ChildProcesses.Add(entry.Value);
-                    }
-                    else
+                    } else if (dict.ContainsKey(entry.Value.Ppid))
+                    {
+                        tree[entry.Value.Ppid] = dict[entry.Value.Ppid];
+                        tree[entry.Value.Ppid].ChildProcesses.Add(entry.Value);
+                    } else
                     {
                         tree[entry.Value.Pid] = entry.Value;
                     }
