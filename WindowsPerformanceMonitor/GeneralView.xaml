@@ -17,13 +17,13 @@
             ItemsSource="{Binding Applications}" 
             Grid.Row="1" 
             Margin="20,10,20,10" 
-            x:Name="listView_ProcList"
+            x:Name="listView"
             >
             <ListView.View>
                 <GridView x:Name="listView_gridView">
                     <GridViewColumn Header="Application" 
                                     Width="247"
-                                    DisplayMemberBinding="{Binding Name}"/>
+                                    DisplayMemberBinding="{Binding ApplicationName}"/>
                     
                 </GridView>
             </ListView.View>

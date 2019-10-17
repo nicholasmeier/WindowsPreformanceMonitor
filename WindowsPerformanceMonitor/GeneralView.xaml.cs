@@ -40,7 +40,8 @@ namespace WindowsPerformanceMonitor
         {
             this.Dispatcher.Invoke(() =>
             {
-                Applications = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
+                Applications = new ObservableCollection<ProcessEntry>(comp.ProcessList.Where(p => p.IsApplication == true));
+                listView.ItemsSource = Applications;
             });
         }
 
