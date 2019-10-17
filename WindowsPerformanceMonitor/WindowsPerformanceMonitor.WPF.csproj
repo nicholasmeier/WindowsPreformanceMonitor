@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="Models\ApplicationStartup.cs" />
     <Compile Include="Models\ComputerObj.cs" />
+    <Compile Include="Models\CPUHardwareDetails.cs" />
     <Compile Include="Models\MeasureModel.cs" />
     <Compile Include="Models\ProcessEntry.cs" />
     <Compile Include="Models\Trend.cs" />
