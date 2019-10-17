@@ -24,40 +24,101 @@ namespace WindowsPerformanceMonitor.Backend
             List<ProcessEntry> processEntries = new List<ProcessEntry>();
 
             Process[] processes = Process.GetProcesses();
-            for (int i = 0; i < processes.Length; i++)
+            
+            if (processes.Length % 8 == 0)
             {
-                /*                uint ppid;
-                                using (var wrapper = new Logic())
-                                {
-                                    ppid = wrapper.getppid(processes[i].Id);
-                                }*/
+                List<ProcessEntry> l1 = new List<ProcessEntry>();
+                List<ProcessEntry> l2 = new List<ProcessEntry>();
+                List<ProcessEntry> l3 = new List<ProcessEntry>();
+                List<ProcessEntry> l4 = new List<ProcessEntry>();
+                List<ProcessEntry> l5 = new List<ProcessEntry>();
+                List<ProcessEntry> l6 = new List<ProcessEntry>();
+                List<ProcessEntry> l7 = new List<ProcessEntry>();
+                List<ProcessEntry> l8 = new List<ProcessEntry>();
+                Parallel.Invoke(
+                    () => l1 = parallelList(processes, l1, 0, processes.Length / 8),
+                    () => l2 = parallelList(processes, l2, (processes.Length / 8), (processes.Length * 2 / 8)),
+                    () => l3 = parallelList(processes, l3, (processes.Length * 2 / 8), (processes.Length * 3 / 8)),
+                    () => l4 = parallelList(processes, l4, (processes.Length * 3 / 8), (processes.Length * 4 / 8)),
+                    () => l5 = parallelList(processes, l5, (processes.Length * 4 / 8), (processes.Length * 5 / 8)),
+                    () => l6 = parallelList(processes, l6, (processes.Length * 5 / 8), (processes.Length * 6 / 8)),
+                    () => l7 = parallelList(processes, l7, (processes.Length * 6 / 8), (processes.Length * 7 / 8)),
+                    () => l8 = parallelList(processes, l8, (processes.Length * 7 / 8), (processes.Length))
+                    );
+                processEntries = l1.Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8).ToList();
+            }else if(processes.Length % 8 != 0)
+            {
+                List<ProcessEntry> l0 = new List<ProcessEntry>();
+                int remainder = (processes.Length % 8);
+                l0 = parallelList(processes, l0, 0, remainder);
+                int newLen = processes.Length - remainder;
+                List<ProcessEntry> l1 = new List<ProcessEntry>();
+                List<ProcessEntry> l2 = new List<ProcessEntry>();
+                List<ProcessEntry> l3 = new List<ProcessEntry>();
+                List<ProcessEntry> l4 = new List<ProcessEntry>();
+                List<ProcessEntry> l5 = new List<ProcessEntry>();
+                List<ProcessEntry> l6 = new List<ProcessEntry>();
+                List<ProcessEntry> l7 = new List<ProcessEntry>();
+                List<ProcessEntry> l8 = new List<ProcessEntry>();
+                int s1, e1, s2, s3, s4, s5, s6, s7, s8;
+                s1 = remainder;
+                e1 = (newLen / 8) + remainder; // because we need it be a multiple of 8 to split
+                // everything must be offset by the remainder to assure alignment
+                s2 = e1;
+                s3 = (newLen * 2 / 8) + remainder;
+                s4 = (newLen * 3 / 8) + remainder;
+                s5 = (newLen * 4 / 8) + remainder;
+                s6 = (newLen * 5 / 8) + remainder;
+                s7 = (newLen * 6 / 8) + remainder;
+                s8 = (newLen * 7 / 8) + remainder;
+                Parallel.Invoke(
+                    () => l1 = parallelList(processes, l1, s1, e1),
+                    () => l2 = parallelList(processes, l2, s2, s3),
+                    () => l3 = parallelList(processes, l3, s3, s4),
+                    () => l4 = parallelList(processes, l4, s4, s5),
+                    () => l5 = parallelList(processes, l5, s5, s6),
+                    () => l6 = parallelList(processes, l6, s6, s7),
+                    () => l7 = parallelList(processes, l7, s7, s8),
+                    () => l8 = parallelList(processes, l8, s8, (processes.Length))
+                    );
+                processEntries = l0.Concat(l1).Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8).ToList();
+            }
+
+            return processEntries;
+        }
+
+        private List<ProcessEntry> parallelList(Process[] processes, List<ProcessEntry> List, int start, int stop)
+        {
+            for (int i=start; i < stop; i++)
+            {
+                int ppid = GetParentProcess(processes[i].Id);
                 ProcessEntry p = new ProcessEntry()
                 {
                     Name = processes[i].ProcessName,
                     Pid = processes[i].Id,
                     Cpu = 0,
-                    Memory = 0,
                     Gpu = 0,
                     Disk = 0,
                     Network = 0,
-                    Ppid = 0, // change
+                    Ppid = ppid,
                     ChildProcesses = new List<ProcessEntry>(),
-                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
+                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
                 };
-
-                try
+                if(p.Name != "Idle")
                 {
-                    p.ApplicationName = processes[i].MainModule.ModuleName;
-                }
-                catch (Exception)
-                {
-                    p.ApplicationName = "Access Denied";
-                }
+                    try
+                    {
+                        p.ApplicationName = processes[i].MainModule.ModuleName;
+                    }
+                    catch (Exception)
+                    {
+                        p.ApplicationName = "Access Denied";
+                    }
 
-                processEntries.Add(p);
+                    List.Add(p);
+                }
             }
-
-            return processEntries;
+            return List;
         }
 
         public List<ProcessEntry> BuildProcessTree(List<ProcessEntry> list)
