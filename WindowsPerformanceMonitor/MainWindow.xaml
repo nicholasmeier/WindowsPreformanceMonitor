@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tabData="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
+        Closing="WindowsPerformance_Closing"
         Title="Windows Performance Monitor" Height="450" Width="800" ResizeMode="NoResize">
     <TabControl>
         <TabItem Header="Real Time">

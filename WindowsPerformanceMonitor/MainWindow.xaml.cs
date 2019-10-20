@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OpenHardwareMonitor.Hardware;
 using System.Threading;
+using System.ComponentModel;
 
 namespace WindowsPerformanceMonitor
 {
@@ -29,6 +30,14 @@ namespace WindowsPerformanceMonitor
             InitializeComponent();
         }
 
+        private void WindowsPerformance_Closing(object sender, CancelEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to exit?", "Exit Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.No)
+            {
+                e.Cancel = true;
+            }
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 
