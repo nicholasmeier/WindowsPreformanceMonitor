@@ -147,8 +147,16 @@ namespace WindowsPerformanceMonitor.Backend
                         tree[entry.Value.Ppid].ChildProcesses.Add(entry.Value);
                     } else if (dict.ContainsKey(entry.Value.Ppid))
                     {
-                        tree[entry.Value.Ppid] = dict[entry.Value.Ppid];
-                        tree[entry.Value.Ppid].ChildProcesses.Add(entry.Value);
+                        if (tree.ContainsKey(dict[entry.Value.Ppid].Ppid))
+                        {
+                            tree[dict[entry.Value.Ppid].Ppid].ChildProcesses.Add(dict[entry.Value.Ppid]);
+                            tree[dict[entry.Value.Ppid].Ppid].ChildProcesses[0].ChildProcesses.Add(entry.Value);
+                        }
+                        else
+                        {
+                            tree[entry.Value.Ppid] = dict[entry.Value.Ppid];
+                            tree[entry.Value.Ppid].ChildProcesses.Add(entry.Value);
+                        }
                     } else
                     {
                         tree[entry.Value.Pid] = entry.Value;

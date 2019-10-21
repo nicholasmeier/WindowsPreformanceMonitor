@@ -26,6 +26,7 @@ namespace WindowsPerformanceMonitor
         private ProcessEntry _selectedProcessListView;
         private ProcessEntry _selectedProcessComboBox;
         public ObservableCollection<ProcessEntry> _procListListView { get; set; }
+        public ObservableCollection<ProcessEntry> _procListTreeView { get; set; }
         public ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
         public ProcessEntry system = new ProcessEntry { Name = "SYSTEM", Pid = -1 };
 
@@ -38,6 +39,7 @@ namespace WindowsPerformanceMonitor
             HardwareObserver observer = new HardwareObserver(UpdateValues);
             Globals.provider.Subscribe(observer);
             _procListListView = new ObservableCollection<ProcessEntry>();
+            _procListTreeView = new ObservableCollection<ProcessEntry>();
             _procListComboBox = new ObservableCollection<ProcessEntry>();
             selectedProcessComboBox = system;
             this.DataContext = this;
@@ -66,12 +68,14 @@ namespace WindowsPerformanceMonitor
 
                 procListListView = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
                 procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
+                procListTreeView = new ObservableCollection<ProcessEntry>(comp.ProcessTree.OrderByDescending(p => p.Cpu));
                 procListComboBox.Insert(0, system);
 
                 selectedProcessListView = Find(selectedListView, procListListView);
                 selectedProcessComboBox = Find(selectedComboBox, procListComboBox);
 
                 UpdateColumnHeaders(comp);
+                UpdateProcessTreeView();
             });
         }
 
@@ -87,6 +91,38 @@ namespace WindowsPerformanceMonitor
             if (Math.Round(comp.TotalCpu, 2) > 100)
             {
                 listView_gridView.Columns[1].Header = $"CPU 100%";
+            }
+        }
+
+        public void UpdateProcessTreeView()
+        {
+            // make the tree with parent, child, and subchild
+            foreach(ProcessEntry parent in _procListTreeView)
+            {
+                TreeViewItem ParentItem = new TreeViewItem();
+                ParentItem.Header = parent.Name + " " + parent.Pid;
+                // check to see if they have a child to add
+                if(parent.ChildProcesses.Count > 0)
+                {
+                    foreach(ProcessEntry child in parent.ChildProcesses)
+                    {
+                        TreeViewItem ChildItem = new TreeViewItem();
+                        ChildItem.Header = child.Name + " " + child.Pid;
+                        // check to see if they have a sub child to add
+                        if(child.ChildProcesses.Count > 0)
+                        {
+                            foreach(ProcessEntry subchild in child.ChildProcesses)
+                            {
+                                //get the subchild and add it to the child
+                                TreeViewItem SubChildItem = new TreeViewItem();
+                                SubChildItem.Header = subchild.Name + " " + subchild.Pid;
+                                ChildItem.Items.Add(SubChildItem);
+                            }
+                        }
+                        ParentItem.Items.Add(ChildItem);
+                    }
+                }
+                //ProcessTreeView.Items.Add(ParentItem);
             }
         }
 
@@ -226,6 +262,16 @@ namespace WindowsPerformanceMonitor
             {
                 _procListListView = value;
                 OnPropertyChanged(nameof(procListListView));
+            }
+        }
+
+        public ObservableCollection<ProcessEntry> procListTreeView
+        {
+            get { return _procListTreeView; }
+            set
+            {
+                _procListTreeView = value;
+                OnPropertyChanged(nameof(procListTreeView));
             }
         }
 
