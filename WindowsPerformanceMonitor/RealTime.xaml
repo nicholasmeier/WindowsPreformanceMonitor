@@ -5,7 +5,7 @@
              xmlns:util="clr-namespace:Wpf.Util"
              x:Class="WindowsPerformanceMonitor.RealTime"
              >
-    <Grid ShowGridLines="False" Height="Auto" Width="Auto">
+    <Grid ShowGridLines="True" Height="Auto" Width="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -113,10 +113,9 @@
                 Margin="20,5,20,0"
                 />
 
-            <ScrollViewer Height="140" VerticalScrollBarVisibility="Auto">
-                <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="170" Margin="20,5,20,10">
+            <ScrollViewer Height="140" VerticalScrollBarVisibility="Disabled">
+                <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="141">
                     <StackPanel x:Name="radioButtons">
-
                         <RadioButton Content="All" IsChecked="True" Checked="RadioButton_Checked"/>
                         <RadioButton Content="CPU" IsChecked="False" Checked="RadioButton_Checked"/>
                         <RadioButton Content="GPU" Checked="RadioButton_Checked"/>

@@ -6,7 +6,7 @@
         xmlns:tabData="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
         Closing="WindowsPerformance_Closing"
-        Title="Windows Performance Monitor" Height="450" Width="800" ResizeMode="NoResize">
+        Title="Windows Performance Monitor" Height="475" Width="800" ResizeMode="NoResize">
     <TabControl>
         <TabItem Header="Real Time">
             <tabData:RealTime x:Name="ucTab1Data1" />
