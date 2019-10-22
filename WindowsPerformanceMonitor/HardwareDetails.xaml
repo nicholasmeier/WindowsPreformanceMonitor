@@ -17,7 +17,7 @@
 
         <!-- Bottom Row (Process List) -->
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-            <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="127" Margin="20,5,20,10">
+            <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Choose Hardware" Height="127" Margin="20,5,20,10">
                 <StackPanel>
                     <StackPanel.Resources>
                         <Style TargetType="{x:Type RadioButton}">
