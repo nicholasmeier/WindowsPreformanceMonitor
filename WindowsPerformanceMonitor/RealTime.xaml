@@ -5,7 +5,7 @@
              xmlns:util="clr-namespace:Wpf.Util"
              x:Class="WindowsPerformanceMonitor.RealTime"
              >
-    <Grid ShowGridLines="True" Height="Auto" Width="Auto">
+    <Grid ShowGridLines="False" Height="Auto" Width="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
