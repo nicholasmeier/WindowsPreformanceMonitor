@@ -63,6 +63,18 @@ namespace WindowsPerformanceMonitor
                 Processes procs = new Processes();
                 ProcessEntry procEntry = (ProcessEntry) listView.Items[listView.SelectedIndex];
                 procs.Kill(procEntry.Pid);
+
+                List<ProcessEntry> newList = new List<ProcessEntry>();
+                for (int i = 0; i < listView.Items.Count; i++)
+                {
+                    ProcessEntry p = (ProcessEntry)listView.Items[i];
+                    if (p.Pid != procEntry.Pid)
+                    {
+                        newList.Add(p);
+                    }
+                }
+
+                listView.ItemsSource = new ObservableCollection<ProcessEntry>(newList);
             }
         }
 
