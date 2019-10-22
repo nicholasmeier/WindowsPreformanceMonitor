@@ -124,5 +124,10 @@ namespace WindowsPerformanceMonitor
         }
 
         #endregion
+
+        private void SummaryView_Closing(object sender, CancelEventArgs e)
+        {
+            mainWindowRef.Show();
+        }
     }
 }

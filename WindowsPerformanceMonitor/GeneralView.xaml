@@ -5,20 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
+        Closing="GeneralView_Closing"
         Title="GeneralView" Height="300" Width="300">
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
+        
+        
+        
+        
         <!-- Top Left (View type, graph type, process to graph)-->
         <Button Margin="20, 3, 20, 2" Click="DetailedView_Click">Detailed View</Button>
         <ListView 
             ItemsSource="{Binding Applications}" 
+            SelectedItem="{Binding SelectedApplication, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Grid.Row="1" 
             Margin="20,10,20,10" 
             x:Name="listView"
             >
+            <ListView.ContextMenu>
+                <ContextMenu Name="ZoneIformationList" StaysOpen="true" Background="WhiteSmoke">
+                    <ContextMenu.BitmapEffect>
+                        <BitmapEffectGroup/>
+                    </ContextMenu.BitmapEffect>
+                    <MenuItem Header="Kill" Name="EditNutritionContextMenu"  Click="KillProcess_Click"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="listView_gridView">
                     <GridViewColumn Header="Application" 

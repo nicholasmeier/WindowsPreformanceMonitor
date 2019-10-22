@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor
@@ -24,6 +25,7 @@ namespace WindowsPerformanceMonitor
     {
 
         private ObservableCollection<ProcessEntry> _applications { get; set; }
+        private ProcessEntry _selectedApplication;
         Window mainWindowRef = null;
 
         public GeneralView(Window mainWindow)
@@ -42,7 +44,26 @@ namespace WindowsPerformanceMonitor
             {
                 Applications = new ObservableCollection<ProcessEntry>(comp.ProcessList.Where(p => p.IsApplication == true));
                 listView.ItemsSource = Applications;
+
+                ProcessEntry selected = SelectedApplication;
+
+                if (SelectedApplication != null)
+                {
+                    SelectedApplication = Applications.FirstOrDefault(p => p.Pid == selected.Pid);
+                }
+
+                listView.SelectedItem = SelectedApplication;
             });
+        }
+
+        private void KillProcess_Click(object sender, RoutedEventArgs e)
+        {
+            if (listView.SelectedIndex > -1)
+            {
+                Processes procs = new Processes();
+                ProcessEntry procEntry = (ProcessEntry) listView.Items[listView.SelectedIndex];
+                procs.Kill(procEntry.Pid);
+            }
         }
 
         private void DetailedView_Click(object sender, System.EventArgs e)
@@ -69,6 +90,21 @@ namespace WindowsPerformanceMonitor
                 OnPropertyChanged(nameof(Applications));
             }
         }
+
+        public ProcessEntry SelectedApplication
+        {
+            get { return _selectedApplication; }
+            set
+            {
+                _selectedApplication = value;
+                OnPropertyChanged(nameof(SelectedApplication));
+            }
+        }
         #endregion
+
+        private void GeneralView_Closing(object sender, CancelEventArgs e)
+        {
+            mainWindowRef.Show();
+        }
     }
 }
