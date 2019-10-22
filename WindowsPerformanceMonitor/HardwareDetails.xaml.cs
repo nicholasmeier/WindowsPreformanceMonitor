@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.Windows.Shapes;
 using System.Management;
 using System.Collections.ObjectModel;
+using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor
 {
@@ -26,11 +27,7 @@ namespace WindowsPerformanceMonitor
     public partial class HardwareDetails : UserControl
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
-        public double _clockSpeedCPU { get; set; }
-        public int _coresCPU { get; set; }
-        public int _logicalCoresCPU { get; set; }
-        public Boolean _virtualizationCPU { get; set; }
-        public List<uint> _cacheSizesCPU { get; set; }
+        CPUHardwareDetails cpuDetails = new CPUHardwareDetails();
 
         public ListBox List { get; set; }
 
@@ -41,6 +38,16 @@ namespace WindowsPerformanceMonitor
             InitializeComponent();
             this.DataContext = this;
             List = lbDetailList;
+            Parallel.Invoke(
+                () => setLogicalCores(),
+                () => setCores(),
+                () => setClockSpeed(),
+                () => setCacheSize()
+                );
+            // based on logical cores
+            setVirtualization();
+            // set the CPU details on load
+            setCPUValues(lbDetailList);
         }
 
         // Get a reference to main windows when it is available.
@@ -52,35 +59,28 @@ namespace WindowsPerformanceMonitor
 
         #endregion
 
-        // TODO: If we make each of these items their own object, we dont have to worry
-                // about overwriting them when they change. Then we only need to call each one
-                // on load.
+
 
         #region CPU Details
 
         private void setCPUValues(ListBox listBox)
         {   
-/*            setLogicalCores();
-            setCores();
-            setVirtualization();
-            setClockSpeed();
-            setCacheSize();*/
-            var _clockSpeed = _clockSpeedCPU.ToString() + "GHz";
+            var _clockSpeed = cpuDetails._clockSpeedCPU.ToString() + "GHz";
             List<DetailItem> items = new List<DetailItem>();
-            items.Add(new DetailItem() { Title = "Base Speed:", Value = "3.101 Ghz" });
-            items.Add(new DetailItem() { Title = "Cores:", Value = "4" });
-            items.Add(new DetailItem() { Title = "Logical Cores:", Value = "8" });
-            items.Add(new DetailItem() { Title = "Virtualization:", Value = "True" });
-            items.Add(new DetailItem() { Title = "L1 Cache:", Value = "256" + " KB" });
-            items.Add(new DetailItem() { Title = "L2 Cache:", Value = "1.0" + " MB" });
-            items.Add(new DetailItem() { Title = "L3 Cache:", Value = "6.0" + " MB" });
+            items.Add(new DetailItem() { Title = "Base Speed:", Value = _clockSpeed });
+            items.Add(new DetailItem() { Title = "Cores:", Value = cpuDetails._coresCPU.ToString() });
+            items.Add(new DetailItem() { Title = "Logical Cores:", Value = cpuDetails._logicalCoresCPU.ToString() });
+            items.Add(new DetailItem() { Title = "Virtualization:", Value = cpuDetails._virtualizationCPU.ToString() });
+            items.Add(new DetailItem() { Title = "L1 Cache:", Value = cpuDetails._cacheSizesCPU[0].ToString() + " KB" });
+            items.Add(new DetailItem() { Title = "L2 Cache:", Value = cpuDetails._cacheSizesCPU[1].ToString() + " MB" });
+            items.Add(new DetailItem() { Title = "L3 Cache:", Value = cpuDetails._cacheSizesCPU[2].ToString() + " MB" });
             listBox.ItemsSource = items;
             groupBoxDetails.Header = "CPU Details";
         }
 
         private void setLogicalCores()
         {
-            _logicalCoresCPU = Environment.ProcessorCount;
+            cpuDetails._logicalCoresCPU = Environment.ProcessorCount;
         }
 
         private void setCores()
@@ -90,18 +90,18 @@ namespace WindowsPerformanceMonitor
             {
                 coreCount += int.Parse(item["NumberOfCores"].ToString());
             }
-            _coresCPU = coreCount;
+            cpuDetails._coresCPU = coreCount;
         }
 
         private void setVirtualization()
         {
-            if (_logicalCoresCPU > 0)
+            if (cpuDetails._logicalCoresCPU > 0)
             {
-                _virtualizationCPU = true;
+                cpuDetails._virtualizationCPU = true;
             }
             else
             {
-                _virtualizationCPU = false;
+                cpuDetails._virtualizationCPU = false;
             }
         }
 
@@ -111,7 +111,7 @@ namespace WindowsPerformanceMonitor
             uint sp = (uint)(Mo["CurrentClockSpeed"]);
             double dp = sp / 1000.00;
             Mo.Dispose();
-            _clockSpeedCPU = dp;
+            cpuDetails._clockSpeedCPU = dp;
         }
 
         private void setCacheSize()
@@ -127,7 +127,7 @@ namespace WindowsPerformanceMonitor
                   .Select(p => (uint)(p.Properties["MaxCacheSize"].Value)));
             }
 
-            _cacheSizesCPU = cacheSizes;
+            cpuDetails._cacheSizesCPU = cacheSizes;
         }
 
         #endregion

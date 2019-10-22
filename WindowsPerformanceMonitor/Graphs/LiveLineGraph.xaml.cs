@@ -224,14 +224,15 @@ namespace WindowsPerformanceMonitor.Graphs
             catch (Exception) // Process was killed but still trying to graph.
             {
                 _trend.Cpu = 0;
-                _trend.CpuTemp = 0;
                 _trend.Gpu = 0;
                 _trend.GpuTemp = 0;
                 _trend.Memory = 0;
                 _trend.Disk = 0;
                 _trend.Network = 0;
+                _trend.CpuTemp = 0;
+                _trend.GpuTemp = 0;
             }
-          
+
             return _trend;
         }
 

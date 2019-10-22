@@ -16,7 +16,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -79,11 +79,18 @@
     <Compile Include="Backend\Hardware.cs" />
     <Compile Include="Backend\Processes.cs" />
     <Compile Include="ComputerStatsMonitor.cs" />
+    <Compile Include="GeneralView.xaml.cs">
+      <DependentUpon>GeneralView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="GraphLegend.xaml.cs">
+      <DependentUpon>GraphLegend.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graphs\Series.cs" />
     <Compile Include="Graphs\LiveLineGraph.xaml.cs">
       <DependentUpon>LiveLineGraph.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GridViewSort.cs" />
     <Compile Include="HardwareDetails.xaml.cs">
       <DependentUpon>HardwareDetails.xaml</DependentUpon>
     </Compile>
@@ -93,6 +100,7 @@
     </Compile>
     <Compile Include="Models\ApplicationStartup.cs" />
     <Compile Include="Models\ComputerObj.cs" />
+    <Compile Include="Models\CPUHardwareDetails.cs" />
     <Compile Include="Models\MeasureModel.cs" />
     <Compile Include="Models\ProcessEntry.cs" />
     <Compile Include="Models\Trend.cs" />
@@ -105,6 +113,17 @@
     <Compile Include="Startup.xaml.cs">
       <DependentUpon>Startup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SummaryView.xaml.cs">
+      <DependentUpon>SummaryView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="GeneralView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GraphLegend.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Graphs\LiveLineGraph.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -138,6 +157,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Startup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SummaryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

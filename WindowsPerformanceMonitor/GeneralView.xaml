@@ -1,0 +1,48 @@
+﻿<Window x:Class="WindowsPerformanceMonitor.GeneralView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WindowsPerformanceMonitor"
+        mc:Ignorable="d"
+        Closing="GeneralView_Closing"
+        Title="GeneralView" Height="300" Width="300">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        
+        
+        
+        
+        <!-- Top Left (View type, graph type, process to graph)-->
+        <Button Margin="20, 3, 20, 2" Click="DetailedView_Click">Detailed View</Button>
+        <ListView 
+            ItemsSource="{Binding Applications}" 
+            SelectedItem="{Binding SelectedApplication, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Grid.Row="1" 
+            Margin="20,10,20,10" 
+            x:Name="listView"
+            >
+            <ListView.ContextMenu>
+                <ContextMenu Name="ZoneIformationList" StaysOpen="true" Background="WhiteSmoke">
+                    <ContextMenu.BitmapEffect>
+                        <BitmapEffectGroup/>
+                    </ContextMenu.BitmapEffect>
+                    <MenuItem Header="Kill" Name="EditNutritionContextMenu"  Click="KillProcess_Click"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView x:Name="listView_gridView">
+                    <GridViewColumn Header="Application" 
+                                    Width="247"
+                                    DisplayMemberBinding="{Binding ApplicationName}"/>
+                    
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

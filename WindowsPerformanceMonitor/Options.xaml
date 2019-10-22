@@ -3,29 +3,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Loaded="OnControlLoaded"
              >
-    <Grid ShowGridLines="False" Height="Auto" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid ShowGridLines="False" Height="Auto" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
 
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,35">
+        <GroupBox Header="Options">
+            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                <CheckBox FlowDirection="RightToLeft">
+                    <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Enable Encryption" />
+                </CheckBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <Label Content="Log File Format:" HorizontalAlignment="Left"/>
                 <ComboBox HorizontalAlignment="Stretch" Margin="17,0,0,0" Width="160"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,35">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <Label Content="Log File Location:" HorizontalAlignment="Left"/>
-                <Rectangle Fill="#FFF4F4F5" StrokeThickness="1" Margin="10,0,0,0" Width="250" Stroke="Black"/>
+                <Rectangle Fill="#FFF4F4F5" StrokeThickness="1" Margin="10,0,0,0" Width="160" Stroke="Black"/>
                 <Button Content=" ... " Margin="10,0,0,0" Click="File_Button_Click"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="5,0,0,35">
-                <CheckBox Content="Enable Encryption"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="5,0,0,35">
+            <StackPanel Orientation="Horizontal" Margin="5,225,680,5">
                 <Button Content=" Save Settings " HorizontalAlignment="Left" Click="Save_Button_Click"/>
-                <Button Content=" Clear Settings " Margin="50,0,0,0"/>
             </StackPanel>
         </StackPanel>
-        
+        </GroupBox>
+
     </Grid>
 </UserControl>
