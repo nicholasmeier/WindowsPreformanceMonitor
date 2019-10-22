@@ -2,7 +2,8 @@
              xmlns:graph="clr-namespace:WindowsPerformanceMonitor.Graphs"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:WindowsPerformanceMonitor" x:Class="WindowsPerformanceMonitor.RealTime"
+             xmlns:util="clr-namespace:Wpf.Util"
+             x:Class="WindowsPerformanceMonitor.RealTime"
              >
     <Grid ShowGridLines="False" Height="Auto" Width="Auto">
         <Grid.ColumnDefinitions>
@@ -18,6 +19,8 @@
         <!-- Top Left (View type, graph type, process to graph)-->
         <ListView 
             ItemsSource="{Binding procListListView}" 
+            IsSynchronizedWithCurrentItem="True"
+            util:GridViewSort.AutoSort="True"
             SelectedItem="{Binding selectedProcessListView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
             Grid.Row="1" 
             Grid.Column="0" 
@@ -29,9 +32,11 @@
                 <GridView x:Name="listView_gridView">
                     <GridViewColumn Header="Process" 
                                     Width="100"
-                                    DisplayMemberBinding="{Binding Name}"/>
+                                    DisplayMemberBinding="{Binding Name}"
+                                    util:GridViewSort.PropertyName="Name"/>
                     <GridViewColumn Header="CPU" 
-                                    Width="100">
+                                    Width="100"
+                                    util:GridViewSort.PropertyName="Cpu">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Cpu, StringFormat={}{0} %}" TextAlignment="Right" />
@@ -39,7 +44,8 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="GPU" 
-                                    Width="100">
+                                    Width="100"
+                                    util:GridViewSort.PropertyName="Gpu">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Gpu, StringFormat={}{0} %}" TextAlignment="Right" />
@@ -47,7 +53,8 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Memory" 
-                                    Width="100">
+                                    Width="100"
+                                    util:GridViewSort.PropertyName="Memory">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Memory, StringFormat={}{0} MB}" TextAlignment="Right" />
@@ -55,7 +62,8 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Disk" 
-                                    Width="100">
+                                    Width="100"
+                                    util:GridViewSort.PropertyName="Disk">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Disk, StringFormat={}{0} Mb/s }" TextAlignment="Right" />
@@ -64,7 +72,8 @@
 
                     </GridViewColumn>
                     <GridViewColumn Header="Network" 
-                                    Width="100">
+                                    Width="100"
+                                    util:GridViewSort.PropertyName="Network">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Network, StringFormat={}{0} MB}" TextAlignment="Right" />

@@ -90,6 +90,7 @@
     <Compile Include="Graphs\LiveLineGraph.xaml.cs">
       <DependentUpon>LiveLineGraph.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GridViewSort.cs" />
     <Compile Include="HardwareDetails.xaml.cs">
       <DependentUpon>HardwareDetails.xaml</DependentUpon>
     </Compile>
