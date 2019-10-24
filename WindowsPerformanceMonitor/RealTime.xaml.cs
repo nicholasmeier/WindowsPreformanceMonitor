@@ -219,9 +219,44 @@ namespace WindowsPerformanceMonitor
             
         }
 
+        private void CBAllChanged(object sender, RoutedEventArgs e)
+        {
+            bool newVal = (cbAll.IsChecked == true);
+            cpu.IsChecked = newVal;
+            gpu.IsChecked = newVal;
+            memory.IsChecked = newVal;
+            disk.IsChecked = newVal;
+            network.IsChecked = newVal;
+            gpuTemp.IsChecked = newVal;
+            cpuTemp.IsChecked = newVal;
+        }
+
         private void CheckBoxChanged(object sender, RoutedEventArgs e)
         {
+            var checkBox = sender as CheckBox;
+            if (checkBox == null)
+            {
+                return;
+            }
 
+            liveGraph.SeriesVisibility[(int)Series.Cpu] = (bool)cpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Gpu] = (bool)gpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Memory] = (bool)memory.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Disk] = (bool)disk.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Network] = (bool)network.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.CpuTemp] = (bool)cpuTemp.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.GpuTemp] = (bool)gpuTemp.IsChecked;
+
+            //If all boxes are checked or unchecked set All correctly
+            if (cpu.IsChecked == gpu.IsChecked && cpu.IsChecked == memory.IsChecked &&
+                cpu.IsChecked == disk.IsChecked && cpu.IsChecked == network.IsChecked
+                && cpu.IsChecked  == gpuTemp.IsChecked && cpu.IsChecked == cpuTemp.IsChecked)
+            {
+                cbAll.IsChecked = cpu.IsChecked;
+            } else {
+                cbAll.IsChecked = null;
+
+            }
         }
 
         #endregion
