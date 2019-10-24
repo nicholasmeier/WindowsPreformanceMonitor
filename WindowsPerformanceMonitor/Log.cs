@@ -33,7 +33,6 @@ namespace WindowsPerformanceMonitor
 
         payload mypayload;
         String logPath;
-        HardwareObserver observer;
         public Log()
         {
             logPath = Directory.GetCurrentDirectory();//DEFAULT LOG PATH
@@ -53,7 +52,7 @@ namespace WindowsPerformanceMonitor
         public void StartLog()
         {
             mypayload.mystart = DateTime.Now;
-            observer = new HardwareObserver(UpdateValues);
+            HardwareObserver observer = new HardwareObserver(UpdateValues);
             Globals.provider.Subscribe(observer);
         }
 
@@ -87,7 +86,6 @@ namespace WindowsPerformanceMonitor
             }
         
             System.IO.File.WriteAllText(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor", fileName + appendage +".txt"), json);
-            observer.Unsubscribe();
         }
 
         public payload ReadIt(String path)
