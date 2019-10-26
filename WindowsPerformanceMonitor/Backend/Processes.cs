@@ -103,7 +103,8 @@ namespace WindowsPerformanceMonitor.Backend
                     Ppid = ppid,
                     ChildProcesses = new List<ProcessEntry>(),
                     IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
-                };
+
+            };
                 if(p.Name != "Idle")
                 {
                     try
@@ -145,7 +146,8 @@ namespace WindowsPerformanceMonitor.Backend
                     if (tree.ContainsKey(entry.Value.Ppid))
                     {
                         tree[entry.Value.Ppid].ChildProcesses.Add(entry.Value);
-                    } else if (dict.ContainsKey(entry.Value.Ppid))
+                    }
+                    else if (dict.ContainsKey(entry.Value.Ppid))
                     {
                         if (tree.ContainsKey(dict[entry.Value.Ppid].Ppid))
                         {
@@ -157,7 +159,8 @@ namespace WindowsPerformanceMonitor.Backend
                             tree[entry.Value.Ppid] = dict[entry.Value.Ppid];
                             tree[entry.Value.Ppid].ChildProcesses.Add(entry.Value);
                         }
-                    } else
+                    }
+                    else
                     {
                         tree[entry.Value.Pid] = entry.Value;
                     }
@@ -439,6 +442,7 @@ namespace WindowsPerformanceMonitor.Backend
         {
             List<float> diskUsages = new List<float>(new float[procList.Count]);
 
+
             for (int i = 0; i < procList.Count; i++)
             {
                 Process p;
@@ -457,7 +461,7 @@ namespace WindowsPerformanceMonitor.Backend
 
                     try
                     {
-                        PerformanceCounter pc = new PerformanceCounter("Process", "IO Data Bytes/sec", p.ProcessName);
+                        PerformanceCounter pc = new PerformanceCounter("Process", "Disk Read Bytes/sec", p.ProcessName);
                         diskUsages.Insert(i, pc.NextValue());
                     }
                     catch (Exception)       
@@ -467,46 +471,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
             }
 
-            Thread.Sleep(100);
-            ulong totalDisk = 0;
-            foreach (DriveInfo d in DriveInfo.GetDrives())
-            {
-                if (d.IsReady)
-                {
-                    totalDisk = totalDisk + (ulong)d.TotalSize;
-                }
-            }
-            ulong totalUsed = 0;
-            /* Get the current time and total process usage
-                for each process, calculate Mem usage
-                based on previous */
-            for (int i = 0; i < procList.Count; i++)
-            {
-                Process p;
-                try
-                {
-                    p = Process.GetProcessById(procList[i].Pid);
-                }
-                catch (ArgumentException)    // Process no longer running
-                {
-                    procList[i].Disk = -1;
-                    continue;
-                }
-                if (diskUsages[i] == 0)
-                {
-                    procList[i].Disk = 0;
-                }
-                else if (diskUsages[i] > 0)
-                {
-                    procList[i].Disk = diskUsages[i] * 0.000001;
-                    totalUsed += (ulong)diskUsages[i];
-                }
-                else
-                {
-                    procList[i].Disk = -1;
-                }
-            }
-            return totalUsed / (double)totalDisk;
+            return 20;
         }
     }
 }
