@@ -28,6 +28,14 @@
             Margin="20,10,20,10" 
             x:Name="listView_ProcList"
             >
+            <ListView.ContextMenu>
+                <ContextMenu Name="ZoneIformationList" StaysOpen="true" Background="WhiteSmoke">
+                    <ContextMenu.BitmapEffect>
+                        <BitmapEffectGroup/>
+                    </ContextMenu.BitmapEffect>
+                    <MenuItem Header="Kill" Name="EditNutritionContextMenu"  Click="KillProcess_Click"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="listView_gridView">
                     <GridViewColumn Header="Process" 

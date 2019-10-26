@@ -11,6 +11,9 @@
         <TabItem Header="Real Time">
             <tabData:RealTime x:Name="ucTab1Data1" />
         </TabItem>
+        <TabItem Header="Process Tree">
+            <tabData:ProcessTree x:Name="ucTab1Data6" />
+        </TabItem>
         <TabItem Header="Logging">
             <tabData:Logging x:Name="ucTab1Data2" />
         </TabItem>
