@@ -139,3 +139,7 @@ C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\SummaryView.baml
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\GeneralView.g.cs
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\GeneralView.baml
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\ProcessTree.g.cs
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\ProcessTree.baml

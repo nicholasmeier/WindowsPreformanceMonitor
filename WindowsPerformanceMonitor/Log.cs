@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace WindowsPerformanceMonitor
             logPath = Directory.GetCurrentDirectory();//DEFAULT LOG PATH
             mypayload = new payload();
             mypayload.mydata = new List<data>();
+            mypayload.mytimes = new List<DateTime>();
             StartLog();
         }
         
@@ -46,6 +48,7 @@ namespace WindowsPerformanceMonitor
             logPath = path;
             mypayload = new payload();
             mypayload.mydata = new List<data>();
+            mypayload.mytimes = new List<DateTime>();
             StartLog();
         }
 

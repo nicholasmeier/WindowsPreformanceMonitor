@@ -12,9 +12,9 @@ DEBUG;TRACE
 C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\App.xaml
 11448385048
 
-29-1342977891
-22-1663930792
+29-1014657916
+23-2118570407
 GeneralView.xaml;GraphLegend.xaml;Graphs\LiveLineGraph.xaml;HardwareDetails.xaml;Logging.xaml;MainWindow.xaml;Options.xaml;ProcessTree.xaml;RealTime.xaml;Startup.xaml;SummaryView.xaml;
 
-True
+False
 
