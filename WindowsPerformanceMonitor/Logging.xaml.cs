@@ -19,8 +19,10 @@ namespace WindowsPerformanceMonitor
     /// Interaction logic for Logging.xaml
     /// </summary>
     /// 
+
     public partial class Logging : UserControl
     {
+        Log temp = new Log();
         private MainWindow mainWindow = null;
 
         public Logging()
@@ -40,11 +42,13 @@ namespace WindowsPerformanceMonitor
 
         private void StartLog_Click(object sender, RoutedEventArgs e)
         {
+            temp.StartLog();
             // TODO
         }
 
         private void StopLog_Click(object sender, RoutedEventArgs e)
         {
+            temp.WriteIt();
             // TODO
         }
 
