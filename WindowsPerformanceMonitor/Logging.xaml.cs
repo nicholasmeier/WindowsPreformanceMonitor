@@ -87,6 +87,7 @@ namespace WindowsPerformanceMonitor
             if (temp != null)
             {
                 temp.WriteIt();
+                GetLogList();
             }
 
             temp = null;
@@ -97,6 +98,7 @@ namespace WindowsPerformanceMonitor
             if (SelectedLog != null)
             {
                 payload log = temp.ReadIt(SelectedLog.path);
+                // Async so we can do other stuff while its reading.
                 Task.Run(() =>
                 {
                     Play(log);
@@ -112,6 +114,7 @@ namespace WindowsPerformanceMonitor
                 Thread.Sleep(2000);
             }
 
+            // This clears the listview after log has finished reading.
             LogProcList = new ObservableCollection<ProcessEntry>();
         }
 
