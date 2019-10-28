@@ -22,12 +22,13 @@ namespace WindowsPerformanceMonitor
 
     public partial class Logging : UserControl
     {
-        Log temp = new Log();
+        Log temp;
         private MainWindow mainWindow = null;
 
         public Logging()
         {
             InitializeComponent();
+            temp = new Log();
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -43,13 +44,16 @@ namespace WindowsPerformanceMonitor
         private void StartLog_Click(object sender, RoutedEventArgs e)
         {
             temp.StartLog();
-            // TODO
         }
 
         private void StopLog_Click(object sender, RoutedEventArgs e)
         {
-            temp.WriteIt();
-            // TODO
+            if (temp != null)
+            {
+                temp.WriteIt();
+            }
+
+            temp = null;
         }
 
         private void DeleteLog_Click(object sender, RoutedEventArgs e)

@@ -83,7 +83,6 @@
             <StackPanel Orientation="Horizontal">
                 <Button Content="Play" Click="DeleteLog_Click" Margin="5,35,5,3" Width="71"/>
                 <Button Content="Pause" Click="DeleteLog_Click" Margin="0,35,0,3" Width="70"/>
-
             </StackPanel>
         </StackPanel>
     </Grid>

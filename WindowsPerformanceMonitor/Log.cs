@@ -13,7 +13,7 @@ namespace WindowsPerformanceMonitor
 {
     class Log
     {
-        public struct data{
+        public struct data {
             public double Cpu;
             public double Gpu;
             public double Memory;
@@ -21,7 +21,7 @@ namespace WindowsPerformanceMonitor
             public double Network;
             public double CpuTemp;
             public double GpuTemp;
-
+            public List<ProcessEntry> ProcessList { get; set; }
         }
 
         public struct payload
@@ -49,7 +49,6 @@ namespace WindowsPerformanceMonitor
             mypayload = new payload();
             mypayload.mydata = new List<data>();
             mypayload.mytimes = new List<DateTime>();
-            StartLog();
         }
 
         public void StartLog()
@@ -70,12 +69,15 @@ namespace WindowsPerformanceMonitor
             NewData.Memory = comp.TotalMemory;
             NewData.Network = comp.TotalNetwork;
             NewData.Disk = comp.TotalDisk;
+            NewData.ProcessList = new List<ProcessEntry>(comp.ProcessList); // This should save all process entry statistics at once.
             mypayload.mydata.Add(NewData);
             mypayload.mytimes.Add(DateTime.Now);
         }
 
         public void WriteIt()
         {
+            // Note: might need to compress these using System.IO.Compression.
+            //       might need to force a write after so much memory is used to avoid running out.
             String json = JsonConvert.SerializeObject(mypayload);
             String fileName = mypayload.mystart.Date.Month.ToString() + "-" + mypayload.mystart.Date.Day.ToString() + "-" + mypayload.mystart.Date.Year.ToString();
             if(!System.IO.Directory.Exists(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor")))
