@@ -77,7 +77,8 @@ namespace WindowsPerformanceMonitor
             items.Add(new DetailItem() { Title = "L1 Cache:", Value = cpuDetails._cacheSizesCPU[0].ToString() + " KB" });
             items.Add(new DetailItem() { Title = "L2 Cache:", Value = cpuDetails._cacheSizesCPU[1].ToString() + " MB" });
             items.Add(new DetailItem() { Title = "L3 Cache:", Value = cpuDetails._cacheSizesCPU[2].ToString() + " MB" });
-            items.Add(new DetailItem() { Title = "Bus Speed:", Value = cpuDetails._busSpeedCPU.ToString() + "MHz" });
+            if (cpuDetails._busSpeedCPU > 0)
+                items.Add(new DetailItem() { Title = "Bus Speed:", Value = cpuDetails._busSpeedCPU.ToString() + "MHz" });
             listBox.ItemsSource = items;
             groupBoxDetails.Header = "CPU Details - " + cpuDetails._name;
         }
