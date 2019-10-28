@@ -29,6 +29,7 @@ namespace WindowsPerformanceMonitor
         Log temp;
         private MainWindow mainWindow = null;
         public ObservableCollection<logNames> _logs { get; set; }
+        public logNames _selectedLog { get; set; }
 
         public class logNames
         {
@@ -100,10 +101,9 @@ namespace WindowsPerformanceMonitor
 
         private void logList_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as ListView).SelectedItem;
-            if (item != null)
+            if (logList.SelectedIndex > -1)
             {
-                // TODO
+                SelectedLog = (logNames)logList.Items[logList.SelectedIndex];
             }
         }
 
@@ -129,6 +129,16 @@ namespace WindowsPerformanceMonitor
             {
                 _logs = value;
                 OnPropertyChanged(nameof(Logs));
+            }
+        }
+
+        public logNames SelectedLog
+        {
+            get { return _selectedLog; }
+            set
+            {
+                _selectedLog = value;
+                OnPropertyChanged(nameof(SelectedLog));
             }
         }
 
