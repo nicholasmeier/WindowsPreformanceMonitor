@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WindowsPerformanceMonitor.Models;
 using static WindowsPerformanceMonitor.Log;
 
 namespace WindowsPerformanceMonitor
@@ -30,6 +31,7 @@ namespace WindowsPerformanceMonitor
         Log temp;
         private MainWindow mainWindow = null;
         public ObservableCollection<logNames> _logs { get; set; }
+        public ObservableCollection<ProcessEntry> _logProcList { get; set; }
         public logNames _selectedLog { get; set; }
 
         public class logNames
@@ -95,7 +97,10 @@ namespace WindowsPerformanceMonitor
             if (SelectedLog != null)
             {
                 payload log = temp.ReadIt(SelectedLog.path);
-                Play(log);
+                Task.Run(() =>
+                {
+                    Play(log);
+                });
             }
         }
 
@@ -103,10 +108,11 @@ namespace WindowsPerformanceMonitor
         {
             for (int i = 0; i < log.mytimes.Count; i++)
             {
-
-
-                Thread.Sleep(200);
+                LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[i].ProcessList.OrderByDescending(p => p.Cpu));
+                Thread.Sleep(2000);
             }
+
+            LogProcList = new ObservableCollection<ProcessEntry>();
         }
 
         private void PauseLog_Click(object sender, RoutedEventArgs e)
@@ -164,6 +170,16 @@ namespace WindowsPerformanceMonitor
             {
                 _selectedLog = value;
                 OnPropertyChanged(nameof(SelectedLog));
+            }
+        }
+
+        public ObservableCollection<ProcessEntry> LogProcList
+        {
+            get { return _logProcList; }
+            set
+            {
+                _logProcList = value;
+                OnPropertyChanged(nameof(LogProcList));
             }
         }
 
