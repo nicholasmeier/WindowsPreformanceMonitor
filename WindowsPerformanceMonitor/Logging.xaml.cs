@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static WindowsPerformanceMonitor.Log;
 
 namespace WindowsPerformanceMonitor
 {
@@ -20,15 +24,26 @@ namespace WindowsPerformanceMonitor
     /// </summary>
     /// 
 
-    public partial class Logging : UserControl
+    public partial class Logging : UserControl, INotifyPropertyChanged
     {
         Log temp;
         private MainWindow mainWindow = null;
+        public ObservableCollection<logNames> _logs { get; set; }
+        public logNames _selectedLog { get; set; }
+
+        public class logNames
+        {
+            public string name { get; set; }
+            public string path { get; set; }
+        }
 
         public Logging()
         {
             InitializeComponent();
             temp = new Log();
+            Logs = new ObservableCollection<logNames>();
+            this.DataContext = this;
+            GetLogList();
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -38,7 +53,25 @@ namespace WindowsPerformanceMonitor
 
         private void InitializeComboBox()
         {
-            // TODO
+            
+        }
+
+        private void GetLogList()
+        {
+            string[] files = Directory.GetFiles("C:\\Users\\Darren\\Documents\\WindowsPerformanceMonitor");
+            List<logNames> tempLogList = new List<logNames>();
+            for (int i = 0; i < files.Length; i++)
+            {
+                string[] split = files[i].Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                tempLogList.Add(new logNames()
+                {
+                    name = split[split.Length - 1],
+                    path = files[i]
+                });
+            }
+
+            Logs = new ObservableCollection<logNames>(tempLogList);
+            Console.WriteLine(Logs);
         }
 
         private void StartLog_Click(object sender, RoutedEventArgs e)
@@ -68,11 +101,47 @@ namespace WindowsPerformanceMonitor
 
         private void logList_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as ListView).SelectedItem;
-            if (item != null)
+            if (logList.SelectedIndex > -1)
             {
-                // TODO
+                SelectedLog = (logNames)logList.Items[logList.SelectedIndex];
             }
         }
+
+        private void testingRead()
+        {
+            payload log = temp.ReadIt("C:\\Users\\Darren\\Documents\\WindowsPerformanceMonitor\\10-27-2019");
+
+        }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public ObservableCollection<logNames> Logs
+        {
+            get { return _logs; }
+            set
+            {
+                _logs = value;
+                OnPropertyChanged(nameof(Logs));
+            }
+        }
+
+        public logNames SelectedLog
+        {
+            get { return _selectedLog; }
+            set
+            {
+                _selectedLog = value;
+                OnPropertyChanged(nameof(SelectedLog));
+            }
+        }
+
+        #endregion
     }
 }

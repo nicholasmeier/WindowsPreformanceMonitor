@@ -16,8 +16,6 @@
         </Grid.RowDefinitions>
         
         
-        
-        
         <!-- Top Left (View type, graph type, process to graph)-->
         <Button Margin="20, 3, 20, 2" Click="DetailedView_Click">Detailed View</Button>
         <ListView 
