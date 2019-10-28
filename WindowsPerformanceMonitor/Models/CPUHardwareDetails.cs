@@ -8,6 +8,7 @@ namespace WindowsPerformanceMonitor.Models
 {
     class CPUHardwareDetails
     {
+        public string _name { get; set; }
         public double _clockSpeedCPU { get; set; }
         public int _coresCPU { get; set; }
         public int _logicalCoresCPU { get; set; }
