@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using System.Management;
 using System.Collections.ObjectModel;
 using WindowsPerformanceMonitor.Models;
+using OpenHardwareMonitor.Hardware;
 
 namespace WindowsPerformanceMonitor
 {
@@ -42,7 +43,8 @@ namespace WindowsPerformanceMonitor
                 () => setLogicalCores(),
                 () => setCores(),
                 () => setClockSpeed(),
-                () => setCacheSize()
+                () => setCacheSize(),
+                () => setCPUName()
                 );
             // based on logical cores
             setVirtualization();
@@ -75,7 +77,7 @@ namespace WindowsPerformanceMonitor
             items.Add(new DetailItem() { Title = "L2 Cache:", Value = cpuDetails._cacheSizesCPU[1].ToString() + " MB" });
             items.Add(new DetailItem() { Title = "L3 Cache:", Value = cpuDetails._cacheSizesCPU[2].ToString() + " MB" });
             listBox.ItemsSource = items;
-            groupBoxDetails.Header = "CPU Details";
+            groupBoxDetails.Header = "CPU Details - " + cpuDetails._name;
         }
 
         private void setLogicalCores()
@@ -128,6 +130,29 @@ namespace WindowsPerformanceMonitor
             }
 
             cpuDetails._cacheSizesCPU = cacheSizes;
+        }
+
+        public void setCPUName()
+        {
+            var cp = new Computer();
+            cp.Open();
+            cp.HDDEnabled = true;
+            cp.FanControllerEnabled = true;
+            cp.RAMEnabled = true;
+            cp.GPUEnabled = true;
+            cp.MainboardEnabled = true;
+            cp.CPUEnabled = true;
+
+            for (int i = 0; i < cp.Hardware.Count(); i++)
+            {
+                var hardware = cp.Hardware[i];
+                hardware.Update();
+
+                if (hardware.HardwareType == HardwareType.CPU)
+                {
+                    cpuDetails._name = hardware.Name;
+                }
+            }
         }
 
         #endregion
