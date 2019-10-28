@@ -67,11 +67,20 @@
         </StackPanel>
 
         <!-- Bottom Left (Log List)-->
-        <ListView Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10,10,10,10" PreviewMouseLeftButtonUp="logList_Click">
+        <ListView 
+            Grid.Row="1" 
+            Grid.Column="0" 
+            Grid.RowSpan="2" 
+            Margin="10,10,10,10" 
+            PreviewMouseLeftButtonUp="logList_Click"
+            ItemsSource="{Binding Logs}"
+            x:Name="logList"
+>
             <ListView.View>
-                <GridView>
+                <GridView x:Name="listView_gridView">
                     <GridViewColumn Header="Stored Logs" 
-                                    Width="100"/>
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding name}"/>
                 </GridView>
             </ListView.View>
         </ListView>

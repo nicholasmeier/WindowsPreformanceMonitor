@@ -69,7 +69,7 @@ namespace WindowsPerformanceMonitor
             NewData.Memory = comp.TotalMemory;
             NewData.Network = comp.TotalNetwork;
             NewData.Disk = comp.TotalDisk;
-            NewData.ProcessList = new List<ProcessEntry>(comp.ProcessList); // This should save all process entry statistics at once.
+            NewData.ProcessList = new List<ProcessEntry>(comp.ProcessList);
             mypayload.mydata.Add(NewData);
             mypayload.mytimes.Add(DateTime.Now);
         }
