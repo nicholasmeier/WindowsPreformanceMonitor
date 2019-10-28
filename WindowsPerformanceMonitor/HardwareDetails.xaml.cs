@@ -44,7 +44,8 @@ namespace WindowsPerformanceMonitor
                 () => setCores(),
                 () => setClockSpeed(),
                 () => setCacheSize(),
-                () => setCPUName()
+                () => setCPUName(),
+                () => setCPUBusSpeed()
                 );
             // based on logical cores
             setVirtualization();
@@ -76,6 +77,7 @@ namespace WindowsPerformanceMonitor
             items.Add(new DetailItem() { Title = "L1 Cache:", Value = cpuDetails._cacheSizesCPU[0].ToString() + " KB" });
             items.Add(new DetailItem() { Title = "L2 Cache:", Value = cpuDetails._cacheSizesCPU[1].ToString() + " MB" });
             items.Add(new DetailItem() { Title = "L3 Cache:", Value = cpuDetails._cacheSizesCPU[2].ToString() + " MB" });
+            items.Add(new DetailItem() { Title = "Bus Speed:", Value = cpuDetails._busSpeedCPU.ToString() + "MHz" });
             listBox.ItemsSource = items;
             groupBoxDetails.Header = "CPU Details - " + cpuDetails._name;
         }
@@ -151,6 +153,38 @@ namespace WindowsPerformanceMonitor
                 if (hardware.HardwareType == HardwareType.CPU)
                 {
                     cpuDetails._name = hardware.Name;
+                }
+            }
+        }
+
+        public void setCPUBusSpeed()
+        {
+            var cp = new Computer();
+            cp.Open();
+            cp.HDDEnabled = true;
+            cp.FanControllerEnabled = true;
+            cp.RAMEnabled = true;
+            cp.GPUEnabled = true;
+            cp.MainboardEnabled = true;
+            cp.CPUEnabled = true;
+
+            for (int i = 0; i < cp.Hardware.Count(); i++)
+            {
+                var hardware = cp.Hardware[i];
+                hardware.Update();
+
+                if (hardware.HardwareType == HardwareType.CPU)
+                {
+                    for (int j = 0; j < hardware.Sensors.Count(); j++)
+                    {
+                        var sensor = hardware.Sensors[j];
+                        if ( sensor.SensorType == SensorType.Clock && sensor.Name == "Bus Speed")
+                        {
+                            cpuDetails._busSpeedCPU = Math.Round((double)sensor.Value, 3);
+                        }
+
+
+                    }
                 }
             }
         }
