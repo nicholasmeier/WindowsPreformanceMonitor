@@ -141,12 +141,6 @@ namespace WindowsPerformanceMonitor
             }
         }
 
-        private void testingRead()
-        {
-            payload log = temp.ReadIt("C:\\Users\\Darren\\Documents\\WindowsPerformanceMonitor\\10-27-2019");
-
-        }
-
         #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
