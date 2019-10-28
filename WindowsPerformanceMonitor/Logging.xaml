@@ -90,8 +90,8 @@
             <CheckBox Content="Automatically record in" Margin="5,10,5,3"/>
             <ComboBox Margin="5,10,5,3"/>
             <StackPanel Orientation="Horizontal">
-                <Button Content="Play" Click="DeleteLog_Click" Margin="5,35,5,3" Width="71"/>
-                <Button Content="Pause" Click="DeleteLog_Click" Margin="0,35,0,3" Width="70"/>
+                <Button Content="Play" Click="PlayLog_Click" Margin="5,35,5,3" Width="71"/>
+                <Button Content="Pause" Click="PauseLog_Click" Margin="0,35,0,3" Width="70"/>
             </StackPanel>
         </StackPanel>
     </Grid>

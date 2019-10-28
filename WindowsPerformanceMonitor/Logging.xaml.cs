@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -87,6 +88,30 @@ namespace WindowsPerformanceMonitor
             }
 
             temp = null;
+        }
+
+        private void PlayLog_Click(object sender, RoutedEventArgs e)
+        {
+            if (SelectedLog != null)
+            {
+                payload log = temp.ReadIt(SelectedLog.path);
+                Play(log);
+            }
+        }
+
+        private void Play(payload log)
+        {
+            for (int i = 0; i < log.mytimes.Count; i++)
+            {
+
+
+                Thread.Sleep(200);
+            }
+        }
+
+        private void PauseLog_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO:
         }
 
         private void DeleteLog_Click(object sender, RoutedEventArgs e)
