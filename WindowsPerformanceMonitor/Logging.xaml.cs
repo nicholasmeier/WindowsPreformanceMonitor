@@ -30,11 +30,11 @@ namespace WindowsPerformanceMonitor
     {
         Log temp;
         private MainWindow mainWindow = null;
-        public ObservableCollection<logNames> _logs { get; set; }
+        public ObservableCollection<LogDetails> _logList { get; set; }
         public ObservableCollection<ProcessEntry> _logProcList { get; set; }
-        public logNames _selectedLog { get; set; }
+        public LogDetails _selectedLog { get; set; }
 
-        public class logNames
+        public class LogDetails
         {
             public string name { get; set; }
             public string path { get; set; }
@@ -44,7 +44,7 @@ namespace WindowsPerformanceMonitor
         {
             InitializeComponent();
             temp = new Log();
-            Logs = new ObservableCollection<logNames>();
+            LogList = new ObservableCollection<LogDetails>();
             this.DataContext = this;
             GetLogList();
         }
@@ -62,35 +62,18 @@ namespace WindowsPerformanceMonitor
         private void GetLogList()
         {
             string[] files = Directory.GetFiles("C:\\Users\\Darren\\Documents\\WindowsPerformanceMonitor");
-            List<logNames> tempLogList = new List<logNames>();
+            List<LogDetails> tempLogList = new List<LogDetails>();
             for (int i = 0; i < files.Length; i++)
             {
                 string[] split = files[i].Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
-                tempLogList.Add(new logNames()
+                tempLogList.Add(new LogDetails()
                 {
                     name = split[split.Length - 1],
                     path = files[i]
                 });
             }
 
-            Logs = new ObservableCollection<logNames>(tempLogList);
-            Console.WriteLine(Logs);
-        }
-
-        private void StartLog_Click(object sender, RoutedEventArgs e)
-        {
-            temp.StartLog();
-        }
-
-        private void StopLog_Click(object sender, RoutedEventArgs e)
-        {
-            if (temp != null)
-            {
-                temp.WriteIt();
-                GetLogList();
-            }
-
-            temp = null;
+            LogList = new ObservableCollection<LogDetails>(tempLogList);
         }
 
         private void PlayLog_Click(object sender, RoutedEventArgs e)
@@ -117,6 +100,21 @@ namespace WindowsPerformanceMonitor
             // This clears the listview after log has finished reading.
             LogProcList = new ObservableCollection<ProcessEntry>();
         }
+        private void StartLog_Click(object sender, RoutedEventArgs e)
+        {
+            temp.StartLog();
+        }
+
+        private void StopLog_Click(object sender, RoutedEventArgs e)
+        {
+            if (temp != null)
+            {
+                temp.WriteIt();
+                GetLogList();
+            }
+
+            temp = null;
+        }
 
         private void PauseLog_Click(object sender, RoutedEventArgs e)
         {
@@ -137,7 +135,7 @@ namespace WindowsPerformanceMonitor
         {
             if (logList.SelectedIndex > -1)
             {
-                SelectedLog = (logNames)logList.Items[logList.SelectedIndex];
+                SelectedLog = (LogDetails)logList.Items[logList.SelectedIndex];
             }
         }
 
@@ -150,17 +148,17 @@ namespace WindowsPerformanceMonitor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        public ObservableCollection<logNames> Logs
+        public ObservableCollection<LogDetails> LogList
         {
-            get { return _logs; }
+            get { return _logList; }
             set
             {
-                _logs = value;
-                OnPropertyChanged(nameof(Logs));
+                _logList = value;
+                OnPropertyChanged(nameof(LogList));
             }
         }
 
-        public logNames SelectedLog
+        public LogDetails SelectedLog
         {
             get { return _selectedLog; }
             set
