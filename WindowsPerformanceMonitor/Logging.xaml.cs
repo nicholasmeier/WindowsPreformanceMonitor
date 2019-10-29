@@ -28,7 +28,6 @@ namespace WindowsPerformanceMonitor
 
     public partial class Logging : UserControl, INotifyPropertyChanged
     {
-        Log temp;
         private MainWindow mainWindow = null;
         public ObservableCollection<LogDetails> _logList { get; set; }
         public ObservableCollection<ProcessEntry> _logProcList { get; set; }
@@ -43,7 +42,6 @@ namespace WindowsPerformanceMonitor
         public Logging()
         {
             InitializeComponent();
-            temp = new Log();
             LogList = new ObservableCollection<LogDetails>();
             this.DataContext = this;
             GetLogList();
@@ -61,7 +59,7 @@ namespace WindowsPerformanceMonitor
 
         private void GetLogList()
         {
-            string[] files = Directory.GetFiles("C:\\Users\\Darren\\Documents\\WindowsPerformanceMonitor");
+            string[] files = Directory.GetFiles("C:\\Users\\Brandon\\Documents\\WindowsPerformanceMonitor");
             List<LogDetails> tempLogList = new List<LogDetails>();
             for (int i = 0; i < files.Length; i++)
             {
@@ -80,7 +78,7 @@ namespace WindowsPerformanceMonitor
         {
             if (SelectedLog != null)
             {
-                payload log = temp.ReadIt(SelectedLog.path);
+                payload log = Globals._log.ReadIt(SelectedLog.path);
                 // Async so we can do other stuff while its reading.
                 Task.Run(() =>
                 {
@@ -102,18 +100,18 @@ namespace WindowsPerformanceMonitor
         }
         private void StartLog_Click(object sender, RoutedEventArgs e)
         {
-            temp.StartLog();
+            Globals._log.StartLog();
         }
 
         private void StopLog_Click(object sender, RoutedEventArgs e)
         {
-            if (temp != null)
+            if (Globals._log != null)
             {
-                temp.WriteIt();
+                Globals._log.WriteIt();
                 GetLogList();
             }
 
-            temp = null;
+            Globals._log = new Log();
         }
 
         private void PauseLog_Click(object sender, RoutedEventArgs e)

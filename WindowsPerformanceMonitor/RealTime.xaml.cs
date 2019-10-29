@@ -157,6 +157,12 @@ namespace WindowsPerformanceMonitor
             }
         }
 
+        private void TrackInLog_Click(object sender, EventArgs e)
+        {
+            ProcessEntry procEntry = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
+            Globals._log.AddPid(procEntry.Pid);
+        }
+
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("Combobox " + comboBox1.SelectedItem);

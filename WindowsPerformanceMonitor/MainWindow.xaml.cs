@@ -27,6 +27,7 @@ namespace WindowsPerformanceMonitor
             computerStatsThread.IsBackground = true;
             computerStatsThread.Start();
             Globals.SetProvider(provider);
+            Globals._log = new Log();
             InitializeComponent();
         }
 

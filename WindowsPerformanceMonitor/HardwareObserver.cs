@@ -24,6 +24,7 @@ namespace WindowsPerformanceMonitor
         }
         public virtual void Unsubscribe()
         {
+            if(unsubscriber != null)
             unsubscriber.Dispose();
         }
         public virtual void OnNext(ComputerObj value)

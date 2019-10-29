@@ -11,7 +11,7 @@ using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor
 {
-    class Log
+    public class Log
     {
         public struct data {
             public double Cpu;
@@ -31,6 +31,7 @@ namespace WindowsPerformanceMonitor
             public DateTime mystart;
         }
 
+        List<int> myPids = new List<int>();
         payload mypayload;
         String logPath;
         HardwareObserver observer;
@@ -51,6 +52,15 @@ namespace WindowsPerformanceMonitor
             mypayload.mytimes = new List<DateTime>();
         }
 
+        public void AddPid(int i)
+        {
+            if(!myPids.Exists(x => x == i))
+            {
+                myPids.Add(i);
+            }
+
+        }
+
         public void StartLog()
         {
             mypayload.mystart = DateTime.Now;
@@ -69,7 +79,16 @@ namespace WindowsPerformanceMonitor
             NewData.Memory = comp.TotalMemory;
             NewData.Network = comp.TotalNetwork;
             NewData.Disk = comp.TotalDisk;
-            NewData.ProcessList = new List<ProcessEntry>(comp.ProcessList);
+            List<ProcessEntry> currList = new List<ProcessEntry>(comp.ProcessList);
+            List<ProcessEntry> newList = new List<ProcessEntry>();
+            foreach (int somePid in myPids)
+            {
+                if (currList.Exists(x => x.Pid == somePid))
+                {
+                    newList.Add(currList.Find(x => x.Pid == somePid));
+                }
+            }
+            NewData.ProcessList = newList;
             mypayload.mydata.Add(NewData);
             mypayload.mytimes.Add(DateTime.Now);
         }
