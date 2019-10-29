@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms;
 
 namespace WindowsPerformanceMonitor
 {
@@ -20,11 +22,11 @@ namespace WindowsPerformanceMonitor
     /// </summary>
     /// 
 
-    public partial class Logging : UserControl
+    public partial class Logging : System.Windows.Controls.UserControl
     {
-        Log temp = new Log();
+        Log temp;
         private MainWindow mainWindow = null;
-
+        private String path = "";
         public Logging()
         {
             InitializeComponent();
@@ -42,7 +44,11 @@ namespace WindowsPerformanceMonitor
 
         private void StartLog_Click(object sender, RoutedEventArgs e)
         {
-            temp.StartLog();
+            if (path.Equals(""))
+                temp = new Log();
+            else
+                temp = new Log(path);
+                temp.StartLog();
             // TODO
         }
 
@@ -57,6 +63,16 @@ namespace WindowsPerformanceMonitor
             // TODO
         }
 
+        private void ChooseLocation_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog Fbd = new FolderBrowserDialog();
+            if(Fbd.ShowDialog() == DialogResult.OK)
+            {
+                path = Fbd.SelectedPath;
+            }
+
+        }
+
         private void ComboBox_Graph_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
@@ -64,7 +80,7 @@ namespace WindowsPerformanceMonitor
 
         private void logList_Click(object sender, RoutedEventArgs e)
         {
-            var item = (sender as ListView).SelectedItem;
+            var item = (sender as System.Windows.Controls.ListView).SelectedItem;
             if (item != null)
             {
                 // TODO

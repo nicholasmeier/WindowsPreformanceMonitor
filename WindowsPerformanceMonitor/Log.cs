@@ -36,7 +36,7 @@ namespace WindowsPerformanceMonitor
         HardwareObserver observer;
         public Log()
         {
-            logPath = Directory.GetCurrentDirectory();//DEFAULT LOG PATH
+            logPath = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor");
             mypayload = new payload();
             mypayload.mydata = new List<data>();
             mypayload.mytimes = new List<DateTime>();
@@ -48,6 +48,7 @@ namespace WindowsPerformanceMonitor
             logPath = path;
             mypayload = new payload();
             mypayload.mydata = new List<data>();
+            mypayload.mytimes = new List<DateTime>();
             StartLog();
         }
 
@@ -77,17 +78,17 @@ namespace WindowsPerformanceMonitor
         {
             String json = JsonConvert.SerializeObject(mypayload);
             String fileName = mypayload.mystart.Date.Month.ToString() + "-" + mypayload.mystart.Date.Day.ToString() + "-" + mypayload.mystart.Date.Year.ToString();
-            if(!System.IO.Directory.Exists(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor")))
-                System.IO.Directory.CreateDirectory(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor"));
+            if(!System.IO.Directory.Exists(Path.Combine(logPath)))
+                System.IO.Directory.CreateDirectory(Path.Combine(logPath));
             int i = 0;
             string appendage = "";
-            while (File.Exists(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor", fileName + appendage +".txt")))
+            while (File.Exists(Path.Combine(logPath, fileName + appendage +".txt")))
             {
                 i++;
                 appendage = "(" + i + ")";
             }
         
-            System.IO.File.WriteAllText(Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor", fileName + appendage +".txt"), json);
+            System.IO.File.WriteAllText(Path.Combine(logPath, fileName + appendage +".txt"), json);
             observer.Unsubscribe();
         }
 
