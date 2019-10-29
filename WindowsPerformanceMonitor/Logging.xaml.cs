@@ -29,9 +29,9 @@ namespace WindowsPerformanceMonitor
     public partial class Logging : UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow = null;
-        public ObservableCollection<LogDetails> _logList { get; set; }
-        public ObservableCollection<ProcessEntry> _logProcList { get; set; }
-        public LogDetails _selectedLog { get; set; }
+        private ObservableCollection<LogDetails> _logList { get; set; }
+        private ObservableCollection<ProcessEntry> _logProcList { get; set; }
+        private LogDetails _selectedLog { get; set; }
 
         public class LogDetails
         {
@@ -59,7 +59,7 @@ namespace WindowsPerformanceMonitor
 
         private void GetLogList()
         {
-            string[] files = Directory.GetFiles("C:\\Users\\Brandon\\Documents\\WindowsPerformanceMonitor");
+            string[] files = Directory.GetFiles("C:\\Users\\Darren\\Documents\\WindowsPerformanceMonitor");
             List<LogDetails> tempLogList = new List<LogDetails>();
             for (int i = 0; i < files.Length; i++)
             {
@@ -74,29 +74,61 @@ namespace WindowsPerformanceMonitor
             LogList = new ObservableCollection<LogDetails>(tempLogList);
         }
 
+        public void UpdateColumnHeaders(data load)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                listView_gridView.Columns[0].Header = $"Process {load.ProcessList.Count}";
+                listView_gridView.Columns[1].Header = $"CPU {Math.Round(load.Cpu, 2)}%";
+                listView_gridView.Columns[2].Header = $"GPU {Math.Round(load.Gpu, 2)}%";
+                listView_gridView.Columns[3].Header = $"Memory {Math.Round(load.Memory, 2)}%";
+                listView_gridView.Columns[4].Header = $"Disk {Math.Round(load.Disk, 2)}%";
+                listView_gridView.Columns[5].Header = $"Network {Math.Round(load.Network, 2)}%";
+
+                if (Math.Round(load.Cpu, 2) > 100)
+                {
+                    listView_gridView.Columns[1].Header = $"CPU 100%";
+                }
+            });
+        }
+
+        public void ResetColumnHeaders()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                listView_gridView.Columns[0].Header = $"Process";
+                listView_gridView.Columns[1].Header = $"CPU";
+                listView_gridView.Columns[2].Header = $"GPU";
+                listView_gridView.Columns[3].Header = $"Memory";
+                listView_gridView.Columns[4].Header = $"Disk";
+                listView_gridView.Columns[5].Header = $"Network";
+            });
+        }
+
         private void PlayLog_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedLog != null)
             {
-                payload log = Globals._log.ReadIt(SelectedLog.path);
-                // Async so we can do other stuff while its reading.
                 Task.Run(() =>
                 {
-                    Play(log);
+                    Play(SelectedLog.path);
                 });
             }
         }
 
-        private void Play(payload log)
+        private void Play(string path)
         {
+            payload log = Globals._log.ReadIt(path);
             for (int i = 0; i < log.mytimes.Count; i++)
             {
                 LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[i].ProcessList.OrderByDescending(p => p.Cpu));
+                UpdateColumnHeaders(log.mydata[i]);
                 Thread.Sleep(2000);
             }
 
             // This clears the listview after log has finished reading.
             LogProcList = new ObservableCollection<ProcessEntry>();
+            ResetColumnHeaders();
         }
         private void StartLog_Click(object sender, RoutedEventArgs e)
         {
