@@ -39,6 +39,7 @@ namespace WindowsPerformanceMonitor
             logPath = Directory.GetCurrentDirectory();//DEFAULT LOG PATH
             mypayload = new payload();
             mypayload.mydata = new List<data>();
+            mypayload.mytimes = new List<DateTime>();
             StartLog();
         }
         
