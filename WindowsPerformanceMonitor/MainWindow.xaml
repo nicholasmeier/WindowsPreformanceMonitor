@@ -6,7 +6,12 @@
         xmlns:tabData="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
         Closing="WindowsPerformance_Closing"
-        Title="Windows Performance Monitor" Height="475" Width="800" ResizeMode="NoResize">
+        Title="Windows Performance Monitor" Height="475" Width="800" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
+            <MenuItem Header="Exit" Click="Menu_Exit"/>
+        </ContextMenu>
+    </Window.Resources>
     <TabControl>
         <TabItem Header="Real Time">
             <tabData:RealTime x:Name="ucTab1Data1" />

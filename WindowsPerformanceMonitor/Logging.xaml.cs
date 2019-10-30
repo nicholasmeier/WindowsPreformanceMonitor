@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -26,7 +27,7 @@ namespace WindowsPerformanceMonitor
     /// </summary>
     /// 
 
-    public partial class Logging : UserControl, INotifyPropertyChanged
+    public partial class Logging : System.Windows.Controls.UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow = null;
         private ObservableCollection<LogDetails> _logList { get; set; }
@@ -59,7 +60,7 @@ namespace WindowsPerformanceMonitor
 
         private void GetLogList()
         {
-            string[] files = Directory.GetFiles(System.IO.Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor"));
+            string[] files = Directory.GetFiles(Globals._log.logPath);
             List<LogDetails> tempLogList = new List<LogDetails>();
             for (int i = 0; i < files.Length; i++)
             {
@@ -144,6 +145,16 @@ namespace WindowsPerformanceMonitor
             }
 
             Globals._log = new Log();
+        }
+        private void ChooseLocation_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog Fbd = new FolderBrowserDialog();
+            if (Fbd.ShowDialog() == DialogResult.OK)
+            {
+                Globals._log.logPath = Fbd.SelectedPath;
+                GetLogList();
+            }
+
         }
 
         private void PauseLog_Click(object sender, RoutedEventArgs e)

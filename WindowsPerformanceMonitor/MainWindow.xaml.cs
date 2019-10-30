@@ -20,6 +20,7 @@ namespace WindowsPerformanceMonitor
 {
     public partial class MainWindow : Window
     {
+        System.Windows.Forms.NotifyIcon ni;
         public MainWindow()
         {
             ComputerStatsMonitor provider = new ComputerStatsMonitor();
@@ -29,14 +30,40 @@ namespace WindowsPerformanceMonitor
             Globals.SetProvider(provider);
             Globals._log = new Log();
             InitializeComponent();
+            ni = new System.Windows.Forms.NotifyIcon();
+            ni.Icon = new System.Drawing.Icon("../../Graphics/WindowsPerformanceMonitor.ico");
+            ni.Visible = true;
+            ni.DoubleClick +=
+                delegate (object sender, EventArgs args)
+                {
+                    this.Show();
+                    this.WindowState = WindowState.Normal;
+                };
+            ni.MouseDown += new System.Windows.Forms.MouseEventHandler(NotifyIcon_MouseDown);
         }
 
         private void WindowsPerformance_Closing(object sender, CancelEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to exit?", "Exit Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.No)
+            this.Hide();
+            ni.Visible = true;
+            e.Cancel = true;
+
+        }
+        void NotifyIcon_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                e.Cancel = true;
+                var menu = this.FindResource("NotifierContextMenu") as ContextMenu;
+                menu.IsOpen = true;
+            }
+        }
+        protected void Menu_Exit(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to exit?", "Exit Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                ni.Visible = false;
+                Application.Current.Shutdown();
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
