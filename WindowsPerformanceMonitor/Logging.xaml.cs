@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WindowsPerformanceMonitor.Graphs;
 using WindowsPerformanceMonitor.Models;
 using static WindowsPerformanceMonitor.Log;
 
@@ -33,6 +34,9 @@ namespace WindowsPerformanceMonitor
         private ObservableCollection<LogDetails> _logList { get; set; }
         private ObservableCollection<ProcessEntry> _logProcList { get; set; }
         private LogDetails _selectedLog { get; set; }
+        public ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
+        private ProcessEntry _selectedProcessComboBox;
+        public ProcessEntry system = new ProcessEntry { Name = "SYSTEM", Pid = -1 };
 
         public class LogDetails
         {
@@ -46,6 +50,11 @@ namespace WindowsPerformanceMonitor
             LogList = new ObservableCollection<LogDetails>();
             this.DataContext = this;
             GetLogList();
+            _procListComboBox = new ObservableCollection<ProcessEntry>();
+            selectedProcessComboBox = system;
+            this.DataContext = this;
+            cbAll.IsChecked = true;
+            procListComboBox.Insert(0, system);
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -74,7 +83,79 @@ namespace WindowsPerformanceMonitor
 
             LogList = new ObservableCollection<LogDetails>(tempLogList);
         }
+        public ObservableCollection<ProcessEntry> procListComboBox
+        {
+            get { return _procListComboBox; }
+            set
+            {
+                _procListComboBox = value;
+                OnPropertyChanged(nameof(procListComboBox));
+            }
+        }
 
+        public ProcessEntry selectedProcessComboBox
+        {
+            get { return _selectedProcessComboBox; }
+            set
+            {
+                _selectedProcessComboBox = value;
+                OnPropertyChanged(nameof(selectedProcessComboBox));
+            }
+        }
+        private void CBAllChanged(object sender, RoutedEventArgs e)
+        {
+            bool newVal = (cbAll.IsChecked == true);
+            cpu.IsChecked = newVal;
+            gpu.IsChecked = newVal;
+            memory.IsChecked = newVal;
+            disk.IsChecked = newVal;
+            network.IsChecked = newVal;
+            gpuTemp.IsChecked = newVal;
+            cpuTemp.IsChecked = newVal;
+        }
+        private void CheckBoxChanged(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as System.Windows.Controls.CheckBox;
+            if (checkBox == null)
+            {
+                return;
+            }
+
+            liveGraph.SeriesVisibility[(int)Series.Cpu] = (bool)cpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Gpu] = (bool)gpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Memory] = (bool)memory.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Disk] = (bool)disk.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Network] = (bool)network.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.CpuTemp] = (bool)cpuTemp.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.GpuTemp] = (bool)gpuTemp.IsChecked;
+
+            //If all boxes are checked or unchecked set All correctly
+            if (cpu.IsChecked == gpu.IsChecked && cpu.IsChecked == memory.IsChecked &&
+                cpu.IsChecked == disk.IsChecked && cpu.IsChecked == network.IsChecked
+                && cpu.IsChecked == gpuTemp.IsChecked && cpu.IsChecked == cpuTemp.IsChecked)
+            {
+                cbAll.IsChecked = cpu.IsChecked;
+            }
+            else
+            {
+                cbAll.IsChecked = null;
+
+            }
+        }
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+            ProcessEntry selected = (ProcessEntry)comboBox1.SelectedItem;
+
+            if (selected != null)
+            {
+                liveGraph.ProcessPid = selected.Pid;
+            }
+            else
+            {
+                liveGraph.ProcessPid = -1;
+            }
+        }
         public void UpdateColumnHeaders(data load)
         {
             this.Dispatcher.Invoke(() =>
@@ -120,8 +201,10 @@ namespace WindowsPerformanceMonitor
         private void Play(string path)
         {
             payload log = Globals._log.ReadIt(path);
+            liveGraph.connect(log);
             for (int i = 0; i < log.mytimes.Count; i++)
             {
+                liveGraph.Read(log, i);
                 LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[i].ProcessList.OrderByDescending(p => p.Cpu));
                 UpdateColumnHeaders(log.mydata[i]);
                 Thread.Sleep(2000);

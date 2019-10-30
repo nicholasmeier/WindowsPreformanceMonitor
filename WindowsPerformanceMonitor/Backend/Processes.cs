@@ -24,7 +24,7 @@ namespace WindowsPerformanceMonitor.Backend
             List<ProcessEntry> processEntries = new List<ProcessEntry>();
 
             Process[] processes = Process.GetProcesses();
-            
+
             if (processes.Length % 8 == 0)
             {
                 List<ProcessEntry> l1 = new List<ProcessEntry>();
@@ -46,7 +46,8 @@ namespace WindowsPerformanceMonitor.Backend
                     () => l8 = parallelList(processes, l8, (processes.Length * 7 / 8), (processes.Length))
                     );
                 processEntries = l1.Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8).ToList();
-            }else if(processes.Length % 8 != 0)
+            }
+            else if (processes.Length % 8 != 0)
             {
                 List<ProcessEntry> l0 = new List<ProcessEntry>();
                 int remainder = (processes.Length % 8);
@@ -431,16 +432,20 @@ namespace WindowsPerformanceMonitor.Backend
                 CloseHandle(handleToSnapshot);
             }
 
-            try
-            {
+            if (parentProc != null)
                 return parentProc.Id;
+            return -1;
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return -1;
-            }
+            //try
+            //{
+            //    return parentProc.Id;
+
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e);
+            //    return -1;
+            //}
         }
 
         public double updateDisk(ObservableCollection<ProcessEntry> procList)

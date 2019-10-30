@@ -44,6 +44,7 @@ namespace WindowsPerformanceMonitor
             selectedProcessComboBox = system;
             this.DataContext = this;
             cbAll.IsChecked = true;
+            liveGraph.connect();
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
