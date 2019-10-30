@@ -59,7 +59,7 @@ namespace WindowsPerformanceMonitor
 
         private void GetLogList()
         {
-            string[] files = Directory.GetFiles("C:\\Users\\Darren\\Documents\\WindowsPerformanceMonitor");
+            string[] files = Directory.GetFiles(System.IO.Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor"));
             List<LogDetails> tempLogList = new List<LogDetails>();
             for (int i = 0; i < files.Length; i++)
             {
