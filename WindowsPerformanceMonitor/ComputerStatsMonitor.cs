@@ -91,8 +91,27 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         computer.RAMEnabled = true;
         computer.HDDEnabled = true;
         computer.FanControllerEnabled = true;
+        computer.MainboardEnabled = true;
         while (true)
         {
+            foreach (var hardware in computer.Hardware)
+            {
+                foreach (var subhardware in hardware.SubHardware)
+                {
+                    subhardware.Update();
+                    if (subhardware.Sensors.Length > 0)
+                    {
+                        foreach (var sensor in subhardware.Sensors)
+                        {
+                            if (sensor.SensorType == SensorType.Fan && sensor.Name.Equals("Fan #1", StringComparison.OrdinalIgnoreCase))
+                            {
+                                //sensor.Value is your CPU fan speed.  If it does not exist, its because the motherboard used is not supported by Open Hardware.
+                                //Open hardware is a wrapper for win32_fan_sensor as well as additional drivers, so if Open Hardware cant find it, we can't either.
+                            }
+                        }
+                    }
+                }
+            }
             List<ProcessEntry> list = processes.GetProcesses();
             obj.ProcessList = new ObservableCollection<ProcessEntry>(new List<ProcessEntry>(list));
             List<Task> tasks = new List<Task>();
