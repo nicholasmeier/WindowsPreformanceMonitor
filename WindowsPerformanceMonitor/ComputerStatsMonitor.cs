@@ -105,12 +105,12 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 //obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)));
             }));
             Parallel.Invoke(
-              () =>  obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
+              () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
               () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
               () => obj.TotalGpu = getTotalGpuLoad(computer),
               () => obj.TotalDisk = processes.updateDisk(obj.ProcessList),
-              () =>   obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)))                
-                );
+              () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)))
+              );
             computer.Accept(updateVisitor);
             foreach (var observer in observers) observer.OnNext(obj);
             Thread.Sleep(300);

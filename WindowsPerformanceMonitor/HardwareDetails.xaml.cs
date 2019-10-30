@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using System.Management;
 using System.Collections.ObjectModel;
 using WindowsPerformanceMonitor.Models;
+using OpenHardwareMonitor.Hardware;
 
 namespace WindowsPerformanceMonitor
 {
@@ -42,7 +43,9 @@ namespace WindowsPerformanceMonitor
                 () => setLogicalCores(),
                 () => setCores(),
                 () => setClockSpeed(),
-                () => setCacheSize()
+                () => setCacheSize(),
+                () => setCPUName(),
+                () => setCPUBusSpeed()
                 );
             // based on logical cores
             setVirtualization();
@@ -59,8 +62,6 @@ namespace WindowsPerformanceMonitor
 
         #endregion
 
-
-
         #region CPU Details
 
         private void setCPUValues(ListBox listBox)
@@ -74,8 +75,10 @@ namespace WindowsPerformanceMonitor
             items.Add(new DetailItem() { Title = "L1 Cache:", Value = cpuDetails._cacheSizesCPU[0].ToString() + " KB" });
             items.Add(new DetailItem() { Title = "L2 Cache:", Value = cpuDetails._cacheSizesCPU[1].ToString() + " MB" });
             items.Add(new DetailItem() { Title = "L3 Cache:", Value = cpuDetails._cacheSizesCPU[2].ToString() + " MB" });
+            if (cpuDetails._busSpeedCPU > 0)
+                items.Add(new DetailItem() { Title = "Bus Speed:", Value = cpuDetails._busSpeedCPU.ToString() + "MHz" });
             listBox.ItemsSource = items;
-            groupBoxDetails.Header = "CPU Details";
+            groupBoxDetails.Header = "CPU Details - " + cpuDetails._name;
         }
 
         private void setLogicalCores()
@@ -128,6 +131,61 @@ namespace WindowsPerformanceMonitor
             }
 
             cpuDetails._cacheSizesCPU = cacheSizes;
+        }
+
+        public void setCPUName()
+        {
+            var cp = new Computer();
+            cp.Open();
+            cp.HDDEnabled = true;
+            cp.FanControllerEnabled = true;
+            cp.RAMEnabled = true;
+            cp.GPUEnabled = true;
+            cp.MainboardEnabled = true;
+            cp.CPUEnabled = true;
+
+            for (int i = 0; i < cp.Hardware.Count(); i++)
+            {
+                var hardware = cp.Hardware[i];
+                hardware.Update();
+
+                if (hardware.HardwareType == HardwareType.CPU)
+                {
+                    cpuDetails._name = hardware.Name;
+                }
+            }
+        }
+
+        public void setCPUBusSpeed()
+        {
+            var cp = new Computer();
+            cp.Open();
+            cp.HDDEnabled = true;
+            cp.FanControllerEnabled = true;
+            cp.RAMEnabled = true;
+            cp.GPUEnabled = true;
+            cp.MainboardEnabled = true;
+            cp.CPUEnabled = true;
+
+            for (int i = 0; i < cp.Hardware.Count(); i++)
+            {
+                var hardware = cp.Hardware[i];
+                hardware.Update();
+
+                if (hardware.HardwareType == HardwareType.CPU)
+                {
+                    for (int j = 0; j < hardware.Sensors.Count(); j++)
+                    {
+                        var sensor = hardware.Sensors[j];
+                        if ( sensor.SensorType == SensorType.Clock && sensor.Name == "Bus Speed")
+                        {
+                            cpuDetails._busSpeedCPU = Math.Round((double)sensor.Value, 3);
+                        }
+
+
+                    }
+                }
+            }
         }
 
         #endregion

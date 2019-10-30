@@ -135,6 +135,34 @@ namespace WindowsPerformanceMonitor
             // TODO
         }
 
+        private void KillProcess_Click(object sender, RoutedEventArgs e)
+        {
+            if (listView_ProcList.SelectedIndex > -1)
+            {
+                Processes procs = new Processes();
+                ProcessEntry procEntry = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
+                procs.Kill(procEntry.Pid);
+
+                List<ProcessEntry> newList = new List<ProcessEntry>();
+                for (int i = 0; i < listView_ProcList.Items.Count; i++)
+                {
+                    ProcessEntry p = (ProcessEntry)listView_ProcList.Items[i];
+                    if (p.Pid != procEntry.Pid)
+                    {
+                        newList.Add(p);
+                    }
+                }
+
+                listView_ProcList.ItemsSource = new ObservableCollection<ProcessEntry>(newList);
+            }
+        }
+
+        private void TrackInLog_Click(object sender, EventArgs e)
+        {
+            ProcessEntry procEntry = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
+            Globals._log.AddPid(procEntry.Pid);
+        }
+
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("Combobox " + comboBox1.SelectedItem);

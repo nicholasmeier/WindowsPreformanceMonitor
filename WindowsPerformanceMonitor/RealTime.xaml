@@ -28,6 +28,15 @@
             Margin="20,10,20,10" 
             x:Name="listView_ProcList"
             >
+            <ListView.ContextMenu>
+                <ContextMenu Name="ZoneIformationList" StaysOpen="true" Background="WhiteSmoke">
+                    <ContextMenu.BitmapEffect>
+                        <BitmapEffectGroup/>
+                    </ContextMenu.BitmapEffect>
+                    <MenuItem Header="Kill" Name="EditNutritionContextMenu"  Click="KillProcess_Click"/>
+                    <MenuItem Header="Track in Log" Name="track_in_log"  Click="TrackInLog_Click"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="listView_gridView">
                     <GridViewColumn Header="Process" 
@@ -113,8 +122,8 @@
                 Margin="20,5,20,0"
                 />
 
-            <ScrollViewer Height="140" VerticalScrollBarVisibility="Auto">
-                <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="170" Margin="20,5,20,10">
+            <ScrollViewer Height="140" VerticalScrollBarVisibility="Disabled">
+                <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="141">
                     <StackPanel x:Name="radioButtons">
                         <CheckBox Content="All" Name="cbAll" Checked="CBAllChanged" Unchecked="CBAllChanged"/>
                         <CheckBox Content="CPU" Name="cpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>

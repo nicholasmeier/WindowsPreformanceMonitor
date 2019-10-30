@@ -6,6 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
+       Closing="SummaryView_Closing"
+
         Title="SummaryView" SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.RowDefinitions>

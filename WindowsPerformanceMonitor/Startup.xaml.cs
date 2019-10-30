@@ -37,8 +37,6 @@ namespace WindowsPerformanceMonitor
             this.DataContext = new WindowsViewModel();
         }
 
-        // Get a reference to main windows when it is available.
-        // The Loaded Event is set in the XAML code above.
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
