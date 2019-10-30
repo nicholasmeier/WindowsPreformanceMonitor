@@ -62,8 +62,6 @@ namespace WindowsPerformanceMonitor
 
         #endregion
 
-
-
         #region CPU Details
 
         private void setCPUValues(ListBox listBox)
