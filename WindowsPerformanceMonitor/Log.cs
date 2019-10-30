@@ -38,6 +38,15 @@ namespace WindowsPerformanceMonitor
         public Log()
         {
             logPath = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor");
+            try {
+
+                Directory.GetFiles(logPath);
+            }
+            catch (Exception e)
+            {
+                Directory.CreateDirectory(logPath);
+            }
+
             mypayload = new payload();
             mypayload.mydata = new List<data>();
             mypayload.mytimes = new List<DateTime>();
