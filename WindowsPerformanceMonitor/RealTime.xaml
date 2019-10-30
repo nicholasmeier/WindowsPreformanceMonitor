@@ -15,7 +15,7 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        
+
         <!-- Top Left (View type, graph type, process to graph)-->
         <ListView 
             ItemsSource="{Binding procListListView}" 
@@ -92,10 +92,10 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        
+
         <!-- Top Right (Graph) -->
         <graph:LiveLineGraph Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="10,10,10,10" x:Name="liveGraph"/>
-        
+
         <!-- Bottom Row (Process List) -->
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
 
@@ -125,14 +125,14 @@
             <ScrollViewer Height="140" VerticalScrollBarVisibility="Disabled">
                 <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="141">
                     <StackPanel x:Name="radioButtons">
-                        <RadioButton Content="All" IsChecked="True" Checked="RadioButton_Checked"/>
-                        <RadioButton Content="CPU" IsChecked="False" Checked="RadioButton_Checked"/>
-                        <RadioButton Content="GPU" Checked="RadioButton_Checked"/>
-                        <RadioButton Content="Memory" Checked="RadioButton_Checked"/>
-                        <RadioButton Content="Disk" Checked="RadioButton_Checked"/>
-                        <RadioButton Content="Network" Checked="RadioButton_Checked"/>
-                        <RadioButton Content="GPU Temperature" Checked="RadioButton_Checked"/>
-                        <RadioButton Content="CPU Temperature" Checked="RadioButton_Checked"/>
+                        <CheckBox Content="All" Name="cbAll" Checked="CBAllChanged" Unchecked="CBAllChanged"/>
+                        <CheckBox Content="CPU" Name="cpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                        <CheckBox Content="GPU" Name="gpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                        <CheckBox Content="Memory" Name="memory" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                        <CheckBox Content="Disk" Name="disk" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                        <CheckBox Content="Network" Name="network" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                        <CheckBox Content="GPU Temperature" Name="gpuTemp" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                        <CheckBox Content="CPU Temperature" Name="cpuTemp" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
                     </StackPanel>
                 </GroupBox>
             </ScrollViewer>

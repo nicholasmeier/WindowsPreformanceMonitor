@@ -43,6 +43,7 @@ namespace WindowsPerformanceMonitor
             _procListComboBox = new ObservableCollection<ProcessEntry>();
             selectedProcessComboBox = system;
             this.DataContext = this;
+            cbAll.IsChecked = true;
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
@@ -97,21 +98,21 @@ namespace WindowsPerformanceMonitor
         public void UpdateProcessTreeView()
         {
             // make the tree with parent, child, and subchild
-            foreach(ProcessEntry parent in _procListTreeView)
+            foreach (ProcessEntry parent in _procListTreeView)
             {
                 TreeViewItem ParentItem = new TreeViewItem();
                 ParentItem.Header = parent.Name + " " + parent.Pid;
                 // check to see if they have a child to add
-                if(parent.ChildProcesses.Count > 0)
+                if (parent.ChildProcesses.Count > 0)
                 {
-                    foreach(ProcessEntry child in parent.ChildProcesses)
+                    foreach (ProcessEntry child in parent.ChildProcesses)
                     {
                         TreeViewItem ChildItem = new TreeViewItem();
                         ChildItem.Header = child.Name + " " + child.Pid;
                         // check to see if they have a sub child to add
-                        if(child.ChildProcesses.Count > 0)
+                        if (child.ChildProcesses.Count > 0)
                         {
-                            foreach(ProcessEntry subchild in child.ChildProcesses)
+                            foreach (ProcessEntry subchild in child.ChildProcesses)
                             {
                                 //get the subchild and add it to the child
                                 TreeViewItem SubChildItem = new TreeViewItem();
@@ -166,7 +167,7 @@ namespace WindowsPerformanceMonitor
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("Combobox " + comboBox1.SelectedItem);
-            ProcessEntry selected = (ProcessEntry) comboBox1.SelectedItem;
+            ProcessEntry selected = (ProcessEntry)comboBox1.SelectedItem;
 
             if (selected != null)
             {
@@ -244,12 +245,49 @@ namespace WindowsPerformanceMonitor
         }
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            
+
+        }
+
+        private void CBAllChanged(object sender, RoutedEventArgs e)
+        {
+            bool newVal = (cbAll.IsChecked == true);
+            cpu.IsChecked = newVal;
+            gpu.IsChecked = newVal;
+            memory.IsChecked = newVal;
+            disk.IsChecked = newVal;
+            network.IsChecked = newVal;
+            gpuTemp.IsChecked = newVal;
+            cpuTemp.IsChecked = newVal;
         }
 
         private void CheckBoxChanged(object sender, RoutedEventArgs e)
         {
+            var checkBox = sender as CheckBox;
+            if (checkBox == null)
+            {
+                return;
+            }
 
+            liveGraph.SeriesVisibility[(int)Series.Cpu] = (bool)cpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Gpu] = (bool)gpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Memory] = (bool)memory.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Disk] = (bool)disk.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Network] = (bool)network.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.CpuTemp] = (bool)cpuTemp.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.GpuTemp] = (bool)gpuTemp.IsChecked;
+
+            //If all boxes are checked or unchecked set All correctly
+            if (cpu.IsChecked == gpu.IsChecked && cpu.IsChecked == memory.IsChecked &&
+                cpu.IsChecked == disk.IsChecked && cpu.IsChecked == network.IsChecked
+                && cpu.IsChecked == gpuTemp.IsChecked && cpu.IsChecked == cpuTemp.IsChecked)
+            {
+                cbAll.IsChecked = cpu.IsChecked;
+            }
+            else
+            {
+                cbAll.IsChecked = null;
+
+            }
         }
 
         #endregion
