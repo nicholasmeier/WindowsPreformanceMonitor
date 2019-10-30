@@ -262,7 +262,7 @@ namespace WindowsPerformanceMonitor.Backend
                 procList[i].Cpu = Math.Round(cpuUsage * 100, 2);
                 totalCpu += cpuUsage;
             }
-
+            UpdateGpu(procList);
             return Math.Round(totalCpu * 100, 2);
         }
 
@@ -347,7 +347,7 @@ namespace WindowsPerformanceMonitor.Backend
                 procList[i].Gpu = procList[i].Cpu * 0.33;
                 totalLoad += procList[i].Gpu;
             }
-            return Math.Round(totalLoad * 100, 2);
+            return totalLoad;
         }
 
 
