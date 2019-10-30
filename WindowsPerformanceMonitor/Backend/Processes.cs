@@ -339,10 +339,15 @@ namespace WindowsPerformanceMonitor.Backend
         /// </summary>
         public double UpdateGpu(ObservableCollection<ProcessEntry> procList)
         {
-            Thread.Sleep(100);
+            //Using a best guess estimate for now 
+            //Estimate GPU usage using CPU usage
             double totalLoad = 0;
-
-            return totalLoad;
+            for (int i = 0; i < procList.Count; i++)
+            {
+                procList[i].Gpu = procList[i].Cpu * 0.33;
+                totalLoad += procList[i].Gpu;
+            }
+            return Math.Round(totalLoad * 100, 2);
         }
 
 
