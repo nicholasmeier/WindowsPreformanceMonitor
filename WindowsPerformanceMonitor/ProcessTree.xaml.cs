@@ -27,15 +27,14 @@ namespace WindowsPerformanceMonitor
         public ProcessTree()
         {
             InitializeComponent();
-            HardwareObserver observer = new HardwareObserver(UpdateValues);
-            Globals.provider.Subscribe(observer);
+            //UpdateValues();
             _procListTreeView = new ObservableCollection<ProcessEntry>();
         }
 
 
-        public void UpdateValues(ComputerObj comp)
+        public void UpdateValues()
         {
-            UpdateList(comp);
+            UpdateList(Globals.comp);
             return;
         }
 
