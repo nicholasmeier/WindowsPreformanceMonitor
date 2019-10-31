@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,7 +26,6 @@ namespace WindowsPerformanceMonitor
     /// Interaction logic for Logging.xaml
     /// </summary>
     /// 
-
     public partial class Logging : System.Windows.Controls.UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow = null;
@@ -235,13 +233,17 @@ namespace WindowsPerformanceMonitor
                 liveGraph.Read(log, i);
                 LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[i].ProcessList.OrderByDescending(p => p.Cpu));
                 UpdateColumnHeaders(log.mydata[i]);
+                procListComboBox = new ObservableCollection<ProcessEntry>(log.mydata[i].ProcessList.OrderByDescending(p => p.Cpu)); 
+                procListComboBox.Insert(0, system);
                 Thread.Sleep(2000);
             }
 
             // This clears the listview after log has finished reading.
+            liveGraph.Clear();
             LogProcList = new ObservableCollection<ProcessEntry>();
             ResetColumnHeaders();
         }
+
         private void StartLog_Click(object sender, RoutedEventArgs e)
         {
             Globals._log.StartLog();

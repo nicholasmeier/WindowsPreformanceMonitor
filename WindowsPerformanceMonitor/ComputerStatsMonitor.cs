@@ -97,15 +97,6 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 //List<ProcessEntry> list = new List<ProcessEntry>();
                 List<ProcessEntry> list = processes.GetProcesses();
                 obj.ProcessList = new ObservableCollection<ProcessEntry>(new List<ProcessEntry>(list));
-                List<Task> tasks = new List<Task>();
-                tasks.Add(new Task(() =>
-                {
-                    obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
-                    obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
-                    obj.TotalGpu = getTotalGpuLoad(computer);
-                    obj.TotalDisk = processes.updateDisk(obj.ProcessList);
-                //obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)));
-            }));
                 Parallel.Invoke(
                   () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                   () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
