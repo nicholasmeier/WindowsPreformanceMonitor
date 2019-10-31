@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenHardwareMonitor.Hardware;
-using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor
 {
@@ -12,7 +11,6 @@ namespace WindowsPerformanceMonitor
     {
         public static Log _log { get; set; }
         public static ComputerStatsMonitor _provider;
-        public static ComputerObj comp { get; set; }
         public static ComputerStatsMonitor provider
         {
             get { return _provider; }

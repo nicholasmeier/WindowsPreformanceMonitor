@@ -45,14 +45,9 @@ namespace WindowsPerformanceMonitor
         private void WindowsPerformance_Closing(object sender, CancelEventArgs e)
         {
             this.Hide();
+            ni.Visible = true;
             e.Cancel = true;
 
-        }
-        private void UpdateProcessTree(object sender, SelectionChangedEventArgs e)
-        {
-            string tabItem = ((sender as TabControl).SelectedItem as TabItem).Header as string;
-            if (tabItem.Equals("Process Tree"))
-                ucTab1Data6.UpdateValues();
         }
         void NotifyIcon_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {

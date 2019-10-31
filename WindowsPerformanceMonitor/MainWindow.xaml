@@ -12,7 +12,7 @@
             <MenuItem Header="Exit" Click="Menu_Exit"/>
         </ContextMenu>
     </Window.Resources>
-    <TabControl SelectionChanged="UpdateProcessTree">
+    <TabControl>
         <TabItem Header="Real Time">
             <tabData:RealTime x:Name="ucTab1Data1" />
         </TabItem>
