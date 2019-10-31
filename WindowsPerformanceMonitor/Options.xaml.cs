@@ -46,5 +46,12 @@ namespace WindowsPerformanceMonitor
         {
             MessageBox.Show("Hello");
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            CompareLogs compare = new CompareLogs(Application.Current.MainWindow);
+            compare.Show();
+            Application.Current.MainWindow.Hide();
+        }
     }
 }

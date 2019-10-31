@@ -24,7 +24,11 @@
                 <Button Content=" ... " Margin="10,0,0,0" Click="File_Button_Click"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="5,225,680,5">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <Button Content=" Compare Logs " HorizontalAlignment="Left" Click="Button_Click"/>
+             </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5,225,680,5">
                 <Button Content=" Save Settings " HorizontalAlignment="Left" Click="Save_Button_Click"/>
             </StackPanel>
         </StackPanel>

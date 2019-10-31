@@ -81,6 +81,9 @@
     </ApplicationDefinition>
     <Compile Include="Backend\Hardware.cs" />
     <Compile Include="Backend\Processes.cs" />
+    <Compile Include="CompareLogs.xaml.cs">
+      <DependentUpon>CompareLogs.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ComputerStatsMonitor.cs" />
     <Compile Include="GeneralView.xaml.cs">
       <DependentUpon>GeneralView.xaml</DependentUpon>
@@ -123,6 +126,10 @@
     <Compile Include="SummaryView.xaml.cs">
       <DependentUpon>SummaryView.xaml</DependentUpon>
     </Compile>
+    <Page Include="CompareLogs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GeneralView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
