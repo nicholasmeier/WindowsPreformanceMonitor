@@ -103,7 +103,8 @@ namespace WindowsPerformanceMonitor.Backend
                     Network = 0,
                     Ppid = ppid,
                     ChildProcesses = new List<ProcessEntry>(),
-                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
+                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
+                    PrevCpu = new Tuple<DateTime, TimeSpan>(new DateTime(1), new TimeSpan(0))
 
             };
                 if(p.Name != "Idle")
@@ -196,76 +197,70 @@ namespace WindowsPerformanceMonitor.Backend
         /// </summary>
         public double UpdateCpu(ObservableCollection<ProcessEntry> procList)
         {
-            return Convert.ToDouble(new ManagementObjectSearcher("SELECT PercentProcessorTime FROM Win32_PerfFormattedData_PerfOS_Processor WHERE Name='_Total'").Get().Cast<ManagementObject>().First().Properties["PercentProcessorTime"].Value.ToString());
-            //List<DateTime> lastTimes = new List<DateTime>(new DateTime[procList.Count]);
-            //List<TimeSpan> lastTotalProcessorTime = new List<TimeSpan>(new TimeSpan[procList.Count]);
+            List<DateTime> lastTimes = new List<DateTime>(new DateTime[procList.Count]);
+            List<TimeSpan> lastTotalProcessorTime = new List<TimeSpan>(new TimeSpan[procList.Count]);
 
-            ///* Get the current time and total process usage
-            //    for each process */
-            //for (int i = 0; i < procList.Count; i++)
-            //{
-            //    Process p;
-            //    try
-            //    {
-            //        p = Process.GetProcessById(procList[i].Pid);
-            //    }
-            //    catch (ArgumentException)    // Process no longer running
-            //    {
-            //        lastTimes.Insert(i, DateTime.Now);
-            //        lastTotalProcessorTime.Insert(i, new TimeSpan(0));
-            //        continue;
-            //    }
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    lastTimes.Insert(i, DateTime.Now);
+                    lastTotalProcessorTime.Insert(i, new TimeSpan(0));
+                    continue;
+                }
 
-            //    if (lastTimes[i] == null || lastTimes[i] == new DateTime())
-            //    {
-            //        lastTimes.Insert(i, DateTime.Now);
-            //        try
-            //        {
-            //            lastTotalProcessorTime.Insert(i, p.TotalProcessorTime);
-            //        }
-            //        catch (Exception)       // WIN32 access denied
-            //        {
-            //            lastTotalProcessorTime.Insert(i, new TimeSpan(0));
-            //        }
-            //    }
-            //}
+                if (lastTimes[i] == null || lastTimes[i] == new DateTime())
+                {
+                    lastTimes.Insert(i, DateTime.Now);
+                    try
+                    {
+                        lastTotalProcessorTime.Insert(i, p.TotalProcessorTime);
+                    }
+                    catch (Exception)       // WIN32 access denied
+                    {
+                        lastTotalProcessorTime.Insert(i, new TimeSpan(0));
+                    }
+                }
+            }
 
-            //Thread.Sleep(100);
-            //double totalCpu = 0;
+            Thread.Sleep(100);
+            double totalCpu = 0;
 
-            ///* Get the current time and total process usage
-            //    for each process, calculate cpu usage
-            //    based on previous */
-            //for (int i = 0; i < procList.Count; i++)
-            //{
-            //    Process p;
-            //    try
-            //    {
-            //        p = Process.GetProcessById(procList[i].Pid);
-            //    }
-            //    catch (ArgumentException)    // Process no longer running
-            //    {
-            //        procList[i].Cpu = -1;
-            //        continue;
-            //    }
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    procList[i].Cpu = -1;
+                    continue;
+                }
 
-            //    DateTime currTime = DateTime.Now;
-            //    TimeSpan currTotalProcessorTime;
-            //    try
-            //    {
-            //        currTotalProcessorTime = p.TotalProcessorTime;
-            //    }
-            //    catch (Exception)            // WIN32 access denied.
-            //    {
-            //        currTotalProcessorTime = new TimeSpan(0);
-            //    }
+                DateTime currTime = DateTime.Now;
+                TimeSpan currTotalProcessorTime;
+                try
+                {
+                    currTotalProcessorTime = p.TotalProcessorTime;
+                }
+                catch (Exception)            // WIN32 access denied.
+                {
+                    currTotalProcessorTime = new TimeSpan(0);
+                }
 
-            //    double cpuUsage = (currTotalProcessorTime.TotalMilliseconds - lastTotalProcessorTime[i].TotalMilliseconds) / currTime.Subtract(lastTimes[i]).TotalMilliseconds / Convert.ToDouble(Environment.ProcessorCount);
-            //    procList[i].Cpu = Math.Round(cpuUsage * 100, 2);
-            //    totalCpu += cpuUsage;
-            //}
-            //UpdateGpu(procList);
-            //return Math.Round(totalCpu * 100, 2);
+                double cpuUsage = (currTotalProcessorTime.TotalMilliseconds - lastTotalProcessorTime[i].TotalMilliseconds) / currTime.Subtract(lastTimes[i]).TotalMilliseconds / Convert.ToDouble(Environment.ProcessorCount);
+                procList[i].Cpu = Math.Round(cpuUsage * 100, 2);
+                totalCpu += cpuUsage;
+            }
+            UpdateGpu(procList);
+            return Math.Round(totalCpu * 100, 2);
         }
 
         /// <summary>
@@ -273,78 +268,78 @@ namespace WindowsPerformanceMonitor.Backend
         /// </summary>
         public double UpdateMem(ObservableCollection<ProcessEntry> procList)
         {
-            var wmiObject = new ManagementObjectSearcher("select * from Win32_OperatingSystem");
+            //var wmiObject = new ManagementObjectSearcher("select * from Win32_OperatingSystem");
 
-            var memoryValues = wmiObject.Get().Cast<ManagementObject>().Select(mo => new {
-                FreePhysicalMemory = Double.Parse(mo["FreePhysicalMemory"].ToString()),
-                TotalVisibleMemorySize = Double.Parse(mo["TotalVisibleMemorySize"].ToString())
-            }).FirstOrDefault();
+            //var memoryValues = wmiObject.Get().Cast<ManagementObject>().Select(mo => new {
+            //    FreePhysicalMemory = Double.Parse(mo["FreePhysicalMemory"].ToString()),
+            //    TotalVisibleMemorySize = Double.Parse(mo["TotalVisibleMemorySize"].ToString())
+            //}).FirstOrDefault();
 
-            if (memoryValues != null)
+            //if (memoryValues != null)
+            //{
+            //    return ((memoryValues.TotalVisibleMemorySize - memoryValues.FreePhysicalMemory) / memoryValues.TotalVisibleMemorySize) * 100;
+            //}
+            //return 0.0;
+            List<long> memoryUsages = new List<long>(new long[procList.Count]);
+
+            for (int i = 0; i < procList.Count; i++)
             {
-                return ((memoryValues.TotalVisibleMemorySize - memoryValues.FreePhysicalMemory) / memoryValues.TotalVisibleMemorySize) * 100;
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    memoryUsages.Insert(i, -1);
+                    continue;
+                }
+
+                if (memoryUsages[i] != -1)
+                {
+                    memoryUsages.Insert(i, 0);
+                    try
+                    {
+                        memoryUsages.Insert(i, p.WorkingSet64);
+                    }
+                    catch (Exception)       // The platform is Windows 98 or Windows Millennium Edition which is not supported
+                    {
+                        memoryUsages.Insert(i, 0);
+                    }
+                }
             }
-            return 0.0;
-            //List<long> memoryUsages = new List<long>(new long[procList.Count]);
 
-            //for (int i = 0; i < procList.Count; i++)
-            //{
-            //    Process p;
-            //    try
-            //    {
-            //        p = Process.GetProcessById(procList[i].Pid);
-            //    }
-            //    catch (ArgumentException)    // Process no longer running
-            //    {
-            //        memoryUsages.Insert(i, -1);
-            //        continue;
-            //    }
+            Thread.Sleep(100);
+            ulong totalMem = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
+            ulong totalUsed = 0;
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    procList[i].Memory = -1;
+                    continue;
+                }
+                if (memoryUsages[i] == 0)
+                {
+                    procList[i].Memory = 0;
+                }
+                else if (memoryUsages[i] > 0)
+                {
+                    procList[i].Memory = Math.Round((memoryUsages[i] / (double)totalMem) * 100, 2);
+                    totalUsed += (ulong)memoryUsages[i];
+                }
+                else
+                {
+                    procList[i].Memory = -1;
+                }
+            }
 
-            //    if (memoryUsages[i] != -1)
-            //    {
-            //        memoryUsages.Insert(i, 0);
-            //        try
-            //        {
-            //            memoryUsages.Insert(i, p.WorkingSet64);
-            //        }
-            //        catch (Exception)       // The platform is Windows 98 or Windows Millennium Edition which is not supported
-            //        {
-            //            memoryUsages.Insert(i, 0);
-            //        }
-            //    }
-            //}
-
-            //Thread.Sleep(100);
-            //ulong totalMem = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
-            //ulong totalUsed = 0;
-            //for (int i = 0; i < procList.Count; i++)
-            //{
-            //    Process p;
-            //    try
-            //    {
-            //        p = Process.GetProcessById(procList[i].Pid);
-            //    }
-            //    catch (ArgumentException)    // Process no longer running
-            //    {
-            //        procList[i].Memory = -1;
-            //        continue;
-            //    }
-            //    if (memoryUsages[i] == 0)
-            //    {
-            //        procList[i].Memory = 0;
-            //    }
-            //    else if (memoryUsages[i] > 0)
-            //    {
-            //        procList[i].Memory = Math.Round((memoryUsages[i] / (double)totalMem) * 100, 2);
-            //        totalUsed += (ulong)memoryUsages[i];
-            //    }
-            //    else
-            //    {
-            //        procList[i].Memory = -1;
-            //    }
-            //}
-
-            //return Math.Round(((double)totalUsed / (double)totalMem) * 100, 2);
+            return Math.Round(((double)totalUsed / (double)totalMem) * 100, 2);
         }
 
 

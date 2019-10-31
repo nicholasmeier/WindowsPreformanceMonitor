@@ -269,6 +269,14 @@ namespace WindowsPerformanceMonitor.Graphs
             return _trend;
         }
 
+        public void Clear()
+        {
+            for (int i = 0; i < SeriesCollection.Count; i++)
+            {
+                SeriesCollection[i].Values.Clear();
+            }
+        }
+
         private void SetAxisLimits(DateTime now)
         {
             AxisMax = now.Ticks + TimeSpan.FromSeconds(1).Ticks; // lets force the axis to be 1 second ahead

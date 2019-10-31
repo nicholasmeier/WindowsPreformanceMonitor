@@ -194,3 +194,5 @@ C:\Users\Andre\Desktop\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\D
 C:\Users\Andre\Desktop\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csproj.CopyComplete
 C:\Users\Andre\Desktop\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.exe
 C:\Users\Andre\Desktop\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.pdb
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\CompareLogs.g.cs
+C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\CompareLogs.baml
