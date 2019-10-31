@@ -38,6 +38,11 @@ namespace WindowsPerformanceMonitor
         private ProcessEntry _selectedProcessComboBox;
         public ProcessEntry system = new ProcessEntry { Name = "SYSTEM", Pid = -1 };
 
+
+        private Thread readThread;
+        private bool paused;
+        ManualResetEvent pauseEvent = new ManualResetEvent(true);
+
         public class LogDetails
         {
             public string name { get; set; }
@@ -55,6 +60,7 @@ namespace WindowsPerformanceMonitor
             this.DataContext = this;
             cbAll.IsChecked = true;
             procListComboBox.Insert(0, system);
+            paused = false;
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -191,10 +197,31 @@ namespace WindowsPerformanceMonitor
         {
             if (SelectedLog != null)
             {
-                Task.Run(() =>
+                paused = false;
+                PauseButton.Content = "Pause";
+                readThread = new Thread(() =>
                 {
                     Play(SelectedLog.path);
                 });
+                readThread.Start();
+            }
+        }
+
+        private void PauseLog_Click(object sender, RoutedEventArgs e)
+        {
+            if (readThread != null)
+            {
+                if(!paused)
+                {
+                    paused = true;
+                    pauseEvent.Reset();
+                    PauseButton.Content = "Resume";
+                } else
+                {
+                    paused = false;
+                    pauseEvent.Set();
+                    PauseButton.Content = "Pause";
+                }
             }
         }
 
@@ -204,6 +231,7 @@ namespace WindowsPerformanceMonitor
             liveGraph.connect(log);
             for (int i = 0; i < log.mytimes.Count; i++)
             {
+                pauseEvent.WaitOne(Timeout.Infinite);
                 liveGraph.Read(log, i);
                 LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[i].ProcessList.OrderByDescending(p => p.Cpu));
                 UpdateColumnHeaders(log.mydata[i]);
@@ -238,11 +266,6 @@ namespace WindowsPerformanceMonitor
                 GetLogList();
             }
 
-        }
-
-        private void PauseLog_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO:
         }
 
         private void DeleteLog_Click(object sender, RoutedEventArgs e)
