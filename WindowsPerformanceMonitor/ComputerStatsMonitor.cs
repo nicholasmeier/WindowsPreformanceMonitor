@@ -114,8 +114,9 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                   () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)))
                   );
                 computer.Accept(updateVisitor);
-                foreach (var observer in observers)
-                observer.OnNext(obj);
+                Parallel.ForEach(observers, observer =>
+                observer.OnNext(obj)
+                );
             
         }
     }

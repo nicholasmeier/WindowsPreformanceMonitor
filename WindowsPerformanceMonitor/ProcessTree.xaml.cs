@@ -51,6 +51,7 @@ namespace WindowsPerformanceMonitor
 
         public void UpdateProcessTreeView()
         {
+            ProcessTreeView.Items.Clear();
             // make the tree with parent, child, and subchild
             foreach (ProcessEntry parent in _procListTreeView)
             {
