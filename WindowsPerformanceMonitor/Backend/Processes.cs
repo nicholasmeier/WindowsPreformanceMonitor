@@ -463,38 +463,36 @@ namespace WindowsPerformanceMonitor.Backend
 
         public double updateDisk(ObservableCollection<ProcessEntry> procList)
         {
-            //List<float> diskUsages = new List<float>(new float[procList.Count]);
+            List<float> diskUsages = new List<float>(new float[procList.Count]);
 
-
-            //for (int i = 0; i < procList.Count; i++)
-            //{
-            //    Process p;
-            //    try
-            //    {
-            //        p = Process.GetProcessById(procList[i].Pid);
-            //    }
-            //    catch (ArgumentException)    // Process no longer running
-            //    {
-            //        diskUsages.Insert(i, -1);
-            //        continue;
-            //    }
-
-            //    if (diskUsages[i] != -1)
-            //    {
-
-            //        try
-            //        {
-            //            PerformanceCounter pc = new PerformanceCounter("Process", "Disk Read Bytes/sec", p.ProcessName);
-            //            diskUsages.Insert(i, pc.NextValue());
-            //        }
-            //        catch (Exception)       
-            //        {
-            //            diskUsages.Insert(i, 0);
-            //        }
-            //    }
-            //}
-
-            return 20;
+            for (int i = 0; i < procList.Count; i++)
+            {
+                Process p;
+                try
+                {
+                    p = Process.GetProcessById(procList[i].Pid);
+                }
+                catch (ArgumentException)    // Process no longer running
+                {
+                    diskUsages.Insert(i, -1);
+                    continue;
+                }
+                if (diskUsages[i] != -1)
+                {
+                    try
+                    {
+                        PerformanceCounter pc = new PerformanceCounter("Process", "IO Data Bytes/sec", p.ProcessName);
+                        procList[i].Disk = pc.NextValue();
+                    }
+                    catch (Exception)       
+                    {
+                        diskUsages.Insert(i, 0);
+                    }
+                }
+            }
+            PerformanceCounter pt = new PerformanceCounter("Process", "IO Data Bytes/sec", "_Total");
+            
+            return pt.NextValue();
         }
     }
 }
