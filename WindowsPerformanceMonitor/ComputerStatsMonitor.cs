@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenHardwareMonitor.Hardware;
+using WindowsPerformanceMonitor;
 using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Models;
 
@@ -84,7 +85,6 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         Processes processes = new Processes();
         obj.Computer = computer;
         obj.ProcessList = plist;
-
         computer.Open();
         computer.CPUEnabled = true;
         computer.GPUEnabled = true;
@@ -94,48 +94,31 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         computer.MainboardEnabled = true;
         while (true)
         {
-            foreach (var hardware in computer.Hardware)
-            {
-                foreach (var subhardware in hardware.SubHardware)
+                //List<ProcessEntry> list = new List<ProcessEntry>();
+                List<ProcessEntry> list = processes.GetProcesses();
+                obj.ProcessList = new ObservableCollection<ProcessEntry>(new List<ProcessEntry>(list));
+                List<Task> tasks = new List<Task>();
+                tasks.Add(new Task(() =>
                 {
-                    subhardware.Update();
-                    if (subhardware.Sensors.Length > 0)
-                    {
-                        foreach (var sensor in subhardware.Sensors)
-                        {
-                            if (sensor.SensorType == SensorType.Fan && sensor.Name.Equals("Fan #1", StringComparison.OrdinalIgnoreCase))
-                            {
-                                //sensor.Value is your CPU fan speed.  If it does not exist, its because the motherboard used is not supported by Open Hardware.
-                                //Open hardware is a wrapper for win32_fan_sensor as well as additional drivers, so if Open Hardware cant find it, we can't either.
-                            }
-                        }
-                    }
-                }
-            }
-            List<ProcessEntry> list = processes.GetProcesses();
-            obj.ProcessList = new ObservableCollection<ProcessEntry>(new List<ProcessEntry>(list));
-            List<Task> tasks = new List<Task>();
-            tasks.Add(new Task(() =>
-            {
-                obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
-                obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
-                obj.TotalGpu = getTotalGpuLoad(computer);
-                obj.TotalDisk = processes.updateDisk(obj.ProcessList);
+                    obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
+                    obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
+                    obj.TotalGpu = getTotalGpuLoad(computer);
+                    obj.TotalDisk = processes.updateDisk(obj.ProcessList);
                 //obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)));
             }));
-            Parallel.Invoke(
-              () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
-              () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-              () => obj.TotalGpu = getTotalGpuLoad(computer),
-              () => obj.TotalDisk = processes.updateDisk(obj.ProcessList),
-              () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)))
-              );
-            computer.Accept(updateVisitor);
-            foreach (var observer in observers) observer.OnNext(obj);
-            Thread.Sleep(300);
+                Parallel.Invoke(
+                  () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
+                  () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                  () => obj.TotalGpu = getTotalGpuLoad(computer),
+                  () => obj.TotalDisk = processes.updateDisk(obj.ProcessList),
+                  () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)))
+                  );
+                computer.Accept(updateVisitor);
+                foreach (var observer in observers)
+                observer.OnNext(obj);
+            
         }
     }
-
 
 
     // Maybe put graph data in its own subscriber fnc so we can loop quicker?
