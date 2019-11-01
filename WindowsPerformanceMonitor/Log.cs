@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Graphs;
 using WindowsPerformanceMonitor.Models;
@@ -112,6 +113,7 @@ namespace WindowsPerformanceMonitor
                 System.IO.Directory.CreateDirectory(Path.Combine(logPath));
             int i = 0;
             string appendage = "";
+
             while (File.Exists(Path.Combine(logPath, fileName + appendage + Globals._logFileType)))
             {
                 i++;
@@ -119,6 +121,13 @@ namespace WindowsPerformanceMonitor
             }
 
             System.IO.File.WriteAllText(Path.Combine(logPath, fileName + appendage + Globals._logFileType), json);
+
+            if (Globals._encryptionEnabled)
+            {
+                Encryption encryptobj = new Encryption();
+                encryptobj.FileEncrypt(Path.Combine(logPath, fileName + appendage + Globals._logFileType), "thisistheencryptionpassword");
+            }
+
             observer.Unsubscribe();
         }
 

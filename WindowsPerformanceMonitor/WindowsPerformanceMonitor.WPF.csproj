@@ -85,6 +85,7 @@
       <DependentUpon>CompareLogs.xaml</DependentUpon>
     </Compile>
     <Compile Include="ComputerStatsMonitor.cs" />
+    <Compile Include="Encryption.cs" />
     <Compile Include="GeneralView.xaml.cs">
       <DependentUpon>GeneralView.xaml</DependentUpon>
     </Compile>

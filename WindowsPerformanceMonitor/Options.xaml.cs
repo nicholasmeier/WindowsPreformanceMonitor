@@ -92,7 +92,7 @@ namespace WindowsPerformanceMonitor
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //MessageBox.Show(FileExtensionComboBox.SelectedItem.ToString());
+            MessageBox.Show(FileExtensionComboBox.SelectedItem.ToString());
             Console.WriteLine("Combobox " + FileExtensionComboBox.SelectedItem);
             string selected = (string)FileExtensionComboBox.SelectedItem;
 
@@ -104,6 +104,18 @@ namespace WindowsPerformanceMonitor
             else
             {
                 //liveGraph.ProcessPid = -1;
+            }
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox check = (CheckBox)sender;
+            if (check.IsChecked == true)
+            {
+                Globals._encryptionEnabled = true;
+            } else
+            {
+                Globals._encryptionEnabled = false;
             }
         }
     }
