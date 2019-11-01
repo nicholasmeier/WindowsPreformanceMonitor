@@ -15,7 +15,16 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <Label Content="Log File Format:" HorizontalAlignment="Left"/>
-                <ComboBox HorizontalAlignment="Stretch" Margin="17,0,0,0" Width="160"/>
+                <ComboBox 
+                    ItemsSource="{Binding extFileComboBox}"
+                    SelectedItem="{Binding selectedProcessComboBox}"
+                    HorizontalAlignment="Stretch" 
+                    Name="FileExtensionComboBox" 
+                    Margin="17,0,0,0" 
+                    Width="160"
+                    SelectionChanged="ComboBox_SelectionChanged" 
+                    MaxDropDownHeight="100" 
+                />
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">

@@ -112,13 +112,13 @@ namespace WindowsPerformanceMonitor
                 System.IO.Directory.CreateDirectory(Path.Combine(logPath));
             int i = 0;
             string appendage = "";
-            while (File.Exists(Path.Combine(logPath, fileName + appendage + ".txt")))
+            while (File.Exists(Path.Combine(logPath, fileName + appendage + Globals._logFileType)))
             {
                 i++;
                 appendage = "(" + i + ")";
             }
 
-            System.IO.File.WriteAllText(Path.Combine(logPath, fileName + appendage + ".txt"), json);
+            System.IO.File.WriteAllText(Path.Combine(logPath, fileName + appendage + Globals._logFileType), json);
             observer.Unsubscribe();
         }
 

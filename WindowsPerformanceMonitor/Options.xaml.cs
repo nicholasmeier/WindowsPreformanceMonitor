@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +23,17 @@ namespace WindowsPerformanceMonitor
     public partial class Options : UserControl
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
+        //public ObservableCollection<string> extFileComboBoxx { get; set; }
+        public ObservableCollection<string> _extFileComboBox { get; set; }
+        private string _selectedExtFileComboBox;
 
         public Options()
         {
             InitializeComponent();
+            //extFileComboBoxx = new ObservableCollection<string> {".txt", ".doc", ".pdf"};
+            extFileComboBox = new ObservableCollection<string> { ".txt", ".doc", ".pdf" };
+            selectedExtFileComboBox = ".txt";
+            this.DataContext = this;
         }
 
         // Get a reference to main windows when it is available.
@@ -32,6 +41,7 @@ namespace WindowsPerformanceMonitor
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
+            FileExtensionComboBox.SelectedIndex = 0;
         }
 
         private void File_Button_Click(object sender, RoutedEventArgs e)
@@ -52,6 +62,49 @@ namespace WindowsPerformanceMonitor
             CompareLogs compare = new CompareLogs(Application.Current.MainWindow);
             compare.Show();
             Application.Current.MainWindow.Hide();
+        }
+
+        public ObservableCollection<string> extFileComboBox
+        {
+            get { return _extFileComboBox; }
+            set
+            {
+                _extFileComboBox = value;
+                OnPropertyChanged(nameof(extFileComboBox));
+            }
+        }
+        public string selectedExtFileComboBox
+        {
+            get { return _selectedExtFileComboBox; }
+            set
+            {
+                _selectedExtFileComboBox = value;
+                OnPropertyChanged(nameof(selectedExtFileComboBox));
+            }
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //MessageBox.Show(FileExtensionComboBox.SelectedItem.ToString());
+            Console.WriteLine("Combobox " + FileExtensionComboBox.SelectedItem);
+            string selected = (string)FileExtensionComboBox.SelectedItem;
+
+            if (selected != null)
+            {
+                //update the file extension for reals
+                Globals._logFileType = selected;
+            }
+            else
+            {
+                //liveGraph.ProcessPid = -1;
+            }
         }
     }
 }

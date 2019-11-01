@@ -10,6 +10,7 @@ namespace WindowsPerformanceMonitor
     public static class Globals
     {
         public static Log _log { get; set; }
+        public static string _logFileType = ".txt";
         public static ComputerStatsMonitor _provider;
         public static ComputerStatsMonitor provider
         {
