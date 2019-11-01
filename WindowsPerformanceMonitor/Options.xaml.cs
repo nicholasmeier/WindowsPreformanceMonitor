@@ -92,7 +92,6 @@ namespace WindowsPerformanceMonitor
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MessageBox.Show(FileExtensionComboBox.SelectedItem.ToString());
             Console.WriteLine("Combobox " + FileExtensionComboBox.SelectedItem);
             string selected = (string)FileExtensionComboBox.SelectedItem;
 
