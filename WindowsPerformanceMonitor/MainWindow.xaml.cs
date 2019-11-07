@@ -21,9 +21,10 @@ namespace WindowsPerformanceMonitor
     public partial class MainWindow : Window
     {
         System.Windows.Forms.NotifyIcon ni;
+        ComputerStatsMonitor provider;
         public MainWindow()
         {
-            ComputerStatsMonitor provider = new ComputerStatsMonitor();
+            provider = new ComputerStatsMonitor();
             Thread computerStatsThread = new Thread(new ThreadStart(provider.getComputerInformation));
             computerStatsThread.IsBackground = true;
             computerStatsThread.Start();
@@ -74,6 +75,11 @@ namespace WindowsPerformanceMonitor
         private void Uc1Tab1Data1_Loaded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public void Changed_Tab(object sender, EventArgs e)
+        {
+            provider.tabIndex = tabControl.SelectedIndex;
         }
     }
 }

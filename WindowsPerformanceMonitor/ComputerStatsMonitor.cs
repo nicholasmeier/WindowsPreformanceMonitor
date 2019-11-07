@@ -15,6 +15,7 @@ using WindowsPerformanceMonitor.Models;
 public class ComputerStatsMonitor : IObservable<ComputerObj>
     {
     List<IObserver<ComputerObj>> observers;
+    public int tabIndex = 0;
     public ComputerStatsMonitor()
     {
         observers = new List<IObserver<ComputerObj>>();
@@ -92,22 +93,37 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         computer.HDDEnabled = true;
         computer.FanControllerEnabled = true;
         computer.MainboardEnabled = true;
+
         while (true)
         {
-                //List<ProcessEntry> list = new List<ProcessEntry>();
-                List<ProcessEntry> list = processes.GetProcesses();
-                obj.ProcessList = new ObservableCollection<ProcessEntry>(new List<ProcessEntry>(list));
+            obj.ProcessList = new ObservableCollection<ProcessEntry>(processes.GetProcesses());
+            Console.WriteLine("Current tab index: " + tabIndex);
+
+            if (tabIndex == 1)
+            {
+                // Only render process tree if we are on process tree tab.
                 Parallel.Invoke(
-                  () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
-                  () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-                  () => obj.TotalGpu = getTotalGpuLoad(computer),
-                  () => obj.TotalDisk = processes.updateDisk(obj.ProcessList),
-                  () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)))
-                  );
-                computer.Accept(updateVisitor);
-                Parallel.ForEach(observers, observer =>
+                    () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
+                    () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                    () => obj.TotalGpu = getTotalGpuLoad(computer),
+                    () => obj.TotalDisk = processes.updateDisk(obj.ProcessList),
+                    () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses())))
+                 );
+            }
+            else
+            {
+                Parallel.Invoke(
+                () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
+                () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                () => obj.TotalGpu = getTotalGpuLoad(computer),
+                () => obj.TotalDisk = processes.updateDisk(obj.ProcessList)
+             );
+            }
+
+            computer.Accept(updateVisitor);
+            Parallel.ForEach(observers, observer =>
                 observer.OnNext(obj)
-                );
+            );
             
         }
     }

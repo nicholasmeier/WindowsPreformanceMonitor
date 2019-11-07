@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\obj\Debug\
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\
 WindowsPerformanceMonitor
 none
 false
 DEBUG;TRACE
-C:\Users\Darren\source\repos\WindowsPreformanceMonitor\WindowsPerformanceMonitor\App.xaml
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\App.xaml
 121525842432
 
-30-2016584948
-23-2118570407
+311886341189
+231365274176
 CompareLogs.xaml;GeneralView.xaml;GraphLegend.xaml;Graphs\LiveLineGraph.xaml;HardwareDetails.xaml;Logging.xaml;MainWindow.xaml;Options.xaml;ProcessTree.xaml;RealTime.xaml;Startup.xaml;SummaryView.xaml;
 
 False

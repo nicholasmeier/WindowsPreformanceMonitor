@@ -43,8 +43,12 @@ namespace WindowsPerformanceMonitor
         {
             this.Dispatcher.Invoke(() =>
             {
-                procListTreeView = new ObservableCollection<ProcessEntry>(comp.ProcessTree.OrderByDescending(p => p.Cpu));
-        
+                if (comp.ProcessTree != null)
+                {
+                    procListTreeView = new ObservableCollection<ProcessEntry>(comp.ProcessTree.OrderByDescending(p => p.Cpu));
+                    Loading.Text = "";
+                }
+
                 UpdateProcessTreeView();
             });
         }
