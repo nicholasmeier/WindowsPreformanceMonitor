@@ -44,28 +44,9 @@
                 <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                     <Button Content="Schedule Log" x:Name="ScheduleButton" Click="ScheduleButton_Click"/>
                 </StackPanel>
-                
-                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                    <Grid x:Name="InputBox" Visibility="Collapsed">
-                        <Grid Background="Black" Opacity="0.5"/>
-                        <Border
-                            MinWidth="150"
-                            Background="LightGray" 
-                            BorderBrush="Black" 
-                            BorderThickness="1" 
-                            HorizontalAlignment="Center" 
-                            VerticalAlignment="Center"> 
-                            <StackPanel>
-                                <TextBlock Margin="5" Text="Enter Time (hrs:mins AM/PM):" FontWeight="Bold" FontFamily="Cambria" />
-                                <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="InputTextBox"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button x:Name="ClearButton" Margin="5" Content="Clear" Background="{x:Null}" Click="ClearButton_Click"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>   
-                    </Grid>
 
-                    <Grid x:Name="DurationInputBox" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <Grid x:Name="DurationInputBox" Visibility="Collapsed" Margin="5, 5, 5, 5">
                         <Grid Background="Black" Opacity="0.5"/>
                         <Border
                             MinWidth="150"
@@ -75,6 +56,8 @@
                             HorizontalAlignment="Center" 
                             VerticalAlignment="Center">
                             <StackPanel>
+                                <TextBlock Margin="5" Text="Enter Time (hrs:mins AM/PM):" FontWeight="Bold" FontFamily="Cambria" />
+                                <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="InputTextBox"/>
                                 <TextBlock Margin="5" Text="Enter Duration (hrs:mins):" FontWeight="Bold" FontFamily="Cambria" />
                                 <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="DurationInputTextBox"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -84,7 +67,6 @@
                             </StackPanel>
                         </Border>
                     </Grid>
-                    <RadioButton Margin="10,6,6,6" Content="Repeat" x:Name="RepeatButton" Visibility="Collapsed" Click="RepeatButton_Click"></RadioButton>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="10,0,0,0">

@@ -120,29 +120,10 @@ namespace WindowsPerformanceMonitor
             }
         }
 
-        private void RepeatButton_Click(object sender, RoutedEventArgs e)
-        {
-            var radioButton = sender as RadioButton;
-            if (radioButton == null ) return;
-
-            switch (radioButton.Content.ToString())
-            {
-                case "Repeat":
-                    //setCPUValues(List);
-                    //groupBoxDetails.Header = "CPU Details";
-                    break;
-                default:
-                    break;
-            }
-
-        }
-
         private void ScheduleButton_Click(object sender, RoutedEventArgs e)
         {
             // CoolButton Clicked! Let's show our InputBox.
-            InputBox.Visibility = System.Windows.Visibility.Visible;
             DurationInputBox.Visibility = System.Windows.Visibility.Visible;
-            RepeatButton.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void YesButton_Click(object sender, RoutedEventArgs e)
@@ -151,42 +132,30 @@ namespace WindowsPerformanceMonitor
 
             // validate the time formats
             if (validateTime(InputTextBox.Text, DurationInputTextBox.Text) == 0) {
-                String input = "Log Scheduled: " + InputTextBox.Text + " Duration: " + DurationInputTextBox.Text + " Repeats: " + RepeatButton.IsChecked;
+                String input = "Log Scheduled: " + InputTextBox.Text + " Duration: " + DurationInputTextBox.Text;
                 LogScheduleListBox.Items.Add(input); // Add Input to our ListBox.
                 LogScheduleListBox.Visibility = System.Windows.Visibility.Visible;
 
                 // YesButton Clicked! Let's hide our InputBox and handle the input text.
-                InputBox.Visibility = System.Windows.Visibility.Collapsed;
                 DurationInputBox.Visibility = System.Windows.Visibility.Collapsed;
-                RepeatButton.Visibility = System.Windows.Visibility.Collapsed;
 
                 // Clear InputBox.
                 InputTextBox.Text = String.Empty;
                 DurationInputTextBox.Text = String.Empty;
-                RepeatButton.IsChecked = false;
             }
             // Clear InputBox.
             InputTextBox.Text = String.Empty;
             DurationInputTextBox.Text = String.Empty;
-            RepeatButton.IsChecked = false;
-        }
-
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
-        {
-            InputTextBox.Text = String.Empty;
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
             // NoButton Clicked! Let's hide our InputBox.
-            InputBox.Visibility = System.Windows.Visibility.Collapsed;
             DurationInputBox.Visibility = System.Windows.Visibility.Collapsed;
-            RepeatButton.Visibility = System.Windows.Visibility.Collapsed;
 
             // Clear InputBox.
             InputTextBox.Text = String.Empty;
             DurationInputTextBox.Text = String.Empty;
-            RepeatButton.IsChecked = false;
         }
 
         private int validateTime(String time, String duration)
