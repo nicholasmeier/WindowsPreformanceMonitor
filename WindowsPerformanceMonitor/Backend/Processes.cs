@@ -19,22 +19,22 @@ namespace WindowsPerformanceMonitor.Backend
         /// <summary>
         /// Get list of processes of type ProcessEntry
         /// </summary>
-        public List<ProcessEntry> GetProcesses()
+        public ObservableCollection<ProcessEntry> GetProcesses()
         {
-            List<ProcessEntry> processEntries = new List<ProcessEntry>();
+            ObservableCollection<ProcessEntry> processEntries = new ObservableCollection<ProcessEntry>();
 
             Process[] processes = Process.GetProcesses();
 
             if (processes.Length % 8 == 0)
             {
-                List<ProcessEntry> l1 = new List<ProcessEntry>();
-                List<ProcessEntry> l2 = new List<ProcessEntry>();
-                List<ProcessEntry> l3 = new List<ProcessEntry>();
-                List<ProcessEntry> l4 = new List<ProcessEntry>();
-                List<ProcessEntry> l5 = new List<ProcessEntry>();
-                List<ProcessEntry> l6 = new List<ProcessEntry>();
-                List<ProcessEntry> l7 = new List<ProcessEntry>();
-                List<ProcessEntry> l8 = new List<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l1 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l2 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l3 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l4 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l5 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l6 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l7 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l8 = new ObservableCollection<ProcessEntry>();
                 Parallel.Invoke(
                     () => l1 = parallelList(processes, l1, 0, processes.Length / 8),
                     () => l2 = parallelList(processes, l2, (processes.Length / 8), (processes.Length * 2 / 8)),
@@ -45,22 +45,23 @@ namespace WindowsPerformanceMonitor.Backend
                     () => l7 = parallelList(processes, l7, (processes.Length * 6 / 8), (processes.Length * 7 / 8)),
                     () => l8 = parallelList(processes, l8, (processes.Length * 7 / 8), (processes.Length))
                     );
-                processEntries = l1.Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8).ToList();
+
+                processEntries = new ObservableCollection<ProcessEntry>(l1.Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8));
             }
             else if (processes.Length % 8 != 0)
             {
-                List<ProcessEntry> l0 = new List<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l0 = new ObservableCollection<ProcessEntry>();
                 int remainder = (processes.Length % 8);
                 l0 = parallelList(processes, l0, 0, remainder);
                 int newLen = processes.Length - remainder;
-                List<ProcessEntry> l1 = new List<ProcessEntry>();
-                List<ProcessEntry> l2 = new List<ProcessEntry>();
-                List<ProcessEntry> l3 = new List<ProcessEntry>();
-                List<ProcessEntry> l4 = new List<ProcessEntry>();
-                List<ProcessEntry> l5 = new List<ProcessEntry>();
-                List<ProcessEntry> l6 = new List<ProcessEntry>();
-                List<ProcessEntry> l7 = new List<ProcessEntry>();
-                List<ProcessEntry> l8 = new List<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l1 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l2 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l3 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l4 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l5 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l6 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l7 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l8 = new ObservableCollection<ProcessEntry>();
                 int s1, e1, s2, s3, s4, s5, s6, s7, s8;
                 s1 = remainder;
                 e1 = (newLen / 8) + remainder; // because we need it be a multiple of 8 to split
@@ -82,13 +83,13 @@ namespace WindowsPerformanceMonitor.Backend
                     () => l7 = parallelList(processes, l7, s7, s8),
                     () => l8 = parallelList(processes, l8, s8, (processes.Length))
                     );
-                processEntries = l0.Concat(l1).Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8).ToList();
+                processEntries = new ObservableCollection<ProcessEntry>(l0.Concat(l1).Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8));
             }
 
             return processEntries;
         }
 
-        private List<ProcessEntry> parallelList(Process[] processes, List<ProcessEntry> List, int start, int stop)
+        private ObservableCollection<ProcessEntry> parallelList(Process[] processes, ObservableCollection<ProcessEntry> List, int start, int stop)
         {
             for (int i=start; i < stop; i++)
             {
@@ -107,15 +108,23 @@ namespace WindowsPerformanceMonitor.Backend
                     PrevCpu = new Tuple<DateTime, TimeSpan>(new DateTime(1), new TimeSpan(0))
 
             };
+
+                if (p.Name.Length == 0)
+                {
+                    continue;
+                }
+
                 if(p.Name != "Idle")
                 {
                     try
                     {
                         p.ApplicationName = processes[i].MainModule.ModuleName;
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        Console.WriteLine(e + "parallelList");
                         p.ApplicationName = "Access Denied";
+                        continue;
                     }
 
                     List.Add(p);
@@ -221,14 +230,15 @@ namespace WindowsPerformanceMonitor.Backend
                     {
                         lastTotalProcessorTime.Insert(i, p.TotalProcessorTime);
                     }
-                    catch (Exception)       // WIN32 access denied
+                    catch (Exception e)       // WIN32 access denied
                     {
+                        Console.WriteLine(e + "cpu");
                         lastTotalProcessorTime.Insert(i, new TimeSpan(0));
                     }
                 }
             }
 
-            Thread.Sleep(100);
+            Thread.Sleep(10);
             double totalCpu = 0;
 
             for (int i = 0; i < procList.Count; i++)
@@ -250,8 +260,9 @@ namespace WindowsPerformanceMonitor.Backend
                 {
                     currTotalProcessorTime = p.TotalProcessorTime;
                 }
-                catch (Exception)            // WIN32 access denied.
+                catch (Exception e)            // WIN32 access denied.
                 {
+                    Console.WriteLine(e + "cpu2");
                     currTotalProcessorTime = new TimeSpan(0);
                 }
 
@@ -302,14 +313,15 @@ namespace WindowsPerformanceMonitor.Backend
                     {
                         memoryUsages.Insert(i, p.WorkingSet64);
                     }
-                    catch (Exception)       // The platform is Windows 98 or Windows Millennium Edition which is not supported
+                    catch (Exception e)       // The platform is Windows 98 or Windows Millennium Edition which is not supported
                     {
+                        Console.WriteLine(e + "mem");
                         memoryUsages.Insert(i, 0);
                     }
                 }
             }
 
-            Thread.Sleep(100);
+            Thread.Sleep(10);
             ulong totalMem = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
             ulong totalUsed = 0;
             for (int i = 0; i < procList.Count; i++)
@@ -319,8 +331,9 @@ namespace WindowsPerformanceMonitor.Backend
                 {
                     p = Process.GetProcessById(procList[i].Pid);
                 }
-                catch (ArgumentException)    // Process no longer running
+                catch (ArgumentException e)    // Process no longer running
                 {
+                    Console.WriteLine(e + "mem2");
                     procList[i].Memory = -1;
                     continue;
                 }
