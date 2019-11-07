@@ -7,15 +7,15 @@
 
         <GroupBox Header="Options">
             <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
-                <CheckBox FlowDirection="RightToLeft" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
-                    <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Enable Encryption" />
-                </CheckBox>
-            </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox FlowDirection="RightToLeft" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Enable Encryption" />
+                    </CheckBox>
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <Label Content="Log File Format:" HorizontalAlignment="Left"/>
-                <ComboBox 
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Label Content="Log File Format:" HorizontalAlignment="Left"/>
+                    <ComboBox 
                     ItemsSource="{Binding extFileComboBox}"
                     SelectedItem="{Binding selectedProcessComboBox}"
                     HorizontalAlignment="Stretch" 
@@ -25,22 +25,81 @@
                     SelectionChanged="ComboBox_SelectionChanged" 
                     MaxDropDownHeight="100" 
                 />
-            </StackPanel>
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <Label Content="Log File Location:" HorizontalAlignment="Left"/>
-                <Rectangle Fill="#FFF4F4F5" StrokeThickness="1" Margin="10,0,0,0" Width="160" Stroke="Black"/>
-                <Button Content=" ... " Margin="10,0,0,0" Click="File_Button_Click"/>
-            </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Label Content="Log File Location:" HorizontalAlignment="Left"/>
+                    <Rectangle Fill="#FFF4F4F5" StrokeThickness="1" Margin="10,0,0,0" Width="160" Stroke="Black"/>
+                    <Button Content=" ... " Margin="10,0,0,0" Click="File_Button_Click"/>
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <Button Content=" Compare Logs " HorizontalAlignment="Left" Click="Button_Click"/>
-             </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,10">
+                    <Button Content=" Compare Logs " HorizontalAlignment="Left" Click="Button_Click"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,10">
+                    <Label Content="Schedule System Log" FontWeight="Bold" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <Button Content="Schedule Log" x:Name="ScheduleButton" Click="ScheduleButton_Click"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <Grid x:Name="InputBox" Visibility="Collapsed">
+                        <Grid Background="Black" Opacity="0.5"/>
+                        <Border
+                            MinWidth="150"
+                            Background="LightGray" 
+                            BorderBrush="Black" 
+                            BorderThickness="1" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"> 
+                            <StackPanel>
+                                <TextBlock Margin="5" Text="Enter Time (hrs:mins AM/PM):" FontWeight="Bold" FontFamily="Cambria" />
+                                <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="InputTextBox"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button x:Name="ClearButton" Margin="5" Content="Clear" Background="{x:Null}" Click="ClearButton_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>   
+                    </Grid>
+
+                    <Grid x:Name="DurationInputBox" Visibility="Collapsed">
+                        <Grid Background="Black" Opacity="0.5"/>
+                        <Border
+                            MinWidth="150"
+                            Background="LightGray" 
+                            BorderBrush="Black" 
+                            BorderThickness="1" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center">
+                            <StackPanel>
+                                <TextBlock Margin="5" Text="Enter Duration (hrs:mins):" FontWeight="Bold" FontFamily="Cambria" />
+                                <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="DurationInputTextBox"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button x:Name="YesButton" Margin="5" Content="Submit" Background="{x:Null}" Click="YesButton_Click"/>
+                                    <Button x:Name="NoButton" Margin="5" Content="Cancel" Background="{x:Null}" Click="NoButton_Click" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <RadioButton Margin="10,6,6,6" Content="Repeat" x:Name="RepeatButton" Visibility="Collapsed" Click="RepeatButton_Click"></RadioButton>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <TextBlock Margin="5" Text="Log Schedule List" FontWeight="Bold"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <ListBox x:Name="LogScheduleListBox" Visibility="Hidden"/>
+                </StackPanel>
+
 
                 <StackPanel Orientation="Horizontal" Margin="5,225,680,5">
-                <Button Content=" Save Settings " HorizontalAlignment="Left" Click="Save_Button_Click"/>
+                    <Button Content=" Save Settings " HorizontalAlignment="Left" Click="Save_Button_Click"/>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
         </GroupBox>
 
     </Grid>

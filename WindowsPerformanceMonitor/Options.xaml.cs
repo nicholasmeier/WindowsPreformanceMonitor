@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +24,7 @@ namespace WindowsPerformanceMonitor
     public partial class Options : UserControl
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
+
         //public ObservableCollection<string> extFileComboBoxx { get; set; }
         public ObservableCollection<string> _extFileComboBox { get; set; }
         private string _selectedExtFileComboBox;
@@ -117,5 +119,102 @@ namespace WindowsPerformanceMonitor
                 Globals._encryptionEnabled = false;
             }
         }
+
+        private void RepeatButton_Click(object sender, RoutedEventArgs e)
+        {
+            var radioButton = sender as RadioButton;
+            if (radioButton == null ) return;
+
+            switch (radioButton.Content.ToString())
+            {
+                case "Repeat":
+                    //setCPUValues(List);
+                    //groupBoxDetails.Header = "CPU Details";
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        private void ScheduleButton_Click(object sender, RoutedEventArgs e)
+        {
+            // CoolButton Clicked! Let's show our InputBox.
+            InputBox.Visibility = System.Windows.Visibility.Visible;
+            DurationInputBox.Visibility = System.Windows.Visibility.Visible;
+            RepeatButton.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void YesButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Do something with the Input
+
+            // validate the time formats
+            if (validateTime(InputTextBox.Text, DurationInputTextBox.Text) == 0) {
+                String input = "Log Scheduled: " + InputTextBox.Text + " Duration: " + DurationInputTextBox.Text + " Repeats: " + RepeatButton.IsChecked;
+                LogScheduleListBox.Items.Add(input); // Add Input to our ListBox.
+                LogScheduleListBox.Visibility = System.Windows.Visibility.Visible;
+
+                // YesButton Clicked! Let's hide our InputBox and handle the input text.
+                InputBox.Visibility = System.Windows.Visibility.Collapsed;
+                DurationInputBox.Visibility = System.Windows.Visibility.Collapsed;
+                RepeatButton.Visibility = System.Windows.Visibility.Collapsed;
+
+                // Clear InputBox.
+                InputTextBox.Text = String.Empty;
+                DurationInputTextBox.Text = String.Empty;
+                RepeatButton.IsChecked = false;
+            }
+            // Clear InputBox.
+            InputTextBox.Text = String.Empty;
+            DurationInputTextBox.Text = String.Empty;
+            RepeatButton.IsChecked = false;
+        }
+
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            InputTextBox.Text = String.Empty;
+        }
+
+        private void NoButton_Click(object sender, RoutedEventArgs e)
+        {
+            // NoButton Clicked! Let's hide our InputBox.
+            InputBox.Visibility = System.Windows.Visibility.Collapsed;
+            DurationInputBox.Visibility = System.Windows.Visibility.Collapsed;
+            RepeatButton.Visibility = System.Windows.Visibility.Collapsed;
+
+            // Clear InputBox.
+            InputTextBox.Text = String.Empty;
+            DurationInputTextBox.Text = String.Empty;
+            RepeatButton.IsChecked = false;
+        }
+
+        private int validateTime(String time, String duration)
+        {
+            var timeregex = @"^ *(1[0-2]|[1-9]):[0-5][0-9] *(a|p|A|P)(m|M) *$";
+
+            var match = Regex.Match(time, timeregex, RegexOptions.IgnoreCase);
+
+            if (!match.Success)
+            {
+                // does not match
+                MessageBoxResult result = MessageBox.Show("The input format is wrong. Example 00:00 AM.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return 1;
+            }
+
+            var durationregex = @"^(([0]?[1-9]|1[0-2])(:)([0-5][0-9]))$";
+
+            match = Regex.Match(duration, durationregex, RegexOptions.IgnoreCase);
+
+            if (!match.Success)
+            {
+                // does not match
+                MessageBoxResult result = MessageBox.Show("The input format is wrong. Example 00:00.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return 1;
+            }
+
+            return 0;
+        }
+
     }
 }
