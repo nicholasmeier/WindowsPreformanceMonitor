@@ -96,28 +96,26 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
 
         while (true)
         {
-            obj.ProcessList = new ObservableCollection<ProcessEntry>(processes.GetProcesses());
-            Console.WriteLine("Current tab index: " + tabIndex);
+            obj.ProcessList = processes.FindDelta(obj.ProcessList);
 
             if (tabIndex == 1)
             {
-                // Only render process tree if we are on process tree tab.
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
                     () => obj.TotalGpu = getTotalGpuLoad(computer),
                     () => obj.TotalDisk = processes.updateDisk(obj.ProcessList),
                     () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses())))
-                 );
+                );
             }
             else
             {
                 Parallel.Invoke(
-                () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
-                () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-                () => obj.TotalGpu = getTotalGpuLoad(computer),
-                () => obj.TotalDisk = processes.updateDisk(obj.ProcessList)
-             );
+                    () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
+                    () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                    () => obj.TotalGpu = getTotalGpuLoad(computer),
+                    () => obj.TotalDisk = processes.updateDisk(obj.ProcessList)
+                );
             }
 
             computer.Accept(updateVisitor);

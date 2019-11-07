@@ -16,11 +16,62 @@ namespace WindowsPerformanceMonitor.Backend
 {
     class Processes
     {
+        public ObservableCollection<ProcessEntry> FindDelta(ObservableCollection<ProcessEntry> prev)
+        {
+            if (prev == null)
+            {
+                return GetProcesses();
+            }
+
+            // Load a hashset where Key = PID, Value is ProcessEntry
+            Process[] processes = Process.GetProcesses();
+            Dictionary<int, ProcessEntry> dict = new Dictionary<int, ProcessEntry>();
+            for (int i = 0; i < prev.Count; i++)
+            {
+                dict.Add(prev[i].Pid, prev[i]);
+            }
+
+            /*
+             * While iterating the new process list from GetProcess(), check if we already 
+             * have a ProcessEntry for it. If so, just reuse it. Otherwise create a new one.
+             */
+            ObservableCollection<ProcessEntry> ret = new ObservableCollection<ProcessEntry>();
+            foreach (Process proc in processes)
+            {
+                ProcessEntry temp;
+                bool hasValue = dict.TryGetValue(proc.Id, out temp);
+                if (hasValue)
+                {
+                    ret.Add(temp);
+                    dict.Remove(proc.Id);
+                }
+                else
+                {
+                    ret.Add(new ProcessEntry()
+                    {
+                        Name = proc.ProcessName,
+                        Pid = proc.Id,
+                        Cpu = 0,
+                        Gpu = 0,
+                        Disk = 0,
+                        Network = 0,
+                        Ppid = GetParentProcess(proc.Id),
+                        ChildProcesses = new List<ProcessEntry>(),
+                        IsApplication = proc.MainWindowHandle != IntPtr.Zero ? true : false,
+                        PrevCpu = new Tuple<DateTime, TimeSpan>(new DateTime(1), new TimeSpan(0))
+                    });
+                }
+            }
+
+            return ret;
+        }
+
         /// <summary>
         /// Get list of processes of type ProcessEntry
         /// </summary>
         public ObservableCollection<ProcessEntry> GetProcesses()
         {
+            
             ObservableCollection<ProcessEntry> processEntries = new ObservableCollection<ProcessEntry>();
 
             Process[] processes = Process.GetProcesses();
@@ -89,6 +140,11 @@ namespace WindowsPerformanceMonitor.Backend
             return processEntries;
         }
 
+        internal void test()
+        {
+            throw new NotImplementedException();
+        }
+
         private ObservableCollection<ProcessEntry> parallelList(Process[] processes, ObservableCollection<ProcessEntry> List, int start, int stop)
         {
             for (int i=start; i < stop; i++)
@@ -106,8 +162,7 @@ namespace WindowsPerformanceMonitor.Backend
                     ChildProcesses = new List<ProcessEntry>(),
                     IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
                     PrevCpu = new Tuple<DateTime, TimeSpan>(new DateTime(1), new TimeSpan(0))
-
-            };
+                };
 
                 if (p.Name.Length == 0)
                 {
