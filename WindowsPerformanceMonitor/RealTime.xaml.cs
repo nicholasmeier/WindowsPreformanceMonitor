@@ -137,6 +137,13 @@ namespace WindowsPerformanceMonitor
             // TODO
         }
 
+        private void ScheduleLogProcess_Click(object sender, RoutedEventArgs e)
+        {
+            if (listView_ProcList.SelectedIndex > -1)
+            {
+            }
+        }
+
         private void KillProcess_Click(object sender, RoutedEventArgs e)
         {
             if (listView_ProcList.SelectedIndex > -1)
