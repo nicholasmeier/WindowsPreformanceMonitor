@@ -37,7 +37,22 @@
                     <Button Content=" Compare Logs " HorizontalAlignment="Left" Click="Button_Click"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0,20,0,10">
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                    <Label Content="Set CPU Notification Threshold" FontWeight="Bold" HorizontalAlignment="Center" Margin="0, 0, 10, 0"/>
+                    <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="CPUThresholdTextBox"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                    <Label Content="Set GPU Notification Threshold" FontWeight="Bold" HorizontalAlignment="Center" Margin="0, 0, 10, 0"/>
+                    <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="GPUThresholdTextBox"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                    <Label Content="Set Memory Notification Threshold" FontWeight="Bold" HorizontalAlignment="Center" Margin="0, 0, 10, 0"/>
+                    <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="MemoryThresholdTextBox"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,5">
                     <Label Content="Schedule System Log" FontWeight="Bold" HorizontalAlignment="Center"/>
                 </StackPanel>
 
@@ -78,7 +93,7 @@
                 </StackPanel>
 
 
-                <StackPanel Orientation="Horizontal" Margin="5,225,680,5">
+                <StackPanel Orientation="Horizontal" Margin="5,20,680,5">
                     <Button Content=" Save Settings " HorizontalAlignment="Left" Click="Save_Button_Click"/>
                 </StackPanel>
             </StackPanel>
