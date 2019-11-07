@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using OpenHardwareMonitor.Hardware;
 using System.Threading;
 using System.ComponentModel;
+using static WindowsPerformanceMonitor.UserSettings;
 
 namespace WindowsPerformanceMonitor
 {
@@ -30,6 +31,11 @@ namespace WindowsPerformanceMonitor
             computerStatsThread.Start();
             Globals.SetProvider(provider);
             Globals._log = new Log();
+            Globals.Settings = new UserSettings();
+            if (Globals.Settings.Exists())
+            {
+                Globals.Settings.Load();
+            }
             InitializeComponent();
             ni = new System.Windows.Forms.NotifyIcon();
             ni.Icon = new System.Drawing.Icon("../../Graphics/WindowsPerformanceMonitor.ico");

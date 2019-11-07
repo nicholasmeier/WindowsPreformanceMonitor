@@ -127,6 +127,7 @@
     <Compile Include="SummaryView.xaml.cs">
       <DependentUpon>SummaryView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserSettings.cs" />
     <Page Include="CompareLogs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

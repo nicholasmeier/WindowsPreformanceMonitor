@@ -23,17 +23,16 @@ namespace WindowsPerformanceMonitor
     public partial class Options : UserControl
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
-        //public ObservableCollection<string> extFileComboBoxx { get; set; }
         public ObservableCollection<string> _extFileComboBox { get; set; }
-        private string _selectedExtFileComboBox;
+        private string _selectedExt;
 
         public Options()
         {
             InitializeComponent();
-            //extFileComboBoxx = new ObservableCollection<string> {".txt", ".doc", ".pdf"};
             extFileComboBox = new ObservableCollection<string> { ".txt", ".doc", ".pdf" };
-            selectedExtFileComboBox = ".txt";
+
             this.DataContext = this;
+
         }
 
         // Get a reference to main windows when it is available.
@@ -41,7 +40,25 @@ namespace WindowsPerformanceMonitor
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
-            FileExtensionComboBox.SelectedIndex = 0;
+            if (Globals.Settings.settings.LogFileFormat != null)
+            {
+                FileExtensionComboBox.SelectedItem = Globals.Settings.settings.LogFileFormat;
+                if (Globals.Settings.settings.IsEncryption == true)
+                {
+                    enc.IsChecked = true;
+                    Globals._encryptionEnabled = true;
+
+                }
+                else
+                {
+                    enc.IsChecked = false;
+                    Globals._encryptionEnabled = false;
+                }
+            }
+            else
+            {
+                selectedExt = ".txt";
+            }
         }
 
         private void File_Button_Click(object sender, RoutedEventArgs e)
@@ -54,7 +71,14 @@ namespace WindowsPerformanceMonitor
 
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Hello");
+            Globals.Settings.Save();
+        }
+
+        private void Delete_Button_Click(object sender, RoutedEventArgs e)
+        {
+            FileExtensionComboBox.SelectedItem = ".doc";
+
+            //Globals.Settings.Delete();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -73,13 +97,13 @@ namespace WindowsPerformanceMonitor
                 OnPropertyChanged(nameof(extFileComboBox));
             }
         }
-        public string selectedExtFileComboBox
+        public string selectedExt
         {
-            get { return _selectedExtFileComboBox; }
+            get { return _selectedExt; }
             set
             {
-                _selectedExtFileComboBox = value;
-                OnPropertyChanged(nameof(selectedExtFileComboBox));
+                _selectedExt = value;
+                OnPropertyChanged(nameof(selectedExt));
             }
         }
 
@@ -99,6 +123,7 @@ namespace WindowsPerformanceMonitor
             {
                 //update the file extension for reals
                 Globals._logFileType = selected;
+                Globals.Settings.settings.LogFileFormat = selected;
             }
             else
             {
@@ -112,9 +137,13 @@ namespace WindowsPerformanceMonitor
             if (check.IsChecked == true)
             {
                 Globals._encryptionEnabled = true;
-            } else
+                Globals.Settings.settings.IsEncryption = true;
+            }
+            else
             {
                 Globals._encryptionEnabled = false;
+                Globals.Settings.settings.IsEncryption = false;
+
             }
         }
     }

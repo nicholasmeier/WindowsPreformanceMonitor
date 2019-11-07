@@ -8,7 +8,7 @@
         <GroupBox Header="Options">
             <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
-                <CheckBox FlowDirection="RightToLeft" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                <CheckBox x:Name="enc" FlowDirection="RightToLeft" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
                     <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Enable Encryption" />
                 </CheckBox>
             </StackPanel>
@@ -16,8 +16,8 @@
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <Label Content="Log File Format:" HorizontalAlignment="Left"/>
                 <ComboBox 
-                    ItemsSource="{Binding extFileComboBox}"
-                    SelectedItem="{Binding selectedProcessComboBox}"
+                    ItemsSource="{Binding _extFileComboBox}"
+                    SelectedItem="{Binding selectedExt}"
                     HorizontalAlignment="Stretch" 
                     Name="FileExtensionComboBox" 
                     Margin="17,0,0,0" 
@@ -28,18 +28,14 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <Label Content="Log File Location:" HorizontalAlignment="Left"/>
-                <Rectangle Fill="#FFF4F4F5" StrokeThickness="1" Margin="10,0,0,0" Width="160" Stroke="Black"/>
-                <Button Content=" ... " Margin="10,0,0,0" Click="File_Button_Click"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <Button Content=" Compare Logs " HorizontalAlignment="Left" Click="Button_Click"/>
              </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="5,225,680,5">
                 <Button Content=" Save Settings " HorizontalAlignment="Left" Click="Save_Button_Click"/>
-            </StackPanel>
+                <Button Content=" Delete Settings " HorizontalAlignment="Left" Click="Delete_Button_Click" Margin="10, 0, 0, 0"/>
+
+                </StackPanel>
         </StackPanel>
         </GroupBox>
 

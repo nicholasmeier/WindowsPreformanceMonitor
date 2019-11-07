@@ -265,6 +265,7 @@ namespace WindowsPerformanceMonitor
             if (Fbd.ShowDialog() == DialogResult.OK)
             {
                 Globals._log.logPath = Fbd.SelectedPath;
+                Globals.Settings.settings.LogFilePath = Fbd.SelectedPath;
                 GetLogList();
             }
 
