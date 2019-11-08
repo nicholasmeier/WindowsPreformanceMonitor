@@ -344,8 +344,16 @@ namespace WindowsPerformanceMonitor.Backend
                     proc.PrevDisk = new PerformanceCounter("Process", "IO Data Bytes/sec", proc.Name);
                 }
 
-                proc.Disk =  (float) Math.Round(proc.PrevDisk.NextValue() / 1000000, 2);
-                totalDisk += proc.Disk;
+                try
+                {
+                    proc.Disk = (float)Math.Round(proc.PrevDisk.NextValue() / 1000000, 2);
+                    totalDisk += proc.Disk;
+                }
+                catch (Exception)
+                {
+                    proc.Disk = 0;
+                }
+
             }
 
             return totalDisk;
