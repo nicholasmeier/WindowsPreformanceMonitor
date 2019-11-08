@@ -16,9 +16,6 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Rectangle Grid.Row="1" Fill="#FF3255F0" Opacity="0.1"></Rectangle>
-        <Rectangle Grid.Row="2" Fill="#FFF33229" Opacity="0.1"></Rectangle>
-        <Rectangle Grid.Row="3" Fill="#FF32F03B" Opacity="0.1"></Rectangle>
         <TextBlock x:Name ="t1" Grid.Row="1" FontSize="12" Padding="30,15" Grid.RowSpan="2"/>
         <TextBlock x:Name ="t2" Grid.Row="2" FontSize="12" Padding="30,15" Grid.RowSpan="2"/>
         <TextBlock x:Name ="t3" Grid.Row="3" FontSize="12" Padding="30,15" Grid.RowSpan="2"/>

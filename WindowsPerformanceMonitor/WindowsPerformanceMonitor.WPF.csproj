@@ -47,6 +47,9 @@
       <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="OpenHardwareMonitorLib">
       <HintPath>Dependency\OpenHardwareMonitorLib.dll</HintPath>
     </Reference>
@@ -78,7 +81,11 @@
     </ApplicationDefinition>
     <Compile Include="Backend\Hardware.cs" />
     <Compile Include="Backend\Processes.cs" />
+    <Compile Include="CompareLogs.xaml.cs">
+      <DependentUpon>CompareLogs.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ComputerStatsMonitor.cs" />
+    <Compile Include="Encryption.cs" />
     <Compile Include="GeneralView.xaml.cs">
       <DependentUpon>GeneralView.xaml</DependentUpon>
     </Compile>
@@ -95,6 +102,7 @@
       <DependentUpon>HardwareDetails.xaml</DependentUpon>
     </Compile>
     <Compile Include="HardwareObserver.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Logging.xaml.cs">
       <DependentUpon>Logging.xaml</DependentUpon>
     </Compile>
@@ -107,6 +115,9 @@
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProcessTree.xaml.cs">
+      <DependentUpon>ProcessTree.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RealTime.xaml.cs">
       <DependentUpon>RealTime.xaml</DependentUpon>
     </Compile>
@@ -116,6 +127,11 @@
     <Compile Include="SummaryView.xaml.cs">
       <DependentUpon>SummaryView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserSettings.cs" />
+    <Page Include="CompareLogs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GeneralView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -149,6 +165,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Options.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProcessTree.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -198,7 +218,9 @@
       <Name>WindowsPerformanceMonitor.Cpp.Wrapper</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Graphics\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"

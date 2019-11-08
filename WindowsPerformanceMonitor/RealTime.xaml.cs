@@ -43,6 +43,8 @@ namespace WindowsPerformanceMonitor
             _procListComboBox = new ObservableCollection<ProcessEntry>();
             selectedProcessComboBox = system;
             this.DataContext = this;
+            cbAll.IsChecked = true;
+            liveGraph.connect();
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
@@ -68,7 +70,7 @@ namespace WindowsPerformanceMonitor
 
                 procListListView = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
                 procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
-                procListTreeView = new ObservableCollection<ProcessEntry>(comp.ProcessTree.OrderByDescending(p => p.Cpu));
+                //procListTreeView = new ObservableCollection<ProcessEntry>(comp.ProcessTree.OrderByDescending(p => p.Cpu));
                 procListComboBox.Insert(0, system);
 
                 selectedProcessListView = Find(selectedListView, procListListView);
@@ -85,7 +87,7 @@ namespace WindowsPerformanceMonitor
             listView_gridView.Columns[1].Header = $"CPU {Math.Round(comp.TotalCpu, 2)}%";
             listView_gridView.Columns[2].Header = $"GPU {Math.Round(comp.TotalGpu, 2)}%";
             listView_gridView.Columns[3].Header = $"Memory {Math.Round(comp.TotalMemory, 2)}%";
-            listView_gridView.Columns[4].Header = $"Disk {Math.Round(comp.TotalDisk, 2)}%";
+            listView_gridView.Columns[4].Header = $"Disk {Math.Round(comp.TotalDisk, 2)} Mb/s";
             listView_gridView.Columns[5].Header = $"Network {Math.Round(comp.TotalNetwork, 2)}%";
 
             if (Math.Round(comp.TotalCpu, 2) > 100)
@@ -97,21 +99,21 @@ namespace WindowsPerformanceMonitor
         public void UpdateProcessTreeView()
         {
             // make the tree with parent, child, and subchild
-            foreach(ProcessEntry parent in _procListTreeView)
+            foreach (ProcessEntry parent in _procListTreeView)
             {
                 TreeViewItem ParentItem = new TreeViewItem();
                 ParentItem.Header = parent.Name + " " + parent.Pid;
                 // check to see if they have a child to add
-                if(parent.ChildProcesses.Count > 0)
+                if (parent.ChildProcesses.Count > 0)
                 {
-                    foreach(ProcessEntry child in parent.ChildProcesses)
+                    foreach (ProcessEntry child in parent.ChildProcesses)
                     {
                         TreeViewItem ChildItem = new TreeViewItem();
                         ChildItem.Header = child.Name + " " + child.Pid;
                         // check to see if they have a sub child to add
-                        if(child.ChildProcesses.Count > 0)
+                        if (child.ChildProcesses.Count > 0)
                         {
-                            foreach(ProcessEntry subchild in child.ChildProcesses)
+                            foreach (ProcessEntry subchild in child.ChildProcesses)
                             {
                                 //get the subchild and add it to the child
                                 TreeViewItem SubChildItem = new TreeViewItem();
@@ -135,10 +137,45 @@ namespace WindowsPerformanceMonitor
             // TODO
         }
 
+        private void ScheduleLogProcess_Click(object sender, RoutedEventArgs e)
+        {
+            if (listView_ProcList.SelectedIndex > -1)
+            {
+            }
+        }
+
+        private void KillProcess_Click(object sender, RoutedEventArgs e)
+        {
+            if (listView_ProcList.SelectedIndex > -1)
+            {
+                Processes procs = new Processes();
+                ProcessEntry procEntry = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
+                procs.Kill(procEntry.Pid);
+
+                List<ProcessEntry> newList = new List<ProcessEntry>();
+                for (int i = 0; i < listView_ProcList.Items.Count; i++)
+                {
+                    ProcessEntry p = (ProcessEntry)listView_ProcList.Items[i];
+                    if (p.Pid != procEntry.Pid)
+                    {
+                        newList.Add(p);
+                    }
+                }
+
+                listView_ProcList.ItemsSource = new ObservableCollection<ProcessEntry>(newList);
+            }
+        }
+
+        private void TrackInLog_Click(object sender, EventArgs e)
+        {
+            ProcessEntry procEntry = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
+            Globals._log.AddPid(procEntry.Pid);
+        }
+
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine("Combobox " + comboBox1.SelectedItem);
-            ProcessEntry selected = (ProcessEntry) comboBox1.SelectedItem;
+            ProcessEntry selected = (ProcessEntry)comboBox1.SelectedItem;
 
             if (selected != null)
             {
@@ -216,12 +253,49 @@ namespace WindowsPerformanceMonitor
         }
         private void ProcessList_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            
+
+        }
+
+        private void CBAllChanged(object sender, RoutedEventArgs e)
+        {
+            bool newVal = (cbAll.IsChecked == true);
+            cpu.IsChecked = newVal;
+            gpu.IsChecked = newVal;
+            memory.IsChecked = newVal;
+            disk.IsChecked = newVal;
+            network.IsChecked = newVal;
+            gpuTemp.IsChecked = newVal;
+            cpuTemp.IsChecked = newVal;
         }
 
         private void CheckBoxChanged(object sender, RoutedEventArgs e)
         {
+            var checkBox = sender as CheckBox;
+            if (checkBox == null)
+            {
+                return;
+            }
 
+            liveGraph.SeriesVisibility[(int)Series.Cpu] = (bool)cpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Gpu] = (bool)gpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Memory] = (bool)memory.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Disk] = (bool)disk.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Network] = (bool)network.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.CpuTemp] = (bool)cpuTemp.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.GpuTemp] = (bool)gpuTemp.IsChecked;
+
+            //If all boxes are checked or unchecked set All correctly
+            if (cpu.IsChecked == gpu.IsChecked && cpu.IsChecked == memory.IsChecked &&
+                cpu.IsChecked == disk.IsChecked && cpu.IsChecked == network.IsChecked
+                && cpu.IsChecked == gpuTemp.IsChecked && cpu.IsChecked == cpuTemp.IsChecked)
+            {
+                cbAll.IsChecked = cpu.IsChecked;
+            }
+            else
+            {
+                cbAll.IsChecked = null;
+
+            }
         }
 
         #endregion

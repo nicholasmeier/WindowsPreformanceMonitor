@@ -44,15 +44,14 @@ namespace WindowsPerformanceMonitor.Graphs
         public LineSeries NetworkSeries { get; set; }
         public LineSeries CpuTempSeries { get; set; }
         public LineSeries GpuTempSeries { get; set; }
+        HardwareObserver observer { get; set; }
 
+        Log.payload log;
 
         public LiveLineGraph()
         {
             InitLineSeries();
             InitializeComponent();
-
-            HardwareObserver observer = new HardwareObserver(UpdateValues);
-            Globals.provider.Subscribe(observer);
             this.DataContext = this;
 
             ProcessPid = 0;
@@ -76,6 +75,17 @@ namespace WindowsPerformanceMonitor.Graphs
             ChartColor = "Red";
 
             SetAxisLimits(DateTime.Now);
+        }
+
+        public void connect()
+        {
+            observer = new HardwareObserver(UpdateValues);
+            Globals.provider.Subscribe(observer);
+        }
+
+        public void connect(Log.payload p)
+        {
+            log = p;
         }
         
         private void InitLineSeries()
@@ -126,6 +136,15 @@ namespace WindowsPerformanceMonitor.Graphs
             Trend trend = GetTrend(comp);
             AddChartValues(trend, now);
             SetAxisLimits(now);
+            ClearChartValues();
+        }
+
+        public void Read(Log.payload log, int c)
+        {
+            var time = log.mytimes[c];
+            Trend trend = GetTrend(log, c);
+            AddChartValues(trend, time);
+            SetAxisLimits(time);
             ClearChartValues();
         }
 
@@ -234,6 +253,28 @@ namespace WindowsPerformanceMonitor.Graphs
             }
 
             return _trend;
+        }
+
+        private Trend GetTrend(Log.payload p, int c)
+        {
+            Trend _trend = new Trend();
+            Log.data myData = p.mydata[c];
+            _trend.Cpu = myData.Cpu;
+            _trend.Gpu = myData.Gpu;
+            _trend.Memory = myData.Memory;
+            _trend.Disk = myData.Disk;
+            _trend.Network = myData.Network;
+            _trend.CpuTemp = myData.CpuTemp;
+            _trend.GpuTemp = myData.GpuTemp;
+            return _trend;
+        }
+
+        public void Clear()
+        {
+            for (int i = 0; i < SeriesCollection.Count; i++)
+            {
+                SeriesCollection[i].Values.Clear();
+            }
         }
 
         private void SetAxisLimits(DateTime now)

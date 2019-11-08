@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenHardwareMonitor.Hardware;
+using WindowsPerformanceMonitor;
 using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Models;
 
@@ -14,6 +15,7 @@ using WindowsPerformanceMonitor.Models;
 public class ComputerStatsMonitor : IObservable<ComputerObj>
     {
     List<IObserver<ComputerObj>> observers;
+    public int tabIndex = 0;
     public ComputerStatsMonitor()
     {
         observers = new List<IObserver<ComputerObj>>();
@@ -84,39 +86,43 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         Processes processes = new Processes();
         obj.Computer = computer;
         obj.ProcessList = plist;
-
         computer.Open();
         computer.CPUEnabled = true;
         computer.GPUEnabled = true;
         computer.RAMEnabled = true;
         computer.HDDEnabled = true;
         computer.FanControllerEnabled = true;
+        computer.MainboardEnabled = true;
+
         while (true)
         {
-            List<ProcessEntry> list = processes.GetProcesses();
-            obj.ProcessList = new ObservableCollection<ProcessEntry>(new List<ProcessEntry>(list));
-            List<Task> tasks = new List<Task>();
-            tasks.Add(new Task(() =>
+            obj.ProcessList = processes.FindDelta(obj.ProcessList);
+
+            if (tabIndex == 1)
             {
-                obj.TotalCpu = processes.UpdateCpu(obj.ProcessList);
-                obj.TotalMemory = processes.UpdateMem(obj.ProcessList);
-                obj.TotalGpu = getTotalGpuLoad(computer);
-                obj.TotalDisk = processes.updateDisk(obj.ProcessList);
-                //obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)));
-            }));
-            Parallel.Invoke(
-              () =>  obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
-              () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-              () => obj.TotalGpu = getTotalGpuLoad(computer),
-              () => obj.TotalDisk = processes.updateDisk(obj.ProcessList),
-              () =>   obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(list)))                
+                Parallel.Invoke(
+                    () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
+                    () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                    () => obj.TotalDisk = processes.UpdateDisk(obj.ProcessList)
+                    //() => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses())))
                 );
+            }
+            else
+            {
+                Parallel.Invoke(
+                    () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
+                    () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                    () => obj.TotalDisk = processes.UpdateDisk(obj.ProcessList)
+                );
+            }
+
             computer.Accept(updateVisitor);
-            foreach (var observer in observers) observer.OnNext(obj);
-            Thread.Sleep(300);
+            Parallel.ForEach(observers, observer =>
+                observer.OnNext(obj)
+            );
+            
         }
     }
-
 
 
     // Maybe put graph data in its own subscriber fnc so we can loop quicker?

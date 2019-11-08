@@ -11,9 +11,11 @@ namespace WindowsPerformanceMonitor.Models
         public string Name { get; set; }
         public int Pid { get; set; }
         public double Cpu { get; set; }
+        public Tuple<DateTime, TimeSpan> PrevCpu { get; set; }
         public double Gpu { get; set; }
         public double Memory { get; set; }
-        public double Disk { get; set; }
+        public float Disk { get; set; }
+        public PerformanceCounter PrevDisk { get; set; }
         public double Network { get; set; }
         public bool IsApplication { get; set; }
         public string ApplicationName { get; set; }

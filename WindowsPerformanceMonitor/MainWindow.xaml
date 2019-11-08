@@ -6,10 +6,18 @@
         xmlns:tabData="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
         Closing="WindowsPerformance_Closing"
-        Title="Windows Performance Monitor" Height="450" Width="800" ResizeMode="NoResize">
-    <TabControl>
+        Title="Windows Performance Monitor" Height="475" Width="800" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <ContextMenu x:Key="NotifierContextMenu" Placement="MousePoint">
+            <MenuItem Header="Exit" Click="Menu_Exit"/>
+        </ContextMenu>
+    </Window.Resources>
+    <TabControl x:Name="tabControl" SelectionChanged="Changed_Tab">
         <TabItem Header="Real Time">
-            <tabData:RealTime x:Name="ucTab1Data1" />
+            <tabData:RealTime x:Name="ucTab1Data1"/>
+        </TabItem>
+        <TabItem Header="Process Tree">
+            <tabData:ProcessTree x:Name="ucTab1Data6" />
         </TabItem>
         <TabItem Header="Logging">
             <tabData:Logging x:Name="ucTab1Data2" />

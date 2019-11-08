@@ -16,25 +16,73 @@ namespace WindowsPerformanceMonitor.Backend
 {
     class Processes
     {
-        /// <summary>
-        /// Get list of processes of type ProcessEntry
-        /// </summary>
-        public List<ProcessEntry> GetProcesses()
+        public ObservableCollection<ProcessEntry> FindDelta(ObservableCollection<ProcessEntry> prev)
         {
-            List<ProcessEntry> processEntries = new List<ProcessEntry>();
+            if (prev == null)
+            {
+                return GetProcesses();
+            }
+
+            // Load a hashset where Key = PID, Value is ProcessEntry
+            Process[] processes = Process.GetProcesses();
+            Dictionary<int, ProcessEntry> dict = new Dictionary<int, ProcessEntry>();
+            for (int i = 0; i < prev.Count; i++)
+            {
+                dict.Add(prev[i].Pid, prev[i]);
+            }
+
+            /*
+             * While iterating the new process list from GetProcess(), check if we already 
+             * have a ProcessEntry for it. If so, just reuse it. Otherwise create a new one.
+             */
+            ObservableCollection<ProcessEntry> ret = new ObservableCollection<ProcessEntry>();
+            foreach (Process proc in processes)
+            {
+                ProcessEntry temp;
+                bool hasValue = dict.TryGetValue(proc.Id, out temp);
+                if (hasValue)
+                {
+                    ret.Add(temp);
+                    dict.Remove(proc.Id);
+                }
+                else
+                {
+                    ret.Add(new ProcessEntry()
+                    {
+                        Name = proc.ProcessName,
+                        Pid = proc.Id,
+                        Cpu = 0,
+                        Gpu = 0,
+                        Disk = 0,
+                        Network = 0,
+                        Ppid = GetParentProcess(proc.Id),
+                        ChildProcesses = new List<ProcessEntry>(),
+                        IsApplication = proc.MainWindowHandle != IntPtr.Zero ? true : false,
+                        PrevCpu = new Tuple<DateTime, TimeSpan>(new DateTime(1), new TimeSpan(0))
+                    });
+                }
+            }
+
+            return ret;
+        }
+
+        public ObservableCollection<ProcessEntry> GetProcesses()
+        {
+            
+            ObservableCollection<ProcessEntry> processEntries = new ObservableCollection<ProcessEntry>();
 
             Process[] processes = Process.GetProcesses();
-            
+
             if (processes.Length % 8 == 0)
             {
-                List<ProcessEntry> l1 = new List<ProcessEntry>();
-                List<ProcessEntry> l2 = new List<ProcessEntry>();
-                List<ProcessEntry> l3 = new List<ProcessEntry>();
-                List<ProcessEntry> l4 = new List<ProcessEntry>();
-                List<ProcessEntry> l5 = new List<ProcessEntry>();
-                List<ProcessEntry> l6 = new List<ProcessEntry>();
-                List<ProcessEntry> l7 = new List<ProcessEntry>();
-                List<ProcessEntry> l8 = new List<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l1 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l2 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l3 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l4 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l5 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l6 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l7 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l8 = new ObservableCollection<ProcessEntry>();
                 Parallel.Invoke(
                     () => l1 = parallelList(processes, l1, 0, processes.Length / 8),
                     () => l2 = parallelList(processes, l2, (processes.Length / 8), (processes.Length * 2 / 8)),
@@ -45,21 +93,23 @@ namespace WindowsPerformanceMonitor.Backend
                     () => l7 = parallelList(processes, l7, (processes.Length * 6 / 8), (processes.Length * 7 / 8)),
                     () => l8 = parallelList(processes, l8, (processes.Length * 7 / 8), (processes.Length))
                     );
-                processEntries = l1.Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8).ToList();
-            }else if(processes.Length % 8 != 0)
+
+                processEntries = new ObservableCollection<ProcessEntry>(l1.Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8));
+            }
+            else if (processes.Length % 8 != 0)
             {
-                List<ProcessEntry> l0 = new List<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l0 = new ObservableCollection<ProcessEntry>();
                 int remainder = (processes.Length % 8);
                 l0 = parallelList(processes, l0, 0, remainder);
                 int newLen = processes.Length - remainder;
-                List<ProcessEntry> l1 = new List<ProcessEntry>();
-                List<ProcessEntry> l2 = new List<ProcessEntry>();
-                List<ProcessEntry> l3 = new List<ProcessEntry>();
-                List<ProcessEntry> l4 = new List<ProcessEntry>();
-                List<ProcessEntry> l5 = new List<ProcessEntry>();
-                List<ProcessEntry> l6 = new List<ProcessEntry>();
-                List<ProcessEntry> l7 = new List<ProcessEntry>();
-                List<ProcessEntry> l8 = new List<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l1 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l2 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l3 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l4 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l5 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l6 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l7 = new ObservableCollection<ProcessEntry>();
+                ObservableCollection<ProcessEntry> l8 = new ObservableCollection<ProcessEntry>();
                 int s1, e1, s2, s3, s4, s5, s6, s7, s8;
                 s1 = remainder;
                 e1 = (newLen / 8) + remainder; // because we need it be a multiple of 8 to split
@@ -81,13 +131,13 @@ namespace WindowsPerformanceMonitor.Backend
                     () => l7 = parallelList(processes, l7, s7, s8),
                     () => l8 = parallelList(processes, l8, s8, (processes.Length))
                     );
-                processEntries = l0.Concat(l1).Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8).ToList();
+                processEntries = new ObservableCollection<ProcessEntry>(l0.Concat(l1).Concat(l2).Concat(l3).Concat(l4).Concat(l5).Concat(l6).Concat(l7).Concat(l8));
             }
 
             return processEntries;
         }
 
-        private List<ProcessEntry> parallelList(Process[] processes, List<ProcessEntry> List, int start, int stop)
+        private ObservableCollection<ProcessEntry> parallelList(Process[] processes, ObservableCollection<ProcessEntry> List, int start, int stop)
         {
             for (int i=start; i < stop; i++)
             {
@@ -102,17 +152,26 @@ namespace WindowsPerformanceMonitor.Backend
                     Network = 0,
                     Ppid = ppid,
                     ChildProcesses = new List<ProcessEntry>(),
-                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false
+                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
+                    PrevCpu = null
                 };
+
+                if (p.Name.Length == 0)
+                {
+                    continue;
+                }
+
                 if(p.Name != "Idle")
                 {
                     try
                     {
                         p.ApplicationName = processes[i].MainModule.ModuleName;
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        Console.WriteLine(e + "parallelList");
                         p.ApplicationName = "Access Denied";
+                        continue;
                     }
 
                     List.Add(p);
@@ -145,7 +204,8 @@ namespace WindowsPerformanceMonitor.Backend
                     if (tree.ContainsKey(entry.Value.Ppid))
                     {
                         tree[entry.Value.Ppid].ChildProcesses.Add(entry.Value);
-                    } else if (dict.ContainsKey(entry.Value.Ppid))
+                    }
+                    else if (dict.ContainsKey(entry.Value.Ppid))
                     {
                         if (tree.ContainsKey(dict[entry.Value.Ppid].Ppid))
                         {
@@ -157,7 +217,8 @@ namespace WindowsPerformanceMonitor.Backend
                             tree[entry.Value.Ppid] = dict[entry.Value.Ppid];
                             tree[entry.Value.Ppid].ChildProcesses.Add(entry.Value);
                         }
-                    } else
+                    }
+                    else
                     {
                         tree[entry.Value.Pid] = entry.Value;
                     }
@@ -187,162 +248,119 @@ namespace WindowsPerformanceMonitor.Backend
             }
         }
 
-        /// <summary>
-        /// Update CPU usage for a process list
-        /// </summary>
         public double UpdateCpu(ObservableCollection<ProcessEntry> procList)
         {
-            List<DateTime> lastTimes = new List<DateTime>(new DateTime[procList.Count]);
-            List<TimeSpan> lastTotalProcessorTime = new List<TimeSpan>(new TimeSpan[procList.Count]);
-
-            /* Get the current time and total process usage
-                for each process */
-            for (int i = 0; i < procList.Count; i++)
+            double totalCpu = 0;
+            foreach (ProcessEntry proc in procList)
             {
                 Process p;
-                try
+                if (proc.PrevCpu == null)
                 {
-                    p = Process.GetProcessById(procList[i].Pid);
-                }
-                catch (ArgumentException)    // Process no longer running
-                {
-                    lastTimes.Insert(i, DateTime.Now);
-                    lastTotalProcessorTime.Insert(i, new TimeSpan(0));
-                    continue;
-                }
-
-                if (lastTimes[i] == null || lastTimes[i] == new DateTime())
-                {
-                    lastTimes.Insert(i, DateTime.Now);
                     try
                     {
-                        lastTotalProcessorTime.Insert(i, p.TotalProcessorTime);
+                        p = Process.GetProcessById(proc.Pid);
+                        proc.PrevCpu = new Tuple<DateTime, TimeSpan>(DateTime.Now, p.TotalProcessorTime);
                     }
-                    catch (Exception)       // WIN32 access denied
+                    catch (Exception)
                     {
-                        lastTotalProcessorTime.Insert(i, new TimeSpan(0));
+                        proc.PrevCpu = new Tuple<DateTime, TimeSpan>(DateTime.Now, new TimeSpan(0));
                     }
                 }
-            }
 
-            Thread.Sleep(100);
-            double totalCpu = 0;
-
-            /* Get the current time and total process usage
-                for each process, calculate cpu usage
-                based on previous */
-            for (int i = 0; i < procList.Count; i++)
-            {
-                Process p;
                 try
                 {
-                    p = Process.GetProcessById(procList[i].Pid);
+                    p = Process.GetProcessById(proc.Pid);
+                    DateTime currTime = DateTime.Now;
+                    TimeSpan currProcTime = p.TotalProcessorTime;
+
+                    double cpuUsage = (currProcTime.TotalMilliseconds - proc.PrevCpu.Item2.TotalMilliseconds) 
+                                        / currTime.Subtract(proc.PrevCpu.Item1).TotalMilliseconds 
+                                        / Convert.ToDouble(Environment.ProcessorCount);
+
+                    proc.Cpu = Math.Round(cpuUsage * 100, 2);
+                    proc.Gpu = Math.Round(proc.Cpu * .11, 2);   // GPU Estimation***
+                    totalCpu += cpuUsage;
+
+                    proc.PrevCpu = new Tuple<DateTime, TimeSpan>(currTime, currProcTime);
+
                 }
-                catch (ArgumentException)    // Process no longer running
+                catch (Exception)
                 {
-                    procList[i].Cpu = -1;
-                    continue;
+                    proc.Cpu = 0;
+                    // We want to insert a non-null prevCpu so we don't hit GetProcessById again since that
+                    // function is what slows this down.
+                    proc.PrevCpu = new Tuple<DateTime, TimeSpan>(DateTime.Now, new TimeSpan(0));
                 }
 
-                DateTime currTime = DateTime.Now;
-                TimeSpan currTotalProcessorTime;
-                try
-                {
-                    currTotalProcessorTime = p.TotalProcessorTime;
-                }
-                catch (Exception)            // WIN32 access denied.
-                {
-                    currTotalProcessorTime = new TimeSpan(0);
-                }
-
-                double cpuUsage = (currTotalProcessorTime.TotalMilliseconds - lastTotalProcessorTime[i].TotalMilliseconds) / currTime.Subtract(lastTimes[i]).TotalMilliseconds / Convert.ToDouble(Environment.ProcessorCount);
-                procList[i].Cpu = Math.Round(cpuUsage * 100, 2);
-                totalCpu += cpuUsage;
             }
 
-            return Math.Round(totalCpu * 100, 2);
+            return totalCpu;
         }
 
-        /// <summary>
-        /// Update memory usage for a process list
-        /// </summary>
         public double UpdateMem(ObservableCollection<ProcessEntry> procList)
         {
-            List<long> memoryUsages = new List<long>(new long[procList.Count]);
-
-            for (int i = 0; i < procList.Count; i++)
-            {
-                Process p;
-                try
-                {
-                    p = Process.GetProcessById(procList[i].Pid);
-                }
-                catch (ArgumentException)    // Process no longer running
-                {
-                    memoryUsages.Insert(i, -1);
-                    continue;
-                }
-
-                if (memoryUsages[i] != -1)
-                {
-                    memoryUsages.Insert(i, 0);
-                    try
-                    {
-                        memoryUsages.Insert(i, p.WorkingSet64);
-                    }
-                    catch (Exception)       // The platform is Windows 98 or Windows Millennium Edition which is not supported
-                    {
-                        memoryUsages.Insert(i, 0);
-                    }
-                }
-            }
-
-            Thread.Sleep(100);
+            double totalUsed = 0;
             ulong totalMem = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
-            ulong totalUsed = 0;
-            for (int i = 0; i < procList.Count; i++)
+            foreach (ProcessEntry proc in procList)
             {
                 Process p;
                 try
                 {
-                    p = Process.GetProcessById(procList[i].Pid);
+                    p = Process.GetProcessById(proc.Pid);
+                    totalUsed +=  p.WorkingSet64;
+                    proc.Memory = Math.Round(((double) p.WorkingSet64 / totalMem * 100), 2);
                 }
-                catch (ArgumentException)    // Process no longer running
+                catch (Exception)
                 {
-                    procList[i].Memory = -1;
-                    continue;
-                }
-                if (memoryUsages[i] == 0)
-                {
-                    procList[i].Memory = 0;
-                }
-                else if (memoryUsages[i] > 0)
-                {
-                    procList[i].Memory = Math.Round((memoryUsages[i] / (double)totalMem) * 100, 2);
-                    totalUsed += (ulong)memoryUsages[i];
-                }
-                else
-                {
-                    procList[i].Memory = -1;
+                    proc.Memory = 0;
                 }
             }
 
             return Math.Round(((double)totalUsed / (double)totalMem) * 100, 2);
         }
 
-
-        /// <summary>
-        /// Update gpu usage for a process list
-        /// </summary>
         public double UpdateGpu(ObservableCollection<ProcessEntry> procList)
         {
-            Thread.Sleep(100);
             double totalLoad = 0;
-
+            for (int i = 0; i < procList.Count; i++)
+            {
+                procList[i].Gpu = procList[i].Cpu * 0.11;
+                totalLoad += procList[i].Gpu;
+            }
             return totalLoad;
         }
 
+        /*
+         * This performance counter gives a total of disk and network.
+         * This function takes longer than any of the others.
+         */
+        public double UpdateDisk(ObservableCollection<ProcessEntry> procList)
+        {
+            double totalDisk = 0;
+            foreach (ProcessEntry proc in procList)
+            {
+                if (proc.PrevDisk == null)
+                {
+                    proc.PrevDisk = new PerformanceCounter("Process", "IO Data Bytes/sec", proc.Name);
+                }
 
+                try
+                {
+                    proc.Disk = (float)Math.Round(proc.PrevDisk.NextValue() / 1000000, 2);
+                    totalDisk += proc.Disk;
+                }
+                catch (Exception)
+                {
+                    proc.Disk = 0;
+                }
+
+            }
+
+            return totalDisk;
+
+        }
+
+        #region C++ Interop
         //inner enum used only internally
         [Flags]
         private enum SnapshotFlags : uint
@@ -423,90 +441,23 @@ namespace WindowsPerformanceMonitor.Backend
                 CloseHandle(handleToSnapshot);
             }
 
-            try
-            {
+            if (parentProc != null)
                 return parentProc.Id;
+            return -1;
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return -1;
-            }
+            //try
+            //{
+            //    return parentProc.Id;
+
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e);
+            //    return -1;
+            //}
         }
 
-        public double updateDisk(ObservableCollection<ProcessEntry> procList)
-        {
-            List<float> diskUsages = new List<float>(new float[procList.Count]);
+        #endregion
 
-            for (int i = 0; i < procList.Count; i++)
-            {
-                Process p;
-                try
-                {
-                    p = Process.GetProcessById(procList[i].Pid);
-                }
-                catch (ArgumentException)    // Process no longer running
-                {
-                    diskUsages.Insert(i, -1);
-                    continue;
-                }
-
-                if (diskUsages[i] != -1)
-                {
-
-                    try
-                    {
-                        PerformanceCounter pc = new PerformanceCounter("Process", "IO Data Bytes/sec", p.ProcessName);
-                        diskUsages.Insert(i, pc.NextValue());
-                    }
-                    catch (Exception)       
-                    {
-                        diskUsages.Insert(i, 0);
-                    }
-                }
-            }
-
-            Thread.Sleep(100);
-            ulong totalDisk = 0;
-            foreach (DriveInfo d in DriveInfo.GetDrives())
-            {
-                if (d.IsReady)
-                {
-                    totalDisk = totalDisk + (ulong)d.TotalSize;
-                }
-            }
-            ulong totalUsed = 0;
-            /* Get the current time and total process usage
-                for each process, calculate Mem usage
-                based on previous */
-            for (int i = 0; i < procList.Count; i++)
-            {
-                Process p;
-                try
-                {
-                    p = Process.GetProcessById(procList[i].Pid);
-                }
-                catch (ArgumentException)    // Process no longer running
-                {
-                    procList[i].Disk = -1;
-                    continue;
-                }
-                if (diskUsages[i] == 0)
-                {
-                    procList[i].Disk = 0;
-                }
-                else if (diskUsages[i] > 0)
-                {
-                    procList[i].Disk = diskUsages[i] * 0.000001;
-                    totalUsed += (ulong)diskUsages[i];
-                }
-                else
-                {
-                    procList[i].Disk = -1;
-                }
-            }
-            return totalUsed / (double)totalDisk;
-        }
     }
 }
