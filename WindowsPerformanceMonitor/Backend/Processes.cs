@@ -269,7 +269,6 @@ namespace WindowsPerformanceMonitor.Backend
 
                 try
                 {
-                    // Maybe make a list of tasks that executes this all at once?
                     p = Process.GetProcessById(proc.Pid);
                     DateTime currTime = DateTime.Now;
                     TimeSpan currProcTime = p.TotalProcessorTime;
@@ -288,6 +287,8 @@ namespace WindowsPerformanceMonitor.Backend
                 catch (Exception)
                 {
                     proc.Cpu = 0;
+                    // We want to insert a non-null prevCpu so we don't hit GetProcessById again since that
+                    // function is what slows this down.
                     proc.PrevCpu = new Tuple<DateTime, TimeSpan>(DateTime.Now, new TimeSpan(0));
                 }
 
@@ -320,8 +321,6 @@ namespace WindowsPerformanceMonitor.Backend
 
         public double UpdateGpu(ObservableCollection<ProcessEntry> procList)
         {
-            //Using a best guess estimate for now 
-            //Estimate GPU usage using CPU usage
             double totalLoad = 0;
             for (int i = 0; i < procList.Count; i++)
             {
@@ -331,38 +330,26 @@ namespace WindowsPerformanceMonitor.Backend
             return totalLoad;
         }
 
-        public double updateDisk(ObservableCollection<ProcessEntry> procList)
+        /*
+         * This performance counter gives a total of disk and network.
+         * This function takes longer than any of the others.
+         */
+        public double UpdateDisk(ObservableCollection<ProcessEntry> procList)
         {
-            List<float> diskUsages = new List<float>(new float[procList.Count]);
-
-            for (int i = 0; i < procList.Count; i++)
+            double totalDisk = 0;
+            foreach (ProcessEntry proc in procList)
             {
-                Process p;
-                try
+                if (proc.PrevDisk == null)
                 {
-                    p = Process.GetProcessById(procList[i].Pid);
+                    proc.PrevDisk = new PerformanceCounter("Process", "IO Data Bytes/sec", proc.Name);
                 }
-                catch (ArgumentException)    // Process no longer running
-                {
-                    diskUsages.Insert(i, -1);
-                    continue;
-                }
-                if (diskUsages[i] != -1)
-                {
-                    try
-                    {
-                        PerformanceCounter pc = new PerformanceCounter("Process", "IO Data Bytes/sec", p.ProcessName);
-                        procList[i].Disk = pc.NextValue();
-                    }
-                    catch (Exception)
-                    {
-                        diskUsages.Insert(i, 0);
-                    }
-                }
-            }
-            PerformanceCounter pt = new PerformanceCounter("Process", "IO Data Bytes/sec", "_Total");
 
-            return pt.NextValue();
+                proc.Disk =  (float) Math.Round(proc.PrevDisk.NextValue() / 1000000, 2);
+                totalDisk += proc.Disk;
+            }
+
+            return totalDisk;
+
         }
 
         #region C++ Interop

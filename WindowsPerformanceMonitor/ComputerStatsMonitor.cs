@@ -102,8 +102,8 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             {
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
-                    () => obj.TotalMemory = processes.UpdateMemTest(obj.ProcessList)
-                    //() => obj.TotalDisk = processes.updateDisk(obj.ProcessList),
+                    () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                    () => obj.TotalDisk = processes.UpdateDisk(obj.ProcessList)
                     //() => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses())))
                 );
             }
@@ -111,8 +111,8 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             {
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
-                    () => obj.TotalMemory = processes.UpdateMemTest(obj.ProcessList)
-                    //() => obj.TotalDisk = processes.updateDisk(obj.ProcessList)
+                    () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                    () => obj.TotalDisk = processes.UpdateDisk(obj.ProcessList)
                 );
             }
 
