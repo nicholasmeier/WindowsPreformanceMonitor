@@ -205,7 +205,7 @@ namespace WindowsPerformanceMonitor.Graphs
         {
             for (int i = 0; i < SeriesCollection.Count; i++)
             {
-                if (SeriesCollection[i].Values.Count > 25)
+                if (SeriesCollection[i].Values.Count > 500)
                 {
                     SeriesCollection[i].Values.RemoveAt(0);
                 }
