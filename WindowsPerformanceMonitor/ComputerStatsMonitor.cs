@@ -98,13 +98,14 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         {
             obj.ProcessList = processes.FindDelta(obj.ProcessList);
 
+            // Update disk is bottlenecking. Everything takes a few ms to update.
             if (tabIndex == 1)
             {
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-                    () => obj.TotalDisk = processes.UpdateDisk(obj.ProcessList)
-                    //() => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses())))
+                    () => obj.TotalDisk = processes.UpdateDisk(obj.ProcessList),
+                    () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses())))
                 );
             }
             else
@@ -120,6 +121,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             Parallel.ForEach(observers, observer =>
                 observer.OnNext(obj)
             );
+
             
         }
     }

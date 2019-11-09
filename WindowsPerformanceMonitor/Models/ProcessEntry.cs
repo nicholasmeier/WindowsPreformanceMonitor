@@ -8,6 +8,7 @@ namespace WindowsPerformanceMonitor.Models
 {
     public class ProcessEntry
     {
+        public Process Proc { get; set; }
         public string Name { get; set; }
         public int Pid { get; set; }
         public double Cpu { get; set; }
