@@ -142,21 +142,29 @@ namespace WindowsPerformanceMonitor.Backend
         {
             for (int i=start; i < stop; i++)
             {
-                int ppid = GetParentProcess(processes[i].Id);
-                ProcessEntry p = new ProcessEntry()
+                ProcessEntry p = null;
+                try
                 {
-                    Name = processes[i].ProcessName,
-                    Pid = processes[i].Id,
-                    Proc = Process.GetProcessById(processes[i].Id),
-                    Cpu = 0,
-                    Gpu = 0,
-                    Disk = 0,
-                    Network = 0,
-                    Ppid = ppid,
-                    ChildProcesses = new List<ProcessEntry>(),
-                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
-                    PrevCpu = null
-                };
+                    int ppid = GetParentProcess(processes[i].Id);
+                    p = new ProcessEntry()
+                    {
+                        Name = processes[i].ProcessName,
+                        Pid = processes[i].Id,
+                        Proc = Process.GetProcessById(processes[i].Id),
+                        Cpu = 0,
+                        Gpu = 0,
+                        Disk = 0,
+                        Network = 0,
+                        Ppid = ppid,
+                        ChildProcesses = new List<ProcessEntry>(),
+                        IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
+                        PrevCpu = null
+                    };
+                }
+                catch (Exception)
+                {
+                    //
+                }
 
                 if (p.Name.Length == 0)
                 {

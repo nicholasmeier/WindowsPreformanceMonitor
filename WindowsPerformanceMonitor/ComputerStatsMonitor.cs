@@ -113,7 +113,6 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 diskTask.Start();
             }
 
-            // Update disk is bottlenecking. Everything takes a few ms to update.
             if (tabIndex == 1)
             {
                 Parallel.Invoke(
@@ -134,12 +133,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             Parallel.ForEach(observers, observer =>
                 observer.OnNext(obj)
             );
-
-    
         }
     }
-
-
-    // Maybe put graph data in its own subscriber fnc so we can loop quicker?
 }
 

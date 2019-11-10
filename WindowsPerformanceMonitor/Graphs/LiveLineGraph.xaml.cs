@@ -126,7 +126,11 @@ namespace WindowsPerformanceMonitor.Graphs
 
         private void UpdateValues(ComputerObj comp)
         {
-            Read(comp);
+            // This lets us render it while on a different tab. Makes the graph look laggy though.
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                Read(comp);
+            });
         }
 
         public int i = 0;
