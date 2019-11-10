@@ -47,6 +47,9 @@ namespace WindowsPerformanceMonitor
 
         public void InitGraphs()
         {
+            liveGraph1.connect();
+            liveGraph2.connect();
+            liveGraph3.connect();
             liveGraph1.ProcessPid = 0;
             liveGraph2.ProcessPid = 0;
             liveGraph3.ProcessPid = 0;
