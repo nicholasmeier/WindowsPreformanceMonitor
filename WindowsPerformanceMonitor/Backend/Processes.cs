@@ -255,7 +255,6 @@ namespace WindowsPerformanceMonitor.Backend
             double totalCpu = 0;
             foreach (ProcessEntry proc in procList)
             {
-                Process p;
                 if (proc.PrevCpu == null)
                 {
                     try
@@ -294,7 +293,7 @@ namespace WindowsPerformanceMonitor.Backend
 
             }
 
-            return totalCpu;
+            return Math.Round(totalCpu * 100, 2);
         }
 
         public double UpdateMem(ObservableCollection<ProcessEntry> procList)
