@@ -221,6 +221,12 @@
   <ItemGroup>
     <Folder Include="Graphics\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\fast-forward.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\fast-forward %281%29.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"

@@ -216,6 +216,13 @@ namespace WindowsPerformanceMonitor.Graphs
             }
         }
 
+        public void BackOne()
+        {
+            for (int i = 0; i < SeriesCollection.Count; i++)
+            {
+                SeriesCollection[i].Values.RemoveAt(SeriesCollection[i].Values.Count - 1);
+            }
+        }
         private Trend GetTrend(ComputerObj comp)
         {
             Trend _trend = new Trend();
