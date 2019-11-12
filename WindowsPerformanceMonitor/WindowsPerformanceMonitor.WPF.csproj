@@ -110,6 +110,7 @@
     <Compile Include="Models\ComputerObj.cs" />
     <Compile Include="Models\CPUHardwareDetails.cs" />
     <Compile Include="Models\MeasureModel.cs" />
+    <Compile Include="Models\NotificationThresholds.cs" />
     <Compile Include="Models\ProcessEntry.cs" />
     <Compile Include="Models\Trend.cs" />
     <Compile Include="Options.xaml.cs">
@@ -220,6 +221,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Graphics\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\fast-forward.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\fast-forward %281%29.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

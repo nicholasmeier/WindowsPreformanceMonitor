@@ -126,7 +126,11 @@ namespace WindowsPerformanceMonitor.Graphs
 
         private void UpdateValues(ComputerObj comp)
         {
-            Read(comp);
+            // This lets us render it while on a different tab. Makes the graph look laggy though.
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                Read(comp);
+            });
         }
 
         public int i = 0;
@@ -205,13 +209,20 @@ namespace WindowsPerformanceMonitor.Graphs
         {
             for (int i = 0; i < SeriesCollection.Count; i++)
             {
-                if (SeriesCollection[i].Values.Count > 25)
+                if (SeriesCollection[i].Values.Count > 500)
                 {
                     SeriesCollection[i].Values.RemoveAt(0);
                 }
             }
         }
 
+        public void BackOne()
+        {
+            for (int i = 0; i < SeriesCollection.Count; i++)
+            {
+                SeriesCollection[i].Values.RemoveAt(SeriesCollection[i].Values.Count - 1);
+            }
+        }
         private Trend GetTrend(ComputerObj comp)
         {
             Trend _trend = new Trend();

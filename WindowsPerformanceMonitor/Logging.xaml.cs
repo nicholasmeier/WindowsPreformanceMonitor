@@ -39,6 +39,9 @@ namespace WindowsPerformanceMonitor
 
         private Thread readThread;
         private bool paused;
+        private bool back;
+        public int currentLogLocation = -1;     // Current location of the log.
+        public int maxLogLocation = 0;          // Max location we can be at for some log.
         ManualResetEvent pauseEvent = new ManualResetEvent(true);
 
         public class LogDetails
@@ -59,6 +62,9 @@ namespace WindowsPerformanceMonitor
             cbAll.IsChecked = true;
             procListComboBox.Insert(0, system);
             paused = false;
+            StepForward.IsEnabled = false;
+            StepBack.IsEnabled = false;
+            readThread = new Thread(() => { });
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -193,8 +199,16 @@ namespace WindowsPerformanceMonitor
 
         private void PlayLog_Click(object sender, RoutedEventArgs e)
         {
+            ResetUI();
+            currentLogLocation = -1;
             if (SelectedLog != null)
             {
+
+                if (readThread.IsAlive)
+                {
+                    readThread.Abort();
+                }
+
                 paused = false;
                 PauseButton.Content = "Pause";
                 readThread = new Thread(() =>
@@ -203,6 +217,13 @@ namespace WindowsPerformanceMonitor
                 });
                 readThread.Start();
             }
+        }
+
+        private void ResetUI()
+        {
+            liveGraph.Clear();
+            LogProcList = new ObservableCollection<ProcessEntry>();
+            ResetColumnHeaders();
         }
 
         private void PauseLog_Click(object sender, RoutedEventArgs e)
@@ -214,11 +235,20 @@ namespace WindowsPerformanceMonitor
                     paused = true;
                     pauseEvent.Reset();
                     PauseButton.Content = "Resume";
-                } else
+                    StepForward.IsEnabled = true;
+                    StepBack.IsEnabled = true;
+                }
+                else
                 {
-                    paused = false;
-                    pauseEvent.Set();
-                    PauseButton.Content = "Pause";
+                    if (currentLogLocation <= maxLogLocation)    // Don't let this run if we're at end.
+                    {
+                        paused = false;
+                        pauseEvent.Set();
+                        PauseButton.Content = "Pause";
+                        StepForward.IsEnabled = false;
+                        StepBack.IsEnabled = false;
+                    }
+
                 }
             }
         }
@@ -227,21 +257,85 @@ namespace WindowsPerformanceMonitor
         {
             payload log = Globals._log.ReadIt(path);
             liveGraph.connect(log);
-            for (int i = 0; i < log.mytimes.Count; i++)
+            maxLogLocation = log.mytimes.Count - 1;
+
+            while (currentLogLocation < log.mytimes.Count - 1)
             {
                 pauseEvent.WaitOne(Timeout.Infinite);
-                liveGraph.Read(log, i);
-                LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[i].ProcessList.OrderByDescending(p => p.Cpu));
-                UpdateColumnHeaders(log.mydata[i]);
-                procListComboBox = new ObservableCollection<ProcessEntry>(log.mydata[i].ProcessList.OrderByDescending(p => p.Cpu)); 
-                procListComboBox.Insert(0, system);
-                Thread.Sleep(2000);
+                if (back == true)
+                {
+                    /**
+                     * Step backwards
+                     */
+                    currentLogLocation--;
+                    if (currentLogLocation >= 0)
+                    {
+                        liveGraph.BackOne();
+                        LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                        UpdateColumnHeaders(log.mydata[currentLogLocation]);
+                        procListComboBox = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                        procListComboBox.Insert(0, system);
+                    }
+
+                    /**
+                     * If the log reached the end when stepping back,
+                     * reset to zero so if they resume we don't crash.
+                     */
+                    if (currentLogLocation < 0)
+                    {
+                        currentLogLocation = -1;
+                    }
+
+                    back = false;
+
+                }
+                else
+                {
+                    /**
+                     * Step forward or play the log.
+                     */
+                    currentLogLocation++;
+                    liveGraph.Read(log, currentLogLocation);
+                    LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                    UpdateColumnHeaders(log.mydata[currentLogLocation]);
+                    procListComboBox = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                    procListComboBox.Insert(0, system);
+                }
+
+                if (paused == true)
+                {
+                    /**
+                     * If this is true, we know we were stepping through the log.
+                     * Reset the pauseEvent so we don't keep reading. We also no longer
+                     * need to sleep since we know we're keeping it paused.
+                     */
+                    pauseEvent.Reset();
+                }
+                else
+                {
+                    // TODO: Make this dynamic so we can change speed.
+                    Thread.Sleep(2000);
+                }
             }
 
-            // This clears the listview after log has finished reading.
-            liveGraph.Clear();
-            LogProcList = new ObservableCollection<ProcessEntry>();
-            ResetColumnHeaders();
+            App.Current.Dispatcher.Invoke(() => {
+                paused = true;
+                pauseEvent.Reset();
+                PauseButton.Content = "Resume";
+                StepForward.IsEnabled = true;
+                StepBack.IsEnabled = true;
+            });
+        }
+
+        private void Step_Forward(object sender, RoutedEventArgs e)
+        {
+            pauseEvent.Set();
+        }
+
+        private void Step_Back(object sender, RoutedEventArgs e)
+        {
+            back = true;
+            pauseEvent.Set();
         }
 
         private void StartLog_Click(object sender, RoutedEventArgs e)

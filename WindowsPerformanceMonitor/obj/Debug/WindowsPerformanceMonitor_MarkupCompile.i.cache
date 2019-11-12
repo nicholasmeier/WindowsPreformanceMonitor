@@ -16,5 +16,5 @@ C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\App.xaml
 231365274176
 CompareLogs.xaml;GeneralView.xaml;GraphLegend.xaml;Graphs\LiveLineGraph.xaml;HardwareDetails.xaml;Logging.xaml;MainWindow.xaml;Options.xaml;ProcessTree.xaml;RealTime.xaml;Startup.xaml;SummaryView.xaml;
 
-True
+False
 

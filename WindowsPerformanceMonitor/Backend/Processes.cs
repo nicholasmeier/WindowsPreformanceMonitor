@@ -50,6 +50,7 @@ namespace WindowsPerformanceMonitor.Backend
                     ret.Add(new ProcessEntry()
                     {
                         Name = proc.ProcessName,
+                        Proc = proc,
                         Pid = proc.Id,
                         Cpu = 0,
                         Gpu = 0,
@@ -59,7 +60,7 @@ namespace WindowsPerformanceMonitor.Backend
                         ChildProcesses = new List<ProcessEntry>(),
                         IsApplication = proc.MainWindowHandle != IntPtr.Zero ? true : false,
                         PrevCpu = new Tuple<DateTime, TimeSpan>(new DateTime(1), new TimeSpan(0))
-                    });
+                    }); ;
                 }
             }
 
@@ -141,20 +142,30 @@ namespace WindowsPerformanceMonitor.Backend
         {
             for (int i=start; i < stop; i++)
             {
-                int ppid = GetParentProcess(processes[i].Id);
-                ProcessEntry p = new ProcessEntry()
+                ProcessEntry p = null;
+                try
                 {
-                    Name = processes[i].ProcessName,
-                    Pid = processes[i].Id,
-                    Cpu = 0,
-                    Gpu = 0,
-                    Disk = 0,
-                    Network = 0,
-                    Ppid = ppid,
-                    ChildProcesses = new List<ProcessEntry>(),
-                    IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
-                    PrevCpu = null
-                };
+                    int ppid = GetParentProcess(processes[i].Id);
+                    p = new ProcessEntry()
+                    {
+                        Name = processes[i].ProcessName,
+                        Pid = processes[i].Id,
+                        Proc = Process.GetProcessById(processes[i].Id),
+                        Cpu = 0,
+                        Gpu = 0,
+                        Disk = 0,
+                        Network = 0,
+                        Ppid = ppid,
+                        ChildProcesses = new List<ProcessEntry>(),
+                        IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
+                        PrevCpu = null
+                    };
+                }
+                catch (Exception)
+                {
+                    //
+                    continue;
+                }
 
                 if (p.Name.Length == 0)
                 {
@@ -253,13 +264,11 @@ namespace WindowsPerformanceMonitor.Backend
             double totalCpu = 0;
             foreach (ProcessEntry proc in procList)
             {
-                Process p;
                 if (proc.PrevCpu == null)
                 {
                     try
                     {
-                        p = Process.GetProcessById(proc.Pid);
-                        proc.PrevCpu = new Tuple<DateTime, TimeSpan>(DateTime.Now, p.TotalProcessorTime);
+                        proc.PrevCpu = new Tuple<DateTime, TimeSpan>(DateTime.Now, proc.Proc.TotalProcessorTime);
                     }
                     catch (Exception)
                     {
@@ -269,9 +278,8 @@ namespace WindowsPerformanceMonitor.Backend
 
                 try
                 {
-                    p = Process.GetProcessById(proc.Pid);
                     DateTime currTime = DateTime.Now;
-                    TimeSpan currProcTime = p.TotalProcessorTime;
+                    TimeSpan currProcTime = proc.Proc.TotalProcessorTime;
 
                     double cpuUsage = (currProcTime.TotalMilliseconds - proc.PrevCpu.Item2.TotalMilliseconds) 
                                         / currTime.Subtract(proc.PrevCpu.Item1).TotalMilliseconds 
@@ -294,7 +302,7 @@ namespace WindowsPerformanceMonitor.Backend
 
             }
 
-            return totalCpu;
+            return Math.Round(totalCpu * 100, 2);
         }
 
         public double UpdateMem(ObservableCollection<ProcessEntry> procList)
@@ -303,12 +311,10 @@ namespace WindowsPerformanceMonitor.Backend
             ulong totalMem = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
             foreach (ProcessEntry proc in procList)
             {
-                Process p;
                 try
                 {
-                    p = Process.GetProcessById(proc.Pid);
-                    totalUsed +=  p.WorkingSet64;
-                    proc.Memory = Math.Round(((double) p.WorkingSet64 / totalMem * 100), 2);
+                    totalUsed += proc.Proc.WorkingSet64;
+                    proc.Memory = Math.Round(((double)proc.Proc.WorkingSet64 / totalMem * 100), 2);
                 }
                 catch (Exception)
                 {
@@ -353,11 +359,9 @@ namespace WindowsPerformanceMonitor.Backend
                 {
                     proc.Disk = 0;
                 }
-
             }
 
             return totalDisk;
-
         }
 
         #region C++ Interop

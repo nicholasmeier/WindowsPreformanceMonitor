@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor
 {
@@ -26,13 +27,13 @@ namespace WindowsPerformanceMonitor
         private MainWindow mainWindow = null; // Reference to the MainWindow
         public ObservableCollection<string> _extFileComboBox { get; set; }
         private string _selectedExt;
-
+        NotificationThresholds nt = new NotificationThresholds();
         public Options()
         {
             InitializeComponent();
             extFileComboBox = new ObservableCollection<string> { ".txt", ".doc", ".pdf" };
-
             this.DataContext = this;
+            loadThresholds();
 
         }
 
@@ -148,6 +149,36 @@ namespace WindowsPerformanceMonitor
             }
         }
 
+        public int loadThresholds()
+        {
+            if (nt.cpuThreshold < 0 || nt.cpuThreshold > 100)
+            {
+                nt.cpuThreshold = 0;
+            }
+
+            if (nt.gpuThreshold < 0 || nt.gpuThreshold > 100)
+            {
+                nt.gpuThreshold = 0;
+            }
+
+            if (nt.memoryThreshold < 0 || nt.memoryThreshold > 100)
+            {
+                nt.memoryThreshold = 0;
+            }
+
+            CPUThresholdTextBox.Text = nt.cpuThreshold.ToString();
+            GPUThresholdTextBox.Text = nt.gpuThreshold.ToString();
+            MemoryThresholdTextBox.Text = nt.memoryThreshold.ToString();
+            return 0;
+        }
+
+        private void SaveThresholdsButton_Click(object snder, RoutedEventArgs e)
+        {
+            nt.cpuThreshold = Convert.ToDouble(CPUThresholdTextBox.Text);
+            nt.gpuThreshold = Convert.ToDouble(GPUThresholdTextBox.Text);
+            nt.memoryThreshold = Convert.ToDouble(MemoryThresholdTextBox.Text);
+            loadThresholds();
+        }
         private void ScheduleButton_Click(object sender, RoutedEventArgs e)
         {
             // CoolButton Clicked! Let's show our InputBox.

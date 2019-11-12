@@ -93,26 +93,39 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         computer.HDDEnabled = true;
         computer.FanControllerEnabled = true;
         computer.MainboardEnabled = true;
+        Task diskTask = null;
 
         while (true)
         {
             obj.ProcessList = processes.FindDelta(obj.ProcessList);
+
+            /*
+             * This function is slow, so this should let it run independently. It 
+             * will not bottleneck the other updates if we have it run it its own
+             * Task.
+             */
+            if (diskTask == null || diskTask.IsCompleted)
+            {
+                diskTask = new Task(() => {
+                    obj.TotalDisk = processes.UpdateDisk(obj.ProcessList);
+                });
+
+                diskTask.Start();
+            }
 
             if (tabIndex == 1)
             {
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-                    () => obj.TotalDisk = processes.UpdateDisk(obj.ProcessList)
-                    //() => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses())))
+                    () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses())))
                 );
             }
             else
             {
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
-                    () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-                    () => obj.TotalDisk = processes.UpdateDisk(obj.ProcessList)
+                    () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList)
                 );
             }
 
@@ -120,11 +133,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             Parallel.ForEach(observers, observer =>
                 observer.OnNext(obj)
             );
-            
         }
     }
-
-
-    // Maybe put graph data in its own subscriber fnc so we can loop quicker?
 }
 

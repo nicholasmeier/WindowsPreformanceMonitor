@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height=".9*"></RowDefinition>
         </Grid.RowDefinitions>
 
         <!-- Top Left (View type, graph type, process to graph)-->
@@ -124,7 +124,7 @@
                 />
 
             <ScrollViewer Height="140" VerticalScrollBarVisibility="Disabled">
-                <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="141">
+                <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="141" Margin="20,0,20,0">
                     <StackPanel x:Name="radioButtons">
                         <CheckBox Content="All" Name="cbAll" Checked="CBAllChanged" Unchecked="CBAllChanged"/>
                         <CheckBox Content="CPU" Name="cpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
@@ -137,6 +137,8 @@
                     </StackPanel>
                 </GroupBox>
             </ScrollViewer>
+
+            <Button x:Name="PauseButton" HorizontalAlignment="Left" Width="80" Margin="20, 5, 0, 0" Click="Pause_List">Pause List</Button>
         </StackPanel>
     </Grid>
 </UserControl>

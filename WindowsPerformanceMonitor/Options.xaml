@@ -3,9 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Loaded="OnControlLoaded"
              >
-    <Grid ShowGridLines="False" Height="Auto" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Top">
+    <Grid ShowGridLines="False" Height="400" Width="775" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-        <GroupBox Header="Options">
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="Options">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
                     <CheckBox x:Name="enc" FlowDirection="RightToLeft" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
@@ -26,72 +33,52 @@
                     MaxDropDownHeight="100" 
                 />
                 </StackPanel>
-                
-                <StackPanel Orientation="Horizontal" Margin="10,0,0,10">
-                    <Button Content=" Compare Logs " HorizontalAlignment="Left" Click="Button_Click"/>
-                </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                    <Label Content="Set CPU Notification Threshold" FontWeight="Bold" HorizontalAlignment="Center" Margin="0, 0, 10, 0"/>
-                    <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="CPUThresholdTextBox"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                    <Label Content="Set GPU Notification Threshold" FontWeight="Bold" HorizontalAlignment="Center" Margin="0, 0, 10, 0"/>
-                    <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="GPUThresholdTextBox"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                    <Label Content="Set Memory Notification Threshold" FontWeight="Bold" HorizontalAlignment="Center" Margin="0, 0, 10, 0"/>
-                    <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="MemoryThresholdTextBox"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="0,10,0,5">
-                    <Label Content="Schedule System Log" FontWeight="Bold" HorizontalAlignment="Center"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                    <Button Content="Schedule Log" x:Name="ScheduleButton" Click="ScheduleButton_Click" Width="90"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                    <Grid x:Name="DurationInputBox" Visibility="Collapsed" Margin="5, 5, 5, 5">
-                        <Grid Background="Black" Opacity="0.5"/>
-                        <Border
-                            MinWidth="150"
-                            Background="LightGray" 
-                            BorderBrush="Black" 
-                            BorderThickness="1" 
-                            HorizontalAlignment="Center" 
-                            VerticalAlignment="Center">
-                            <StackPanel>
-                                <TextBlock Margin="5" Text="Enter Time (hrs:mins AM/PM):" FontWeight="Bold" FontFamily="Cambria" />
-                                <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="InputTextBox"/>
-                                <TextBlock Margin="5" Text="Enter Duration (hrs:mins):" FontWeight="Bold" FontFamily="Cambria" />
-                                <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="DurationInputTextBox"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button x:Name="YesButton" Margin="5" Content="Submit" Background="{x:Null}" Click="YesButton_Click"/>
-                                    <Button x:Name="NoButton" Margin="5" Content="Cancel" Background="{x:Null}" Click="NoButton_Click" />
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </Grid>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                    <TextBlock Margin="5" Text="Log Schedule List" FontWeight="Bold"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                    <ListBox x:Name="LogScheduleListBox" Visibility="Hidden"/>
-                </StackPanel>
-
-
-                <StackPanel Orientation="Horizontal" Margin="5,20,680,5">
-                    <Button Content=" Save Settings " HorizontalAlignment="Left" Click="Save_Button_Click"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Save Settings" Margin="0,285,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
+                    <Button Content="Delete Settings" Margin="10,285,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
 
+        <GroupBox Grid.Row="0" Grid.Column="1"  Header="Notifications">
+            <StackPanel>
+                <Label Content="Set CPU Notification Threshold %" FontWeight="Bold"/>
+                <TextBox  x:Name="CPUThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+
+                <Label Content="Set GPU Notification Threshold %" FontWeight="Bold"/>
+                <TextBox  x:Name="GPUThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+
+                <Label Content="Set Memory Notification Threshold %" FontWeight="Bold"/>
+                <TextBox x:Name="MemoryThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+                <Button Content="Save Thresholds" x:Name="SaveThresholds" Margin="5,10,0,0"  Click="SaveThresholdsButton_Click" Width="100" HorizontalAlignment="Left" />
+
+                <Label Content="Schedule System Log" FontWeight="Bold"/>
+
+                <Button Content="Schedule Log" x:Name="ScheduleButton" Margin="5,0,0,0"  Click="ScheduleButton_Click" Width="100" HorizontalAlignment="Left" />
+                <Grid x:Name="DurationInputBox" Visibility="Collapsed" Margin="5, 5, 5, 5">
+                    <Grid Background="Black" Opacity="0.5"/>
+                    <Border
+                            MinWidth="150"
+                            Background="LightGray" 
+                            BorderBrush="Black" 
+                            BorderThickness="1" >
+                        <StackPanel>
+                            <TextBlock Margin="5" Text="Enter Time (hrs:mins AM/PM):" FontWeight="Bold" FontFamily="Cambria" />
+                            <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="InputTextBox"/>
+                            <TextBlock Margin="5" Text="Enter Duration (hrs:mins):" FontWeight="Bold" FontFamily="Cambria" />
+                            <TextBox MinWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="DurationInputTextBox"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button x:Name="YesButton" Margin="5" Content="Submit" Background="{x:Null}" Click="YesButton_Click"/>
+                                <Button x:Name="NoButton" Margin="5" Content="Cancel" Background="{x:Null}" Click="NoButton_Click" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+                <ListBox x:Name="LogScheduleListBox" Visibility="Hidden"/>
+                <TextBlock Margin="5,5,4.6,5" Text="Log Schedule List" FontWeight="Bold"/>
+
+            </StackPanel>
+        </GroupBox>
     </Grid>
 </UserControl>
