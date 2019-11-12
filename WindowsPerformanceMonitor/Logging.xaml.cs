@@ -69,6 +69,7 @@ namespace WindowsPerformanceMonitor
             StartRecordingButton.IsEnabled = true;
             StopRecordingButton.IsEnabled = false;
             Globals._logRef = this;
+            pBar.Value = 0;
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -76,131 +77,53 @@ namespace WindowsPerformanceMonitor
             mainWindow = Window.GetWindow(this) as MainWindow;
         }
 
-        private void InitializeComboBox()
+        #region Log Manager / UI Event Functions
+
+        private void StartLog_Click(object sender, RoutedEventArgs e)
         {
-            
+            Globals._log.StartLog();
+            StartRecordingButton.IsEnabled = false;
+            StopRecordingButton.IsEnabled = true;
         }
 
-        public void GetLogList()
+        private void StopLog_Click(object sender, RoutedEventArgs e)
         {
-            string[] files = Directory.GetFiles(Globals._log.logPath);
-            List<LogDetails> tempLogList = new List<LogDetails>();
-            for (int i = 0; i < files.Length; i++)
+            StopRecordingButton.IsEnabled = false;
+            if (Globals._log != null)
             {
-                string[] split = files[i].Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
-                tempLogList.Add(new LogDetails()
+                Globals._log.WriteIt();
+                GetLogList();
+            }
+
+            StartRecordingButton.IsEnabled = true;
+            Globals._log = new Log();
+        }
+
+        private void PauseLog_Click(object sender, RoutedEventArgs e)
+        {
+            if (readThread != null)
+            {
+                if (!paused)
                 {
-                    name = split[split.Length - 1],
-                    path = files[i]
-                });
-            }
-
-            LogList = new ObservableCollection<LogDetails>(tempLogList);
-        }
-        public ObservableCollection<LogProcessEntry> procListComboBox
-        {
-            get { return _procListComboBox; }
-            set
-            {
-                _procListComboBox = value;
-                OnPropertyChanged(nameof(procListComboBox));
-            }
-        }
-
-        public LogProcessEntry selectedProcessComboBox
-        {
-            get { return _selectedProcessComboBox; }
-            set
-            {
-                _selectedProcessComboBox = value;
-                OnPropertyChanged(nameof(selectedProcessComboBox));
-            }
-        }
-        private void CBAllChanged(object sender, RoutedEventArgs e)
-        {
-            bool newVal = (cbAll.IsChecked == true);
-            cpu.IsChecked = newVal;
-            gpu.IsChecked = newVal;
-            memory.IsChecked = newVal;
-            disk.IsChecked = newVal;
-            network.IsChecked = newVal;
-            gpuTemp.IsChecked = newVal;
-            cpuTemp.IsChecked = newVal;
-        }
-        private void CheckBoxChanged(object sender, RoutedEventArgs e)
-        {
-            var checkBox = sender as System.Windows.Controls.CheckBox;
-            if (checkBox == null)
-            {
-                return;
-            }
-
-            liveGraph.SeriesVisibility[(int)Series.Cpu] = (bool)cpu.IsChecked;
-            liveGraph.SeriesVisibility[(int)Series.Gpu] = (bool)gpu.IsChecked;
-            liveGraph.SeriesVisibility[(int)Series.Memory] = (bool)memory.IsChecked;
-            liveGraph.SeriesVisibility[(int)Series.Disk] = (bool)disk.IsChecked;
-            liveGraph.SeriesVisibility[(int)Series.Network] = (bool)network.IsChecked;
-            liveGraph.SeriesVisibility[(int)Series.CpuTemp] = (bool)cpuTemp.IsChecked;
-            liveGraph.SeriesVisibility[(int)Series.GpuTemp] = (bool)gpuTemp.IsChecked;
-
-            //If all boxes are checked or unchecked set All correctly
-            if (cpu.IsChecked == gpu.IsChecked && cpu.IsChecked == memory.IsChecked &&
-                cpu.IsChecked == disk.IsChecked && cpu.IsChecked == network.IsChecked
-                && cpu.IsChecked == gpuTemp.IsChecked && cpu.IsChecked == cpuTemp.IsChecked)
-            {
-                cbAll.IsChecked = cpu.IsChecked;
-            }
-            else
-            {
-                cbAll.IsChecked = null;
-
-            }
-        }
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (comboBox1.SelectedItem != null)
-            {
-                LogProcessEntry selected = (LogProcessEntry)comboBox1.SelectedItem;
-
-                if (selected.Name != null)
-                {
-                    liveGraph.ProcessPid = selected.Pid;
+                    paused = true;
+                    pauseEvent.Reset();
+                    PauseButton.Content = "Resume";
+                    StepForward.IsEnabled = true;
+                    StepBack.IsEnabled = true;
                 }
                 else
                 {
-                    liveGraph.ProcessPid = -1;
+                    if (currentLogLocation <= maxLogLocation)    // Don't let this run if we're at end.
+                    {
+                        paused = false;
+                        pauseEvent.Set();
+                        PauseButton.Content = "Pause";
+                        StepForward.IsEnabled = false;
+                        StepBack.IsEnabled = false;
+                    }
+
                 }
             }
-        }
-        public void UpdateColumnHeaders(data load)
-        {
-            this.Dispatcher.Invoke(() =>
-            {
-                listView_gridView.Columns[0].Header = $"Process {load.ProcessList.Count}";
-                listView_gridView.Columns[1].Header = $"CPU {Math.Round(load.Cpu, 2)}%";
-                listView_gridView.Columns[2].Header = $"GPU {Math.Round(load.Gpu, 2)}%";
-                listView_gridView.Columns[3].Header = $"Memory {Math.Round(load.Memory, 2)}%";
-                listView_gridView.Columns[4].Header = $"Disk {Math.Round(load.Disk, 2)}%";
-                listView_gridView.Columns[5].Header = $"Network {Math.Round(load.Network, 2)}%";
-
-                if (Math.Round(load.Cpu, 2) > 100)
-                {
-                    listView_gridView.Columns[1].Header = $"CPU 100%";
-                }
-            });
-        }
-
-        public void ResetColumnHeaders()
-        {
-            this.Dispatcher.Invoke(() =>
-            {
-                listView_gridView.Columns[0].Header = $"Process";
-                listView_gridView.Columns[1].Header = $"CPU";
-                listView_gridView.Columns[2].Header = $"GPU";
-                listView_gridView.Columns[3].Header = $"Memory";
-                listView_gridView.Columns[4].Header = $"Disk";
-                listView_gridView.Columns[5].Header = $"Network";
-            });
         }
 
         private void PlayLog_Click(object sender, RoutedEventArgs e)
@@ -226,47 +149,14 @@ namespace WindowsPerformanceMonitor
             }
         }
 
-        private void ResetUI()
-        {
-            liveGraph.Clear();
-            LogProcList = new ObservableCollection<LogProcessEntry>();
-            ResetColumnHeaders();
-        }
-
-        private void PauseLog_Click(object sender, RoutedEventArgs e)
-        {
-            if (readThread != null)
-            {
-                if(!paused)
-                {
-                    paused = true;
-                    pauseEvent.Reset();
-                    PauseButton.Content = "Resume";
-                    StepForward.IsEnabled = true;
-                    StepBack.IsEnabled = true;
-                }
-                else
-                {
-                    if (currentLogLocation <= maxLogLocation)    // Don't let this run if we're at end.
-                    {
-                        paused = false;
-                        pauseEvent.Set();
-                        PauseButton.Content = "Pause";
-                        StepForward.IsEnabled = false;
-                        StepBack.IsEnabled = false;
-                    }
-
-                }
-            }
-        }
-
         private void ConnectLog(string path)
         {
             log = Globals._log.ReadIt(path);
             liveGraph.connect(log);
             maxLogLocation = log.mytimes.Count - 1;
+            SetProgressBarMax();
         }
-        
+
         private void Play(string path)
         {
             while (true)
@@ -282,6 +172,75 @@ namespace WindowsPerformanceMonitor
                 NotifyLocationHasChanged();
                 Thread.Sleep(50);
             }
+        }
+
+        private void Step_Forward(object sender, RoutedEventArgs e)
+        {
+            if (currentLogLocation < maxLogLocation)
+            {
+                Forward();
+                NotifyLocationHasChanged();
+            }
+        }
+
+        private void Step_Back(object sender, RoutedEventArgs e)
+        {
+            if (currentLogLocation > 0)
+            {
+                Back();
+                NotifyLocationHasChanged();
+            }
+        }
+
+        private void Forward()
+        {
+            currentLogLocation++;
+            IncProgressBar();
+            liveGraph.Read(log, currentLogLocation);
+            LogProcList = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+            UpdateColumnHeaders(log.mydata[currentLogLocation]);
+            procListComboBox = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+            procListComboBox.Insert(0, system);
+        }
+
+        private void Back()
+        {
+            currentLogLocation--;
+            DecProgressBar();
+            liveGraph.BackOne();
+            LogProcList = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+            UpdateColumnHeaders(log.mydata[currentLogLocation]);
+            procListComboBox = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+            procListComboBox.Insert(0, system);
+
+            if (currentLogLocation < 0)
+            {
+                currentLogLocation = -1;
+            }
+        }
+
+        private void IncProgressBar()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                pBar.Value = (int) currentLogLocation;
+            });
+        }
+
+        private void DecProgressBar()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                pBar.Value = (int) currentLogLocation;
+            });
+        }
+
+        private void SetProgressBarMax()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                pBar.Value = maxLogLocation;
+            });
         }
 
         private void NotifyLocationHasChanged()
@@ -322,71 +281,127 @@ namespace WindowsPerformanceMonitor
             }
         }
 
+        #endregion
 
-        private void Step_Forward(object sender, RoutedEventArgs e)
+        #region Helpers
+        private void ResetUI()
         {
-            if (currentLogLocation < maxLogLocation)
+            liveGraph.Clear();
+            LogProcList = new ObservableCollection<LogProcessEntry>();
+            ResetColumnHeaders();
+            pBar.Value = 0;
+        }
+
+        public void ResetColumnHeaders()
+        {
+            this.Dispatcher.Invoke(() =>
             {
-                Forward();
-                NotifyLocationHasChanged();
+                listView_gridView.Columns[0].Header = $"Process";
+                listView_gridView.Columns[1].Header = $"CPU";
+                listView_gridView.Columns[2].Header = $"GPU";
+                listView_gridView.Columns[3].Header = $"Memory";
+                listView_gridView.Columns[4].Header = $"Disk";
+                listView_gridView.Columns[5].Header = $"Network";
+            });
+        }
+
+        public void UpdateColumnHeaders(data load)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                listView_gridView.Columns[0].Header = $"Process {load.ProcessList.Count}";
+                listView_gridView.Columns[1].Header = $"CPU {Math.Round(load.Cpu, 2)}%";
+                listView_gridView.Columns[2].Header = $"GPU {Math.Round(load.Gpu, 2)}%";
+                listView_gridView.Columns[3].Header = $"Memory {Math.Round(load.Memory, 2)}%";
+                listView_gridView.Columns[4].Header = $"Disk {Math.Round(load.Disk, 2)}%";
+                listView_gridView.Columns[5].Header = $"Network {Math.Round(load.Network, 2)}%";
+
+                if (Math.Round(load.Cpu, 2) > 100)
+                {
+                    listView_gridView.Columns[1].Header = $"CPU 100%";
+                }
+            });
+        }
+
+        public void GetLogList()
+        {
+            string[] files = Directory.GetFiles(Globals._log.logPath);
+            List<LogDetails> tempLogList = new List<LogDetails>();
+            for (int i = 0; i < files.Length; i++)
+            {
+                string[] split = files[i].Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                tempLogList.Add(new LogDetails()
+                {
+                    name = split[split.Length - 1],
+                    path = files[i]
+                });
+            }
+
+            LogList = new ObservableCollection<LogDetails>(tempLogList);
+        }
+
+
+
+        #endregion
+
+        #region UI Events
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboBox1.SelectedItem != null)
+            {
+                LogProcessEntry selected = (LogProcessEntry)comboBox1.SelectedItem;
+
+                if (selected.Name != null)
+                {
+                    liveGraph.ProcessPid = selected.Pid;
+                }
+                else
+                {
+                    liveGraph.ProcessPid = -1;
+                }
             }
         }
 
-        private void Step_Back(object sender, RoutedEventArgs e)
+        private void CBAllChanged(object sender, RoutedEventArgs e)
         {
-            if (currentLogLocation > 0)
+            bool newVal = (cbAll.IsChecked == true);
+            cpu.IsChecked = newVal;
+            gpu.IsChecked = newVal;
+            memory.IsChecked = newVal;
+            disk.IsChecked = newVal;
+            network.IsChecked = newVal;
+            gpuTemp.IsChecked = newVal;
+            cpuTemp.IsChecked = newVal;
+        }
+        private void CheckBoxChanged(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as System.Windows.Controls.CheckBox;
+            if (checkBox == null)
             {
-                Back();
-                NotifyLocationHasChanged();
-            }
-        }
-
-        private void Forward()
-        {
-            currentLogLocation++;
-            liveGraph.Read(log, currentLogLocation);
-            LogProcList = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
-            UpdateColumnHeaders(log.mydata[currentLogLocation]);
-            procListComboBox = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
-            procListComboBox.Insert(0, system);
-        }
-
-        private void Back()
-        {
-            currentLogLocation--;
-            liveGraph.BackOne();
-            LogProcList = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
-            UpdateColumnHeaders(log.mydata[currentLogLocation]);
-            procListComboBox = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
-            procListComboBox.Insert(0, system);
-
-            if (currentLogLocation < 0)
-            {
-                currentLogLocation = -1;
-            }
-        }
-
-
-        private void StartLog_Click(object sender, RoutedEventArgs e)
-        {
-            Globals._log.StartLog();
-            StartRecordingButton.IsEnabled = false;
-            StopRecordingButton.IsEnabled = true;
-        }
-
-        private void StopLog_Click(object sender, RoutedEventArgs e)
-        {
-            StopRecordingButton.IsEnabled = false;
-            if (Globals._log != null)
-            {
-                Globals._log.WriteIt();
-                GetLogList();
+                return;
             }
 
-            StartRecordingButton.IsEnabled = true;
-            Globals._log = new Log();
-        }
+            liveGraph.SeriesVisibility[(int)Series.Cpu] = (bool)cpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Gpu] = (bool)gpu.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Memory] = (bool)memory.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Disk] = (bool)disk.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.Network] = (bool)network.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.CpuTemp] = (bool)cpuTemp.IsChecked;
+            liveGraph.SeriesVisibility[(int)Series.GpuTemp] = (bool)gpuTemp.IsChecked;
 
+            //If all boxes are checked or unchecked set All correctly
+            if (cpu.IsChecked == gpu.IsChecked && cpu.IsChecked == memory.IsChecked &&
+                cpu.IsChecked == disk.IsChecked && cpu.IsChecked == network.IsChecked
+                && cpu.IsChecked == gpuTemp.IsChecked && cpu.IsChecked == cpuTemp.IsChecked)
+            {
+                cbAll.IsChecked = cpu.IsChecked;
+            }
+            else
+            {
+                cbAll.IsChecked = null;
+
+            }
+        }
 
         private void DeleteLog_Click(object sender, RoutedEventArgs e)
         {
@@ -405,6 +420,8 @@ namespace WindowsPerformanceMonitor
                 SelectedLog = (LogDetails)logList.Items[logList.SelectedIndex];
             }
         }
+
+        #endregion
 
         #region INotifyPropertyChanged
 
@@ -442,6 +459,26 @@ namespace WindowsPerformanceMonitor
             {
                 _logProcList = value;
                 OnPropertyChanged(nameof(LogProcList));
+            }
+        }
+
+        public ObservableCollection<LogProcessEntry> procListComboBox
+        {
+            get { return _procListComboBox; }
+            set
+            {
+                _procListComboBox = value;
+                OnPropertyChanged(nameof(procListComboBox));
+            }
+        }
+
+        public LogProcessEntry selectedProcessComboBox
+        {
+            get { return _selectedProcessComboBox; }
+            set
+            {
+                _selectedProcessComboBox = value;
+                OnPropertyChanged(nameof(selectedProcessComboBox));
             }
         }
 
