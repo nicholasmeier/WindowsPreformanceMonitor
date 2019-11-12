@@ -122,6 +122,9 @@
     <Compile Include="RealTime.xaml.cs">
       <DependentUpon>RealTime.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ScheduleLogProcess.xaml.cs">
+      <DependentUpon>ScheduleLogProcess.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Startup.xaml.cs">
       <DependentUpon>Startup.xaml</DependentUpon>
     </Compile>
@@ -129,6 +132,9 @@
       <DependentUpon>SummaryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserSettings.cs" />
+    <Compile Include="SetThreshold.xaml.cs">
+      <DependentUpon>SetThreshold.xaml</DependentUpon>
+    </Compile>
     <Page Include="CompareLogs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -177,11 +183,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ScheduleLogProcess.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Startup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SummaryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SetThreshold.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
