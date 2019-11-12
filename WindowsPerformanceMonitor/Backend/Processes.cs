@@ -164,6 +164,7 @@ namespace WindowsPerformanceMonitor.Backend
                 catch (Exception)
                 {
                     //
+                    continue;
                 }
 
                 if (p.Name.Length == 0)

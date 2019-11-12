@@ -11,7 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        
+
         <GroupBox Grid.Row="0" Grid.Column="0" Header="Options">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
@@ -33,7 +33,7 @@
                     MaxDropDownHeight="100" 
                 />
                 </StackPanel>
-               
+
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Save Settings" Margin="0,285,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
                     <Button Content="Delete Settings" Margin="10,285,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
@@ -43,14 +43,15 @@
 
         <GroupBox Grid.Row="0" Grid.Column="1"  Header="Notifications">
             <StackPanel>
-                <Label Content="Set CPU Notification Threshold" FontWeight="Bold"/>
+                <Label Content="Set CPU Notification Threshold %" FontWeight="Bold"/>
                 <TextBox  x:Name="CPUThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
 
-                <Label Content="Set GPU Notification Threshold" FontWeight="Bold"/>
+                <Label Content="Set GPU Notification Threshold %" FontWeight="Bold"/>
                 <TextBox  x:Name="GPUThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
 
-                <Label Content="Set Memory Notification Threshold" FontWeight="Bold"/>
+                <Label Content="Set Memory Notification Threshold %" FontWeight="Bold"/>
                 <TextBox x:Name="MemoryThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+                <Button Content="Save Thresholds" x:Name="SaveThresholds" Margin="5,10,0,0"  Click="SaveThresholdsButton_Click" Width="100" HorizontalAlignment="Left" />
 
                 <Label Content="Schedule System Log" FontWeight="Bold"/>
 
@@ -74,9 +75,8 @@
                         </StackPanel>
                     </Border>
                 </Grid>
-
-                <TextBlock Margin="5" Text="Log Schedule List" FontWeight="Bold"/>
                 <ListBox x:Name="LogScheduleListBox" Visibility="Hidden"/>
+                <TextBlock Margin="5,5,4.6,5" Text="Log Schedule List" FontWeight="Bold"/>
 
             </StackPanel>
         </GroupBox>
