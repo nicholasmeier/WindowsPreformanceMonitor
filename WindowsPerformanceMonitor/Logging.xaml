@@ -108,10 +108,9 @@
 
         <!-- Top Left (Logging Buttons) -->
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-            <Button Content="Choose Location" Click="ChooseLocation_Click" Margin="5,5,5,3"/>
+            <Button Content="Choose Location" Margin="5,5,5,3"/>
             <Button x:Name="StartRecordingButton" Content="Start Recording" Click="StartLog_Click" Margin="5,5,5,3"/>
             <Button x:Name="StopRecordingButton" Content="Stop Recording" Click="StopLog_Click" Margin="5,5,5,3"/>
-            <Button Content="Delete Log" Click="DeleteLog_Click" Margin="5,5,5,3"/>
         </StackPanel>
 
         <!-- Bottom Left (Log List)-->
@@ -140,8 +139,8 @@
                 <Button Content="Pause" Name="PauseButton" Click="PauseLog_Click" Margin="0,5,0,3" Width="70"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Button Content="&lt;&lt;" Click="Step_Back" Name="StepForward" Margin="5,5,5,3" Width="71"/>
-                <Button Content="&gt;&gt;" Click="Step_Forward" Name="StepBack"  Margin="0,5,0,3" Width="70"/>
+                <Button Content="&lt;&lt;" Click="Step_Back" Name="StepBack" Margin="5,5,5,3" Width="71"/>
+                <Button Content="&gt;&gt;" Click="Step_Forward" Name="StepForward"  Margin="0,5,0,3" Width="70"/>
             </StackPanel>
         </StackPanel>
     </Grid>

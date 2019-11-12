@@ -13,6 +13,7 @@ namespace WindowsPerformanceMonitor
         public static string _logFileType = ".txt";
         public static bool _encryptionEnabled = false;
         public static ComputerStatsMonitor _provider;
+        public static Logging _logRef { get; set; }
         public static UserSettings Settings { get; set; }
         public static ComputerStatsMonitor provider
         {

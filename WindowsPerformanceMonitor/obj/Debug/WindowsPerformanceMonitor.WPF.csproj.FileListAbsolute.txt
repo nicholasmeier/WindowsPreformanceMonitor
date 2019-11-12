@@ -248,3 +248,7 @@ C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\WindowsPerf
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.exe
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.pdb
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\WindowsPerformanceMonitor.WPF.csprojAssemblyReference.cache
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\ScheduleLogProcess.g.cs
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\SetThreshold.g.cs
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\ScheduleLogProcess.baml
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\SetThreshold.baml

@@ -33,9 +33,10 @@
                     <ContextMenu.BitmapEffect>
                         <BitmapEffectGroup/>
                     </ContextMenu.BitmapEffect>
-                    <MenuItem Header="Kill" Name="EditNutritionContextMenu"  Click="KillProcess_Click"/>
                     <MenuItem Header="Schedule Log" Name="ScheduleLog"  Click="ScheduleLogProcess_Click"/>
                     <MenuItem Header="Track in Log" Name="track_in_log"  Click="TrackInLog_Click"/>
+                    <MenuItem Header="Set Thresholds" Name="SetThreshold"  Click="SetThreshold_Click"/>
+                    <MenuItem Header="Kill" Name="EditNutritionContextMenu"  Click="KillProcess_Click"/>
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
