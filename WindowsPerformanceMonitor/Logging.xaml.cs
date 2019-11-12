@@ -269,7 +269,7 @@ namespace WindowsPerformanceMonitor
         
         private void Play(string path)
         {
-            while (currentLogLocation <= maxLogLocation + 2)
+            while (true)
             {
                 pauseEvent.WaitOne(Timeout.Infinite);
 
@@ -288,8 +288,11 @@ namespace WindowsPerformanceMonitor
         {
             if (currentLogLocation >= maxLogLocation - 2)
             {
-                App.Current.Dispatcher.Invoke(() => {
+                this.Dispatcher.Invoke(() =>
+                {
+
                     paused = true;
+                    pauseEvent.Reset();
                     PauseButton.Content = "Resume";
                     PauseButton.IsEnabled = false;
                     StepForward.IsEnabled = true;
@@ -300,7 +303,7 @@ namespace WindowsPerformanceMonitor
             {
                 if (paused)
                 {
-                    App.Current.Dispatcher.Invoke(() => {
+                    this.Dispatcher.Invoke(() => {
                         PauseButton.Content = "Resume";
                         PauseButton.IsEnabled = true;
                         StepForward.IsEnabled = true;
@@ -309,7 +312,7 @@ namespace WindowsPerformanceMonitor
                 }
                 else
                 {
-                    App.Current.Dispatcher.Invoke(() => {
+                    this.Dispatcher.Invoke(() => {
                         PauseButton.Content = "Pause";
                         PauseButton.IsEnabled = true;
                         StepForward.IsEnabled = false;
