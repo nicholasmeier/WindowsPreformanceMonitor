@@ -30,11 +30,11 @@ namespace WindowsPerformanceMonitor
     {
         private MainWindow mainWindow = null;
         private ObservableCollection<LogDetails> _logList { get; set; }
-        private ObservableCollection<ProcessEntry> _logProcList { get; set; }
+        private ObservableCollection<LogProcessEntry> _logProcList { get; set; }
         private LogDetails _selectedLog { get; set; }
-        public ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
-        private ProcessEntry _selectedProcessComboBox;
-        public ProcessEntry system = new ProcessEntry { Name = "SYSTEM", Pid = -1 };
+        public ObservableCollection<LogProcessEntry> _procListComboBox { get; set; }
+        private LogProcessEntry _selectedProcessComboBox;
+        public LogProcessEntry system = new LogProcessEntry { Name = "SYSTEM", Pid = -1 };
 
 
         private Thread readThread;
@@ -56,7 +56,7 @@ namespace WindowsPerformanceMonitor
             LogList = new ObservableCollection<LogDetails>();
             this.DataContext = this;
             GetLogList();
-            _procListComboBox = new ObservableCollection<ProcessEntry>();
+            _procListComboBox = new ObservableCollection<LogProcessEntry>();
             selectedProcessComboBox = system;
             this.DataContext = this;
             cbAll.IsChecked = true;
@@ -93,7 +93,7 @@ namespace WindowsPerformanceMonitor
 
             LogList = new ObservableCollection<LogDetails>(tempLogList);
         }
-        public ObservableCollection<ProcessEntry> procListComboBox
+        public ObservableCollection<LogProcessEntry> procListComboBox
         {
             get { return _procListComboBox; }
             set
@@ -103,7 +103,7 @@ namespace WindowsPerformanceMonitor
             }
         }
 
-        public ProcessEntry selectedProcessComboBox
+        public LogProcessEntry selectedProcessComboBox
         {
             get { return _selectedProcessComboBox; }
             set
@@ -154,10 +154,10 @@ namespace WindowsPerformanceMonitor
         }
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
-            ProcessEntry selected = (ProcessEntry)comboBox1.SelectedItem;
 
-            if (selected != null)
+            LogProcessEntry selected = (LogProcessEntry)comboBox1.SelectedItem;
+
+            if (selected.Name != null)
             {
                 liveGraph.ProcessPid = selected.Pid;
             }
@@ -222,7 +222,7 @@ namespace WindowsPerformanceMonitor
         private void ResetUI()
         {
             liveGraph.Clear();
-            LogProcList = new ObservableCollection<ProcessEntry>();
+            LogProcList = new ObservableCollection<LogProcessEntry>();
             ResetColumnHeaders();
         }
 
@@ -271,9 +271,9 @@ namespace WindowsPerformanceMonitor
                     if (currentLogLocation >= 0)
                     {
                         liveGraph.BackOne();
-                        LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                        LogProcList = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
                         UpdateColumnHeaders(log.mydata[currentLogLocation]);
-                        procListComboBox = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                        procListComboBox = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
                         procListComboBox.Insert(0, system);
                     }
 
@@ -296,9 +296,9 @@ namespace WindowsPerformanceMonitor
                      */
                     currentLogLocation++;
                     liveGraph.Read(log, currentLogLocation);
-                    LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                    LogProcList = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
                     UpdateColumnHeaders(log.mydata[currentLogLocation]);
-                    procListComboBox = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                    procListComboBox = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
                     procListComboBox.Insert(0, system);
                 }
 
@@ -412,7 +412,7 @@ namespace WindowsPerformanceMonitor
             }
         }
 
-        public ObservableCollection<ProcessEntry> LogProcList
+        public ObservableCollection<LogProcessEntry> LogProcList
         {
             get { return _logProcList; }
             set
