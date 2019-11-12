@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using WindowsPerformanceMonitor.Backend;
@@ -22,7 +24,18 @@ namespace WindowsPerformanceMonitor
             public double Network;
             public double CpuTemp;
             public double GpuTemp;
-            public List<ProcessEntry> ProcessList { get; set; }
+            public List<LogProcessEntry> ProcessList { get; set; }
+        }
+
+        public struct LogProcessEntry
+        {
+            public string Name { get; set; }
+            public int Pid { get; set; }
+            public double Cpu { get; set; }
+            public double Gpu { get; set; }
+            public double Memory { get; set; }
+            public float Disk { get; set; }
+            public double Network { get; set; }
         }
 
         public struct payload
@@ -90,12 +103,21 @@ namespace WindowsPerformanceMonitor
             NewData.Network = comp.TotalNetwork;
             NewData.Disk = comp.TotalDisk;
             List<ProcessEntry> currList = new List<ProcessEntry>(comp.ProcessList);
-            List<ProcessEntry> newList = new List<ProcessEntry>();
+            List<LogProcessEntry> newList = new List<LogProcessEntry>();
             foreach (int somePid in myPids)
             {
                 if (currList.Exists(x => x.Pid == somePid))
                 {
-                    newList.Add(currList.Find(x => x.Pid == somePid));
+                    ProcessEntry temp = currList.Find(x => x.Pid == somePid);
+                    LogProcessEntry newTemp = new LogProcessEntry();
+                    newTemp.Cpu = temp.Cpu;
+                    newTemp.Disk = temp.Disk;
+                    newTemp.Gpu = temp.Gpu;
+                    newTemp.Memory = temp.Memory;
+                    newTemp.Name = temp.Name;
+                    newTemp.Network = temp.Network;
+                    newTemp.Pid = temp.Pid;
+                    newList.Add(newTemp);
                 }
             }
             NewData.ProcessList = newList;
