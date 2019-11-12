@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -22,7 +23,7 @@ namespace WindowsPerformanceMonitor
     /// <summary>
     /// Interaction logic for Options.xaml
     /// </summary>
-    public partial class Options : UserControl
+    public partial class Options : System.Windows.Controls.UserControl
     {
         private MainWindow mainWindow = null; // Reference to the MainWindow
         public ObservableCollection<string> _extFileComboBox { get; set; }
@@ -75,7 +76,16 @@ namespace WindowsPerformanceMonitor
         {
             Globals.Settings.Save();
         }
-
+        private void ChooseLocation_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog Fbd = new FolderBrowserDialog();
+            if (Fbd.ShowDialog() == DialogResult.OK)
+            {
+                Globals._log.logPath = Fbd.SelectedPath;
+                Globals.Settings.settings.LogFilePath = Fbd.SelectedPath;
+            }
+            Globals._logRef.GetLogList();
+        }
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
             FileExtensionComboBox.SelectedItem = ".doc";
@@ -85,9 +95,9 @@ namespace WindowsPerformanceMonitor
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            CompareLogs compare = new CompareLogs(Application.Current.MainWindow);
+            CompareLogs compare = new CompareLogs(System.Windows.Application.Current.MainWindow);
             compare.Show();
-            Application.Current.MainWindow.Hide();
+            System.Windows.Application.Current.MainWindow.Hide();
         }
 
         public ObservableCollection<string> extFileComboBox
@@ -135,7 +145,7 @@ namespace WindowsPerformanceMonitor
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox check = (CheckBox)sender;
+            System.Windows.Controls.CheckBox check = (System.Windows.Controls.CheckBox)sender;
             if (check.IsChecked == true)
             {
                 Globals._encryptionEnabled = true;
@@ -226,7 +236,7 @@ namespace WindowsPerformanceMonitor
             if (!match.Success)
             {
                 // does not match
-                MessageBoxResult result = MessageBox.Show("The input format is wrong. Example 00:00 AM.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBoxResult result = System.Windows.MessageBox.Show("The input format is wrong. Example 00:00 AM.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return 1;
             }
 
@@ -237,7 +247,7 @@ namespace WindowsPerformanceMonitor
             if (!match.Success)
             {
                 // does not match
-                MessageBoxResult result = MessageBox.Show("The input format is wrong. Example 00:00.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBoxResult result = System.Windows.MessageBox.Show("The input format is wrong. Example 00:00.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return 1;
             }
 

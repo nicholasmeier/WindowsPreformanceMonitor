@@ -108,7 +108,6 @@
 
         <!-- Top Left (Logging Buttons) -->
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-            <Button Content="Choose Location" Click="ChooseLocation_Click" Margin="5,5,5,3"/>
             <Button Content="Start Recording" Click="StartLog_Click" Margin="5,5,5,3"/>
             <Button Content="Stop Recording" Click="StopLog_Click" Margin="5,5,5,3"/>
             <Button Content="Delete Log" Click="DeleteLog_Click" Margin="5,5,5,3"/>

@@ -65,6 +65,7 @@ namespace WindowsPerformanceMonitor
             StepForward.IsEnabled = false;
             StepBack.IsEnabled = false;
             readThread = new Thread(() => { });
+            Globals._logRef = this;
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -77,7 +78,7 @@ namespace WindowsPerformanceMonitor
             
         }
 
-        private void GetLogList()
+        public void GetLogList()
         {
             string[] files = Directory.GetFiles(Globals._log.logPath);
             List<LogDetails> tempLogList = new List<LogDetails>();
@@ -353,17 +354,7 @@ namespace WindowsPerformanceMonitor
 
             Globals._log = new Log();
         }
-        private void ChooseLocation_Click(object sender, RoutedEventArgs e)
-        {
-            FolderBrowserDialog Fbd = new FolderBrowserDialog();
-            if (Fbd.ShowDialog() == DialogResult.OK)
-            {
-                Globals._log.logPath = Fbd.SelectedPath;
-                Globals.Settings.settings.LogFilePath = Fbd.SelectedPath;
-                GetLogList();
-            }
 
-        }
 
         private void DeleteLog_Click(object sender, RoutedEventArgs e)
         {
