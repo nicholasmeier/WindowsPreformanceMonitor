@@ -40,7 +40,8 @@ namespace WindowsPerformanceMonitor
         private Thread readThread;
         private bool paused;
         private bool back;
-        private bool finished;
+        public int currentLogLocation = -1;     // Current location of the log.
+        public int maxLogLocation = 0;          // Max location we can be at for some log.
         ManualResetEvent pauseEvent = new ManualResetEvent(true);
 
         public class LogDetails
@@ -63,6 +64,7 @@ namespace WindowsPerformanceMonitor
             paused = false;
             StepForward.IsEnabled = false;
             StepBack.IsEnabled = false;
+            readThread = new Thread(() => { });
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -197,9 +199,16 @@ namespace WindowsPerformanceMonitor
 
         private void PlayLog_Click(object sender, RoutedEventArgs e)
         {
+            ResetUI();
             currentLogLocation = -1;
             if (SelectedLog != null)
             {
+
+                if (readThread.IsAlive)
+                {
+                    readThread.Abort();
+                }
+
                 paused = false;
                 PauseButton.Content = "Pause";
                 readThread = new Thread(() =>
@@ -210,20 +219,17 @@ namespace WindowsPerformanceMonitor
             }
         }
 
+        private void ResetUI()
+        {
+            liveGraph.Clear();
+            LogProcList = new ObservableCollection<ProcessEntry>();
+            ResetColumnHeaders();
+        }
+
         private void PauseLog_Click(object sender, RoutedEventArgs e)
         {
             if (readThread != null)
             {
-                if (finished)
-                {
-                    paused = true;
-                    pauseEvent.Reset();
-                    PauseButton.Content = "Resume";
-                    PauseButton.IsEnabled = false;
-                    StepForward.IsEnabled = true;
-                    StepBack.IsEnabled = true;
-                }
-
                 if(!paused)
                 {
                     paused = true;
@@ -234,36 +240,31 @@ namespace WindowsPerformanceMonitor
                 }
                 else
                 {
-                    paused = false;
-                    pauseEvent.Set();
-                    PauseButton.Content = "Pause";
-                    StepForward.IsEnabled = false;
-                    StepBack.IsEnabled = false;
+                    if (currentLogLocation <= maxLogLocation)    // Don't let this run if we're at end.
+                    {
+                        paused = false;
+                        pauseEvent.Set();
+                        PauseButton.Content = "Pause";
+                        StepForward.IsEnabled = false;
+                        StepBack.IsEnabled = false;
+                    }
+
                 }
             }
         }
-
-        private void Play(string path, string direction)
-        {
-            payload log = Globals._log.ReadIt(path);
-            liveGraph.connect(log);
-        }
-
-        public int currentLogLocation = -1;
 
         private void Play(string path)
         {
             payload log = Globals._log.ReadIt(path);
             liveGraph.connect(log);
+            maxLogLocation = log.mytimes.Count - 1;
 
-            while (currentLogLocation < log.mytimes.Count)
+            while (currentLogLocation < log.mytimes.Count - 1)
             {
-
-
                 pauseEvent.WaitOne(Timeout.Infinite);
                 if (back == true)
                 {
-                    /*
+                    /**
                      * Step backwards
                      */
                     currentLogLocation--;
@@ -276,7 +277,10 @@ namespace WindowsPerformanceMonitor
                         procListComboBox.Insert(0, system);
                     }
 
-                    // Reset to -1 so we can start from 0.
+                    /**
+                     * If the log reached the end when stepping back,
+                     * reset to zero so if they resume we don't crash.
+                     */
                     if (currentLogLocation < 0)
                     {
                         currentLogLocation = -1;
@@ -287,8 +291,8 @@ namespace WindowsPerformanceMonitor
                 }
                 else
                 {
-                    /*
-                     * Step forward & play the log.
+                    /**
+                     * Step forward or play the log.
                      */
                     currentLogLocation++;
                     liveGraph.Read(log, currentLogLocation);
@@ -300,7 +304,7 @@ namespace WindowsPerformanceMonitor
 
                 if (paused == true)
                 {
-                    /*
+                    /**
                      * If this is true, we know we were stepping through the log.
                      * Reset the pauseEvent so we don't keep reading. We also no longer
                      * need to sleep since we know we're keeping it paused.
@@ -309,14 +313,18 @@ namespace WindowsPerformanceMonitor
                 }
                 else
                 {
+                    // TODO: Make this dynamic so we can change speed.
                     Thread.Sleep(2000);
                 }
             }
 
-            // This clears the listview after log has finished reading.
-            liveGraph.Clear();
-            LogProcList = new ObservableCollection<ProcessEntry>();
-            ResetColumnHeaders();
+            App.Current.Dispatcher.Invoke(() => {
+                paused = true;
+                pauseEvent.Reset();
+                PauseButton.Content = "Resume";
+                StepForward.IsEnabled = true;
+                StepBack.IsEnabled = true;
+            });
         }
 
         private void Step_Forward(object sender, RoutedEventArgs e)
