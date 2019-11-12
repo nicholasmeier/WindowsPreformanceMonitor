@@ -80,7 +80,7 @@
         </ListView>
 
         <!-- Bottom Row (Process List) -->
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical">
             <ComboBox 
                 ItemsSource="{Binding procListComboBox}"
                 DisplayMemberPath="Name"
@@ -90,9 +90,9 @@
                 Height="20" 
                 SelectionChanged="ComboBox_SelectionChanged" 
                 MaxDropDownHeight="100" 
-                Margin="20,5,20,0"
+                Margin="5,5,5,0"
                 />
-            <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Margin="20,5,20,10">
+            <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Margin="5,0,5,20">
                 <StackPanel x:Name="radioButtons">
                     <CheckBox Content="All" Name="cbAll" Checked="CBAllChanged" Unchecked="CBAllChanged"/>
                     <CheckBox Content="CPU" Name="cpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
@@ -109,8 +109,8 @@
         <!-- Top Left (Logging Buttons) -->
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
             <Button Content="Choose Location" Click="ChooseLocation_Click" Margin="5,5,5,3"/>
-            <Button Content="Start Recording" Click="StartLog_Click" Margin="5,5,5,3"/>
-            <Button Content="Stop Recording" Click="StopLog_Click" Margin="5,5,5,3"/>
+            <Button x:Name="StartRecordingButton" Content="Start Recording" Click="StartLog_Click" Margin="5,5,5,3"/>
+            <Button x:Name="StopRecordingButton" Content="Stop Recording" Click="StopLog_Click" Margin="5,5,5,3"/>
             <Button Content="Delete Log" Click="DeleteLog_Click" Margin="5,5,5,3"/>
         </StackPanel>
 
@@ -134,9 +134,7 @@
         </ListView>
 
         <!-- Top Middle (Start recording button) -->
-        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
-            <CheckBox Content="Automatically record in" Margin="5,5,5,3"/>
-            <ComboBox Margin="5,10,5,3"/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Margin="0,30,0,0">
             <StackPanel Orientation="Horizontal">
                 <Button Content="Play" Click="PlayLog_Click" Margin="5,5,5,3" Width="71"/>
                 <Button Content="Pause" Name="PauseButton" Click="PauseLog_Click" Margin="0,5,0,3" Width="70"/>

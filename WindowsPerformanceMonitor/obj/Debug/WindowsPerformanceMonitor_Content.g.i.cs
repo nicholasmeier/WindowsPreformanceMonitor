@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("icons/fast-forward%20(1).png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("icons/bullet_black.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("icons/bullet_blue.png")]
 
 

@@ -35,7 +35,11 @@ namespace WindowsPerformanceMonitor
 
         public void UpdateValues(ComputerObj comp)
         {
-            UpdateList(comp);
+            if (comp.Tab == 1)
+            {
+                UpdateList(comp);
+            }
+
             return;
         }
 

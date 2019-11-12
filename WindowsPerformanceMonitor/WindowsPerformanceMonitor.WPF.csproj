@@ -228,6 +228,19 @@
   <ItemGroup>
     <Resource Include="Icons\fast-forward %281%29.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\bullet_orange.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\bullet_green.png" />
+    <Resource Include="Icons\bullet_pink.png" />
+    <Resource Include="Icons\bullet_purple.png" />
+    <Resource Include="Icons\bullet_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\bullet_black.png" />
+    <Resource Include="Icons\bullet_blue.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"

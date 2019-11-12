@@ -65,6 +65,9 @@ namespace WindowsPerformanceMonitor
             StepForward.IsEnabled = false;
             StepBack.IsEnabled = false;
             readThread = new Thread(() => { });
+            StartRecordingButton.IsEnabled = true;
+            StopRecordingButton.IsEnabled = false;
+
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -253,13 +256,14 @@ namespace WindowsPerformanceMonitor
             }
         }
 
+        
         private void Play(string path)
         {
             payload log = Globals._log.ReadIt(path);
             liveGraph.connect(log);
             maxLogLocation = log.mytimes.Count - 1;
 
-            while (currentLogLocation < log.mytimes.Count - 1)
+            while (currentLogLocation < log.mytimes.Count - 1) // This is why we can't step back after we played.
             {
                 pauseEvent.WaitOne(Timeout.Infinite);
                 if (back == true)
@@ -314,7 +318,7 @@ namespace WindowsPerformanceMonitor
                 else
                 {
                     // TODO: Make this dynamic so we can change speed.
-                    Thread.Sleep(2000);
+                    Thread.Sleep(50);
                 }
             }
 
@@ -334,23 +338,60 @@ namespace WindowsPerformanceMonitor
 
         private void Step_Back(object sender, RoutedEventArgs e)
         {
-            back = true;
-            pauseEvent.Set();
+            /*back = true;
+            pauseEvent.Set();*/
+            //Back();
+
+
+            // Check if it finished, it it did, play it again but move the starting thing back one maybe?
         }
+
+
+        private void Back(payload log)
+        {
+            /**
+             * Step backwards
+             */
+            currentLogLocation--;
+            if (currentLogLocation >= 0)
+            {
+                liveGraph.BackOne();
+                LogProcList = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                UpdateColumnHeaders(log.mydata[currentLogLocation]);
+                procListComboBox = new ObservableCollection<ProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
+                procListComboBox.Insert(0, system);
+            }
+
+            /**
+             * If the log reached the end when stepping back,
+             * reset to zero so if they resume we don't crash.
+             */
+            if (currentLogLocation < 0)
+            {
+                currentLogLocation = -1;
+            }
+
+            back = false;
+        }
+
 
         private void StartLog_Click(object sender, RoutedEventArgs e)
         {
             Globals._log.StartLog();
+            StartRecordingButton.IsEnabled = false;
+            StopRecordingButton.IsEnabled = true;
         }
 
         private void StopLog_Click(object sender, RoutedEventArgs e)
         {
+            StopRecordingButton.IsEnabled = false;
             if (Globals._log != null)
             {
                 Globals._log.WriteIt();
                 GetLogList();
             }
 
+            StartRecordingButton.IsEnabled = true;
             Globals._log = new Log();
         }
         private void ChooseLocation_Click(object sender, RoutedEventArgs e)

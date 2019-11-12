@@ -18,5 +18,6 @@ namespace WindowsPerformanceMonitor.Models
         public double TotalMemory { get; set; }
         public double TotalDisk { get; set; }
         public double TotalNetwork { get; set; }
+        public int Tab { get; set; }
     }
 }

@@ -102,13 +102,10 @@
 
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Click="Summary_Click" Margin="20,5,0,0" Width="75">Summary</Button>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Click="General_Click" Margin="5,5,0,0" Width="75">General</Button>
+                    <Button Click="Summary_Click" Margin="20,5,0,0" Width="100">Summary</Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Click="Legend_Click" Margin="0,5,20,0" Width="75">Legend</Button>
+                    <Button Click="General_Click" Margin="5,5,20,0" Width="100">General</Button>
                 </StackPanel>
             </Grid>
             <ComboBox 
@@ -126,14 +123,53 @@
             <ScrollViewer Height="140" VerticalScrollBarVisibility="Disabled">
                 <GroupBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Graph Type" Height="141" Margin="20,0,20,0">
                     <StackPanel x:Name="radioButtons">
-                        <CheckBox Content="All" Name="cbAll" Checked="CBAllChanged" Unchecked="CBAllChanged"/>
-                        <CheckBox Content="CPU" Name="cpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
-                        <CheckBox Content="GPU" Name="gpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
-                        <CheckBox Content="Memory" Name="memory" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
-                        <CheckBox Content="Disk" Name="disk" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
-                        <CheckBox Content="Network" Name="network" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
-                        <CheckBox Content="GPU Temperature" Name="gpuTemp" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
-                        <CheckBox Content="CPU Temperature" Name="cpuTemp" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                        <Label>
+                            <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
+                                <CheckBox Content="All" Name="cbAll" Checked="CBAllChanged" Unchecked="CBAllChanged"/>
+                            </StackPanel>
+                        </Label>
+                        <Label>
+                            <StackPanel Orientation="Horizontal" Margin="0,-11,0,0">
+                                <CheckBox Content="CPU" Name="cpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                                <Image Source="Icons/bullet_red.png" />
+                            </StackPanel>
+                        </Label>
+                        <Label>
+                            <StackPanel Orientation="Horizontal" Margin="0,-11,0,0">
+                                <CheckBox Content="GPU" Name="gpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                                <Image Source="Icons/bullet_orange.png" />
+                            </StackPanel>
+                        </Label>
+                        <Label>
+                            <StackPanel Orientation="Horizontal" Margin="0,-11,0,0">
+                                <CheckBox Content="Memory" Name="memory" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                                <Image Source="Icons/bullet_green.png" />
+                            </StackPanel>
+                        </Label>
+                        <Label>
+                            <StackPanel Orientation="Horizontal" Margin="0,-11,0,0">
+                                <CheckBox Content="Disk" Name="disk" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                                <Image Source="Icons/bullet_blue.png" />
+                            </StackPanel>
+                        </Label>
+                        <Label>
+                            <StackPanel Orientation="Horizontal" Margin="0,-11,0,0">
+                                <CheckBox Content="Network" Name="network" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                                <Image Source="Icons/bullet_purple.png" />
+                            </StackPanel>
+                        </Label>
+                        <Label>
+                            <StackPanel Orientation="Horizontal" Margin="0,-11,0,0">
+                                <CheckBox Content="GPU Temperature" Name="gpuTemp" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                                <Image Source="Icons/bullet_pink.png" />
+                            </StackPanel>
+                        </Label>
+                        <Label>
+                            <StackPanel Orientation="Horizontal" Margin="0,-11,0,0">
+                                <CheckBox Content="CPU Temperature" Name="cpuTemp" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                                <Image Source="Icons/bullet_black.png" />
+                            </StackPanel>
+                        </Label>
                     </StackPanel>
                 </GroupBox>
             </ScrollViewer>
