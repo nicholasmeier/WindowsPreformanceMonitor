@@ -29,6 +29,7 @@ namespace WindowsPerformanceMonitor
         public ObservableCollection<ProcessEntry> _procListTreeView { get; set; }
         public ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
         public ProcessEntry system = new ProcessEntry { Name = "SYSTEM", Pid = -1 };
+        public bool paused;
 
 
         #region Initialization
@@ -45,6 +46,7 @@ namespace WindowsPerformanceMonitor
             this.DataContext = this;
             cbAll.IsChecked = true;
             liveGraph.connect();
+            paused = false;
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
@@ -57,8 +59,11 @@ namespace WindowsPerformanceMonitor
 
         public void UpdateValues(ComputerObj comp)
         {
-            UpdateList(comp);
-            return;
+            if (!paused)
+            {
+                UpdateList(comp);
+                return;
+            }
         }
 
         public void UpdateList(ComputerObj comp)
@@ -170,6 +175,20 @@ namespace WindowsPerformanceMonitor
         {
             ProcessEntry procEntry = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
             Globals._log.AddPid(procEntry.Pid);
+        }
+
+        private void Pause_List(object sender, EventArgs e)
+        {
+            if (paused)
+            {
+                paused = false;
+                PauseButton.Content = "Pause";
+            }
+            else
+            {
+                paused = true;
+                PauseButton.Content = "Continue";
+            }
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
