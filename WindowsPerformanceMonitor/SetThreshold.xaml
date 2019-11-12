@@ -1,0 +1,33 @@
+﻿<Window x:Class="WindowsPerformanceMonitor.SetThreshold"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WindowsPerformanceMonitor"
+        mc:Ignorable="d"
+        Closing="SetThresholdView_Closing"
+        Title="Notificaitons" Height="300" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top Left (View type, graph type, process to graph)-->
+        <Button Grid.Row="1" Margin="20, 3, 20, 5" Click="SaveThresholds_Click">Save Thresholds</Button>
+        <StackPanel
+            Grid.Row="0" 
+            Margin="20,10,20,10"
+            >
+            <Label Content="Set CPU Notification Threshold %" FontWeight="Bold"/>
+            <TextBox  x:Name="CPUThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+            
+            <Label Content="Set GPU Notification Threshold %" FontWeight="Bold"/>
+            <TextBox  x:Name="GPUThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+
+            <Label Content="Set Memory Notification Threshold %" FontWeight="Bold"/>
+            <TextBox x:Name="MemoryThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

@@ -30,7 +30,7 @@ namespace WindowsPerformanceMonitor
         public ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
         public ProcessEntry system = new ProcessEntry { Name = "SYSTEM", Pid = -1 };
         public bool paused;
-
+        private bool setThresholdOpen;
 
         #region Initialization
 
@@ -47,6 +47,7 @@ namespace WindowsPerformanceMonitor
             cbAll.IsChecked = true;
             liveGraph.connect();
             paused = false;
+            setThresholdOpen = false;
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
@@ -142,10 +143,24 @@ namespace WindowsPerformanceMonitor
             // TODO
         }
 
+        private void SetThreshold_Click(object sender, RoutedEventArgs e)
+        {
+            if (listView_ProcList.SelectedIndex > -1)
+            {
+                ProcessEntry process = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
+                SetThreshold modal = new SetThreshold(Application.Current.MainWindow, process);
+                modal.Show();
+         
+            }
+        }
+
         private void ScheduleLogProcess_Click(object sender, RoutedEventArgs e)
         {
             if (listView_ProcList.SelectedIndex > -1)
             {
+                ProcessEntry process = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
+                ScheduleLogProcess modal = new ScheduleLogProcess(Application.Current.MainWindow, process);
+                modal.Show();
             }
         }
 
