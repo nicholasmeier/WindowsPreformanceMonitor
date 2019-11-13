@@ -32,12 +32,11 @@
                     SelectionChanged="ComboBox_SelectionChanged" 
                     MaxDropDownHeight="100" 
                 />
-                    
                 </StackPanel>
-                <Button Content="Choose Location" Click="ChooseLocation_Click" MaxWidth="100" HorizontalAlignment="Left" Margin="5,5,5,3"/>
+
+                <Button Content="Choose Location" Click="ChooseLocation_Click" HorizontalAlignment="Left" MaxWidth="100" Margin="5,5,5,3"/>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Save Settings" Margin="0,285,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
-                    <Button Content="Delete Settings" Margin="10,285,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
+                    <Button Content="Save Settings" Margin="0,250,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>

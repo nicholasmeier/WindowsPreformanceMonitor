@@ -181,8 +181,6 @@ namespace WindowsPerformanceMonitor
                         {
                             cpuDetails._busSpeedCPU = Math.Round((double)sensor.Value, 3);
                         }
-
-
                     }
                 }
             }

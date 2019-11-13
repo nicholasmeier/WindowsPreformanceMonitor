@@ -45,6 +45,9 @@ namespace WindowsPerformanceMonitor
             mainWindow = Window.GetWindow(this) as MainWindow;
             if (Globals.Settings.settings.LogFileFormat != null)
             {
+
+                Globals._log.logPath = Globals.Settings.settings.LogFilePath;
+
                 FileExtensionComboBox.SelectedItem = Globals.Settings.settings.LogFileFormat;
                 if (Globals.Settings.settings.IsEncryption == true)
                 {
@@ -84,6 +87,8 @@ namespace WindowsPerformanceMonitor
                 Globals._log.logPath = Fbd.SelectedPath;
                 Globals.Settings.settings.LogFilePath = Fbd.SelectedPath;
             }
+
+
             Globals._logRef.GetLogList();
         }
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
