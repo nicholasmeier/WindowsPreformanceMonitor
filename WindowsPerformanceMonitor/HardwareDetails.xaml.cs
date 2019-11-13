@@ -163,7 +163,6 @@ namespace WindowsPerformanceMonitor
             cp.HDDEnabled = true;
             cp.FanControllerEnabled = true;
             cp.RAMEnabled = true;
-            cp.GPUEnabled = true;
             cp.MainboardEnabled = true;
             cp.CPUEnabled = true;
 
