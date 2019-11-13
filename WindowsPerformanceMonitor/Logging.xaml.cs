@@ -349,6 +349,17 @@ namespace WindowsPerformanceMonitor
         #endregion
 
         #region UI Events
+
+        private void Delete_Click(object sender, EventArgs e)
+        {
+            LogDetails logDeets = (LogDetails)logList.Items[logList.SelectedIndex];
+            int ret = Globals._log.DeleteIt(logDeets.name);
+            if (ret == 0)
+            {
+                GetLogList();
+            }
+        }
+
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (comboBox1.SelectedItem != null)

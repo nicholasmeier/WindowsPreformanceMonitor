@@ -121,8 +121,17 @@
             Margin="10,10,10,10" 
             PreviewMouseLeftButtonUp="logList_Click"
             ItemsSource="{Binding LogList}"
-            x:Name="logList"
->
+            x:Name="logList">
+            <ListView.ContextMenu>
+                <ContextMenu Name="logListCtxMenu" StaysOpen="true" Background="WhiteSmoke">
+                    <ContextMenu.BitmapEffect>
+                        <BitmapEffectGroup/>
+                    </ContextMenu.BitmapEffect>
+                    <MenuItem Header="Delete" Click="Delete_Click"/>
+                    <!--<MenuItem Header="Decrypt" Click="DeleteLog_Click"/> // **If anyone is bored and wants to add more features.
+                    <MenuItem Header="Encrypt" Click="DeleteLog_Click"/>-->
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="storedLogs_ListView">
                     <GridViewColumn Header="Stored Logs" 

@@ -176,5 +176,18 @@ namespace WindowsPerformanceMonitor
 
             return JsonConvert.DeserializeObject<payload>(json);
         }
+
+        public int DeleteIt(string fileName)
+        {
+            var path = Globals._log.logPath;
+            var fullPath = Path.Combine(path, fileName);
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+                return 0;
+            }
+
+            return 1;
+        }
     }
 }
