@@ -46,7 +46,10 @@ namespace WindowsPerformanceMonitor
             if (Globals.Settings.settings.LogFileFormat != null)
             {
 
-                Globals._log.logPath = Globals.Settings.settings.LogFilePath;
+                if (Globals.Settings.settings.LogFilePath != null && Globals.Settings.settings.LogFilePath != string.Empty)
+                {
+                    Globals._log.logPath = Globals.Settings.settings.LogFilePath;
+                }
 
                 FileExtensionComboBox.SelectedItem = Globals.Settings.settings.LogFileFormat;
                 if (Globals.Settings.settings.IsEncryption == true)

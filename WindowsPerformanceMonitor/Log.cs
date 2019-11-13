@@ -47,7 +47,7 @@ namespace WindowsPerformanceMonitor
 
         List<int> myPids = new List<int>();
         payload mypayload;
-        public String logPath;
+        public string logPath;
         HardwareObserver observer;
         public Log()
         {
@@ -155,7 +155,25 @@ namespace WindowsPerformanceMonitor
 
         public payload ReadIt(String path)
         {
-            string json = new StreamReader(path).ReadToEnd();
+            string json = null;
+            if (path.EndsWith(".aes"))
+            {
+                Encryption encryptobj = new Encryption();
+                var tempPath = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "WPFTemp");
+                if (File.Exists(tempPath))
+                {
+                    File.Delete(tempPath);
+                }
+
+                encryptobj.FileDecrypt(path, tempPath, "thisistheencryptionpassword");
+                json = new StreamReader(tempPath).ReadToEnd();
+               
+            }
+            else
+            {
+                json = new StreamReader(path).ReadToEnd();
+            }
+
             return JsonConvert.DeserializeObject<payload>(json);
         }
     }
