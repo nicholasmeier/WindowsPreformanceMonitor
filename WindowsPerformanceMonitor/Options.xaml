@@ -36,7 +36,7 @@
 
                 <Button Content="Choose Location" Click="ChooseLocation_Click" HorizontalAlignment="Left" MaxWidth="100" Margin="5,5,5,3"/>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Save Settings" Margin="0,250,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
+                    <Button Content="Save Settings" Margin="5,250,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>

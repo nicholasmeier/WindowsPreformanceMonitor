@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using WindowsPerformanceMonitor.Graphs;
 using WindowsPerformanceMonitor.Models;
 using static WindowsPerformanceMonitor.Log;
@@ -159,7 +160,7 @@ namespace WindowsPerformanceMonitor
             log = Globals._log.ReadIt(path);
             liveGraph.connect(log);
             maxLogLocation = log.mytimes.Count - 1;
-            SetProgressBarMax();
+            SetProgressBarMax(maxLogLocation - 2);
         }
 
         private void Play(string path)
@@ -241,12 +242,9 @@ namespace WindowsPerformanceMonitor
             });
         }
 
-        private void SetProgressBarMax()
+        private void SetProgressBarMax(int max)
         {
-            this.Dispatcher.Invoke(() =>
-            {
-                pBar.Value = maxLogLocation;
-            });
+            pBar.Dispatcher.Invoke(() => pBar.Maximum = max, DispatcherPriority.Background);
         }
 
         private void NotifyLocationHasChanged()

@@ -144,7 +144,7 @@
             </StackPanel>
             <StackPanel>
                 <Grid Margin="5,10,5,0">
-                    <ProgressBar Width="140"  x:Name="pBar" Minimum="0" Value="0" />
+                    <ProgressBar Width="140"  x:Name="pBar" Minimum="0" Maximum="20" Value="0" />
                 </Grid>
             </StackPanel>
         </StackPanel>
