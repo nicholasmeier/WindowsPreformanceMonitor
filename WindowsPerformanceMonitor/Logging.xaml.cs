@@ -132,19 +132,24 @@ namespace WindowsPerformanceMonitor
             currentLogLocation = -1;
             if (SelectedLog != null)
             {
+                readThread.Abort();
 
-                if (readThread.IsAlive)
-                {
-                    readThread.Abort();
-                }
-
-                paused = false;
-                PauseButton.Content = "Pause";
                 readThread = new Thread(() =>
                 {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        paused = false;
+                        pauseEvent.Set();
+                        PauseButton.Content = "Pause";
+                        StepForward.IsEnabled = false;
+                        StepBack.IsEnabled = false;
+                    });
+
+                    currentLogLocation = -1;
                     ConnectLog(SelectedLog.path);
                     Play(SelectedLog.path);
                 });
+
                 readThread.Start();
             }
         }
@@ -185,6 +190,7 @@ namespace WindowsPerformanceMonitor
 
         private void Step_Back(object sender, RoutedEventArgs e)
         {
+            var x = currentLogLocation;
             if (currentLogLocation > 0)
             {
                 Back();
