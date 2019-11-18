@@ -9,6 +9,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+
+// You might need to download WinPcap_4_1_3 to run this
+// without errors.
 namespace WindowsPerformanceMonitor.Backend
 {
     public class ProcessPerformanceInfo
