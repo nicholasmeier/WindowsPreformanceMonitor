@@ -1,15 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 using WindowsPerformanceMonitor.Backend;
-using WindowsPerformanceMonitor.Graphs;
 using WindowsPerformanceMonitor.Models;
 
 namespace WindowsPerformanceMonitor

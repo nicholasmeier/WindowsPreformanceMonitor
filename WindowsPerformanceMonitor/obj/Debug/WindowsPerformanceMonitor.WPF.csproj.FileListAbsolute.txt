@@ -252,3 +252,7 @@ C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\ScheduleLog
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\SetThreshold.g.cs
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\ScheduleLogProcess.baml
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\SetThreshold.baml
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\bin\Debug\PacketDotNet.dll
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\bin\Debug\SharpPcap.dll
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
