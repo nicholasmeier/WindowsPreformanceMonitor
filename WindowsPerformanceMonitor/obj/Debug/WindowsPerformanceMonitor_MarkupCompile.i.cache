@@ -12,9 +12,9 @@ DEBUG;TRACE
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\App.xaml
 141837382160
 
-36-153160020
-231365274176
+371219320267
+130-1506004237
 CompareLogs.xaml;GeneralView.xaml;GraphLegend.xaml;Graphs\LiveLineGraph.xaml;HardwareDetails.xaml;Logging.xaml;MainWindow.xaml;Options.xaml;ProcessTree.xaml;RealTime.xaml;ScheduleLogProcess.xaml;Startup.xaml;SummaryView.xaml;SetThreshold.xaml;
 
-True
+False
 

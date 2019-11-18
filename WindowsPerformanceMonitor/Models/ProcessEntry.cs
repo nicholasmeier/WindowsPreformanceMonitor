@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using WindowsPerformanceMonitor.Backend;
 
 namespace WindowsPerformanceMonitor.Models
 {
@@ -29,5 +30,6 @@ namespace WindowsPerformanceMonitor.Models
         public double MemoryThreshold { get; set; }
         public string LogScheduleTime { get; set; }
         public string LogScheduleDuration { get; set; }
+        public NetworkInfo networkInfo { get; set; }
     }
 }

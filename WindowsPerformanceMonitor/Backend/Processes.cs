@@ -47,7 +47,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
                 else
                 {
-                    ret.Add(new ProcessEntry()
+                    var p = new ProcessEntry()
                     {
                         Name = proc.ProcessName,
                         Proc = proc,
@@ -60,7 +60,9 @@ namespace WindowsPerformanceMonitor.Backend
                         ChildProcesses = new List<ProcessEntry>(),
                         IsApplication = proc.MainWindowHandle != IntPtr.Zero ? true : false,
                         PrevCpu = new Tuple<DateTime, TimeSpan>(new DateTime(1), new TimeSpan(0))
-                    }); ;
+                    };
+
+                    ret.Add(p);
                 }
             }
 
@@ -158,7 +160,7 @@ namespace WindowsPerformanceMonitor.Backend
                         Ppid = ppid,
                         ChildProcesses = new List<ProcessEntry>(),
                         IsApplication = processes[i].MainWindowHandle != IntPtr.Zero ? true : false,
-                        PrevCpu = null
+                        PrevCpu = null,
                     };
                 }
                 catch (Exception)
