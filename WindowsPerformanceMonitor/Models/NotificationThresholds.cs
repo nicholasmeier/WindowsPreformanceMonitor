@@ -9,7 +9,10 @@ namespace WindowsPerformanceMonitor.Models
     class NotificationThresholds
     {
         public double cpuThreshold;
+        public bool cpuThresholdPassed;
         public double gpuThreshold;
+        public bool gpuThresholdPassed;
         public double memoryThreshold;
+        public bool memoryThresholdPassed;
     }
 }

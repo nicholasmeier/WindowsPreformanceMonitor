@@ -81,7 +81,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         UpdateVisitor updateVisitor = new UpdateVisitor();
         Computer computer = new Computer();
         ComputerObj obj = new ComputerObj();
-
+        NotificationThresholds notifications = new NotificationThresholds();
         ObservableCollection<ProcessEntry> plist = null;
         Processes processes = new Processes();
         obj.Computer = computer;

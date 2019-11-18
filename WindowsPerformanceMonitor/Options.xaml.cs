@@ -196,6 +196,9 @@ namespace WindowsPerformanceMonitor
             nt.gpuThreshold = Convert.ToDouble(GPUThresholdTextBox.Text);
             nt.memoryThreshold = Convert.ToDouble(MemoryThresholdTextBox.Text);
             loadThresholds();
+            App.Current.Properties["cpuThreshold"] = nt.cpuThreshold;
+            App.Current.Properties["gpuThreshold"] = nt.gpuThreshold;
+            App.Current.Properties["memoryThreshold"] = nt.memoryThreshold;
         }
         private void ScheduleButton_Click(object sender, RoutedEventArgs e)
         {
