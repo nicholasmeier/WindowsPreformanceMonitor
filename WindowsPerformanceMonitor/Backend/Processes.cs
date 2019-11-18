@@ -288,7 +288,12 @@ namespace WindowsPerformanceMonitor.Backend
                                         / Convert.ToDouble(Environment.ProcessorCount);
 
                     proc.Cpu = Math.Round(cpuUsage * 100, 2);
+                    if (proc.Cpu > 0)
+                        checkProcCPUThreshold(proc.Cpu, proc.CpuThreshold, proc.Name, proc.Pid);
+
                     proc.Gpu = Math.Round(proc.Cpu * .11, 2);   // GPU Estimation***
+                    if (proc.Gpu > 0)
+                        checkProcGPUThreshold(proc.Gpu, proc.GpuThreshold, proc.Name, proc.Pid);
                     totalCpu += cpuUsage;
 
                     proc.PrevCpu = new Tuple<DateTime, TimeSpan>(currTime, currProcTime);
@@ -316,7 +321,9 @@ namespace WindowsPerformanceMonitor.Backend
                 try
                 {
                     totalUsed += proc.Proc.WorkingSet64;
-                    proc.Memory = Math.Round(((double)proc.Proc.WorkingSet64 / totalMem * 100), 2);
+               
+                    if (proc.Memory > 0)
+                        checkProcMemoryThreshold(proc.Memory, proc.MemoryThreshold, proc.Name, proc.Pid);
                 }
                 catch (Exception)
                 {
@@ -464,6 +471,40 @@ namespace WindowsPerformanceMonitor.Backend
         }
 
         #endregion
+
+        public void checkProcCPUThreshold(double cpu, double cpuThreshold, string procName, int pid)
+        {
+            if (cpu > 0 && cpuThreshold > 0)
+            {
+                if (cpu > cpuThreshold)
+                {
+                    Console.WriteLine("PROC CPU PASSED.");
+                }
+            }
+
+        }
+
+        public void checkProcGPUThreshold(double gpu, double gpuThreshold, string procName, int pid)
+        {
+            if (gpu > 0 && gpuThreshold > 0)
+            {
+                if (gpu > gpuThreshold)
+                {
+                    Console.WriteLine("PROC GPU PASSED.");
+                }
+            }
+        }
+
+        public void checkProcMemoryThreshold(double memory, double memoryThreshold, string procName, int pid)
+        {
+            if (memory > 0 && memoryThreshold > 0)
+            {
+                if (memory > memoryThreshold)
+                {
+                    Console.WriteLine("PROC MEMORY PASSED.");
+                }
+            }
+        }
 
     }
 }

@@ -25,7 +25,7 @@
             <Label Content="Set GPU Notification Threshold %" FontWeight="Bold"/>
             <TextBox  x:Name="GPUThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
 
-            <Label Content="Set Memory Notification Threshold %" FontWeight="Bold"/>
+            <Label Content="Set Memory Notification Threshold MB" FontWeight="Bold"/>
             <TextBox x:Name="MemoryThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
         </StackPanel>
 
