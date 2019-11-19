@@ -168,6 +168,20 @@ namespace WindowsPerformanceMonitor
             }
         }
 
+        private void Hibernate_Checked(object sender, RoutedEventArgs e)
+        {
+            // to disable hiberantion
+            System.Windows.Controls.CheckBox check = (System.Windows.Controls.CheckBox)sender;
+            if (check.IsChecked == true)
+            {
+                App.Current.Properties["DisableHibernation"] = true;
+            }
+            else
+            {
+                App.Current.Properties["DisableHibernation"] = false;
+            }
+        }
+
         public int loadThresholds()
         {
             if (nt.cpuThreshold < 0 || nt.cpuThreshold > 100)

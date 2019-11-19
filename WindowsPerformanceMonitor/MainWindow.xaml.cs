@@ -60,8 +60,21 @@ namespace WindowsPerformanceMonitor
             }else
             {
                 // making the application "hibernate" add a flag for the options page to disable
-                App.Current.Properties["SUSPENDED"] = true;
-                computerStatsThread.Suspend();
+                if (App.Current.Properties["DisableHibernation"] != null)
+                {
+                    bool hiber = (bool)App.Current.Properties["DisableHibernation"];
+                    if(hiber == false)
+                    {
+                        App.Current.Properties["SUSPENDED"] = true;
+                        computerStatsThread.Suspend();
+                    }
+                }
+                else
+                {
+                    App.Current.Properties["SUSPENDED"] = true;
+                    computerStatsThread.Suspend();
+                }
+
             }
 
             ni.Visible = true;
