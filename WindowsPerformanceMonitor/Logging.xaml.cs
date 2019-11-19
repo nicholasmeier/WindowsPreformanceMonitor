@@ -66,6 +66,7 @@ namespace WindowsPerformanceMonitor
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             mainWindow = Window.GetWindow(this) as MainWindow;
+            GetLogList();
         }
 
         #region Log Manager / UI Event Functions

@@ -76,7 +76,6 @@
                     </Border>
                 </Grid>
                 <ListBox x:Name="LogScheduleListBox" Visibility="Hidden"/>
-                <TextBlock Margin="5,5,4.6,5" Text="Log Schedule List" FontWeight="Bold"/>
 
             </StackPanel>
         </GroupBox>

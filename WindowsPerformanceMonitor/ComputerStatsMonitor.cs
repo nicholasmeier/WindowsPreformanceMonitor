@@ -132,12 +132,55 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             }
 
             checkNotificationThresholds(obj.TotalCpu, obj.TotalGpu, obj.TotalMemory);
+            checkLogSchedule();
 
             computer.Accept(updateVisitor);
             Parallel.ForEach(observers, observer =>
                 observer.OnNext(obj)
             );
         }
+    }
+    
+    public void checkLogSchedule()
+    {
+        List<Tuple<string, string>> logList = (List<Tuple<string, string>>)App.Current.Properties["ScheduledLogList"];
+        string currTime = DateTime.Now.ToString("h:mm tt");
+        bool running = false;
+        int index = 0;
+        if (logList != null)
+        {
+            if (App.Current.Properties["ScheduledLogRunning"] != null)
+            {
+                running = (bool)App.Current.Properties["ScheduledLogRunning"];
+            }
+            foreach (var logtime in logList)
+            {
+                if (currTime == logtime.Item1 && !running)
+                {
+                    App.Current.Properties["ScheduledLogRunning"] = true;
+                    // start the log 
+                    Globals._log.StartLog();
+                }
+                else if (currTime == logtime.Item2)
+                {
+                    if (Globals._log != null)
+                    {
+                        Globals._log.WriteIt();
+                    }
+                    App.Current.Properties["ScheduledLogRunning"] = false;
+                    Globals._log = new Log();
+                    logList.Remove(logtime);
+                    App.Current.Properties["ScheduledLogList"] = logList;
+                    if (logList.Count == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+            
+
+
     }
 
     public void checkNotificationThresholds(double Totalcpu, double Totalgpu, double Totalmemory)
