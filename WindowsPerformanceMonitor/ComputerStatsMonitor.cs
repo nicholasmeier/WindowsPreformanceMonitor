@@ -146,7 +146,6 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         List<Tuple<string, string>> logList = (List<Tuple<string, string>>)App.Current.Properties["ScheduledLogList"];
         string currTime = DateTime.Now.ToString("h:mm tt");
         bool running = false;
-        int index = 0;
         if (logList != null)
         {
             if (App.Current.Properties["ScheduledLogRunning"] != null)
