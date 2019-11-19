@@ -29,13 +29,14 @@ namespace WindowsPerformanceMonitor
         public ObservableCollection<string> _extFileComboBox { get; set; }
         private string _selectedExt;
         NotificationThresholds nt = new NotificationThresholds();
+        List<Tuple<string, string>> logTimeList;
         public Options()
         {
             InitializeComponent();
             extFileComboBox = new ObservableCollection<string> { ".txt", ".doc", ".pdf" };
             this.DataContext = this;
             loadThresholds();
-
+            logTimeList = new List<Tuple<string, string>>();
         }
 
         // Get a reference to main windows when it is available.
@@ -167,6 +168,20 @@ namespace WindowsPerformanceMonitor
             }
         }
 
+        private void Hibernate_Checked(object sender, RoutedEventArgs e)
+        {
+            // to disable hiberantion
+            System.Windows.Controls.CheckBox check = (System.Windows.Controls.CheckBox)sender;
+            if (check.IsChecked == true)
+            {
+                App.Current.Properties["DisableHibernation"] = true;
+            }
+            else
+            {
+                App.Current.Properties["DisableHibernation"] = false;
+            }
+        }
+
         public int loadThresholds()
         {
             if (nt.cpuThreshold < 0 || nt.cpuThreshold > 100)
@@ -196,6 +211,9 @@ namespace WindowsPerformanceMonitor
             nt.gpuThreshold = Convert.ToDouble(GPUThresholdTextBox.Text);
             nt.memoryThreshold = Convert.ToDouble(MemoryThresholdTextBox.Text);
             loadThresholds();
+            App.Current.Properties["cpuThreshold"] = nt.cpuThreshold;
+            App.Current.Properties["gpuThreshold"] = nt.gpuThreshold;
+            App.Current.Properties["memoryThreshold"] = nt.memoryThreshold;
         }
         private void ScheduleButton_Click(object sender, RoutedEventArgs e)
         {
@@ -209,9 +227,16 @@ namespace WindowsPerformanceMonitor
 
             // validate the time formats
             if (validateTime(InputTextBox.Text, DurationInputTextBox.Text) == 0) {
-                String input = "Log Scheduled: " + InputTextBox.Text + " Duration: " + DurationInputTextBox.Text;
-                LogScheduleListBox.Items.Add(input); // Add Input to our ListBox.
-                LogScheduleListBox.Visibility = System.Windows.Visibility.Visible;
+                String input = "Log Scheduled: " + InputTextBox.Text.ToUpper() + " Duration: " + DurationInputTextBox.Text;
+                System.Windows.MessageBox.Show(input, "Log Time Scheduled.", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                DateTime TestTime = DateTime.Parse(InputTextBox.Text.ToUpper());
+                // Add 30 minutes
+                TestTime = TestTime + TimeSpan.Parse(DurationInputTextBox.Text);
+                string EndTime = TestTime.ToString("h:mm tt");
+
+                logTimeList.Add(new Tuple<string, string>(InputTextBox.Text, EndTime));
+                App.Current.Properties["ScheduledLogList"] = logTimeList;
 
                 // YesButton Clicked! Let's hide our InputBox and handle the input text.
                 DurationInputBox.Visibility = System.Windows.Visibility.Collapsed;
@@ -248,7 +273,7 @@ namespace WindowsPerformanceMonitor
                 return 1;
             }
 
-            var durationregex = @"^(([0]?[1-9]|1[0-2])(:)([0-5][0-9]))$";
+            var durationregex = @"^(([0]?[0-9]|1[0-9])(:)([0-5][0-9]))$";
 
             match = Regex.Match(duration, durationregex, RegexOptions.IgnoreCase);
 

@@ -35,8 +35,14 @@
                 </StackPanel>
 
                 <Button Content="Choose Location" Click="ChooseLocation_Click" HorizontalAlignment="Left" MaxWidth="100" Margin="5,5,5,3"/>
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="Hibernate" FlowDirection="RightToLeft" Checked="Hibernate_Checked" Unchecked="Hibernate_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Disable Hibernation"/>
+                    </CheckBox>
+                </StackPanel>
+                
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Save Settings" Margin="5,250,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
+                    <Button Content="Save Settings" Margin="5,200,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -76,7 +82,6 @@
                     </Border>
                 </Grid>
                 <ListBox x:Name="LogScheduleListBox" Visibility="Hidden"/>
-                <TextBlock Margin="5,5,4.6,5" Text="Log Schedule List" FontWeight="Bold"/>
 
             </StackPanel>
         </GroupBox>

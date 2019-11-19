@@ -16,6 +16,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
     {
     List<IObserver<ComputerObj>> observers;
     public int tabIndex = 0;
+    NotificationThresholds notifications = new NotificationThresholds();
     public ComputerStatsMonitor()
     {
         observers = new List<IObserver<ComputerObj>>();
@@ -81,7 +82,6 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         UpdateVisitor updateVisitor = new UpdateVisitor();
         Computer computer = new Computer();
         ComputerObj obj = new ComputerObj();
-
         ObservableCollection<ProcessEntry> plist = null;
         Processes processes = new Processes();
         obj.Computer = computer;
@@ -131,10 +131,88 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 ); ;
             }
 
+            checkNotificationThresholds(obj.TotalCpu, obj.TotalGpu, obj.TotalMemory);
+            checkLogSchedule();
+
             computer.Accept(updateVisitor);
             Parallel.ForEach(observers, observer =>
                 observer.OnNext(obj)
             );
+        }
+    }
+    
+    public void checkLogSchedule()
+    {
+        List<Tuple<string, string>> logList = (List<Tuple<string, string>>)App.Current.Properties["ScheduledLogList"];
+        string currTime = DateTime.Now.ToString("h:mm tt");
+        bool running = false;
+        if (logList != null)
+        {
+            if (App.Current.Properties["ScheduledLogRunning"] != null)
+            {
+                running = (bool)App.Current.Properties["ScheduledLogRunning"];
+            }
+            foreach (var logtime in logList)
+            {
+                if (currTime == logtime.Item1 && !running)
+                {
+                    App.Current.Properties["ScheduledLogRunning"] = true;
+                    // start the log 
+                    Globals._log.StartLog();
+                }
+                else if (currTime == logtime.Item2)
+                {
+                    if (Globals._log != null)
+                    {
+                        Globals._log.WriteIt();
+                    }
+                    App.Current.Properties["ScheduledLogRunning"] = false;
+                    Globals._log = new Log();
+                    logList.Remove(logtime);
+                    App.Current.Properties["ScheduledLogList"] = logList;
+                    if (logList.Count == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+            
+
+
+    }
+
+    public void checkNotificationThresholds(double Totalcpu, double Totalgpu, double Totalmemory)
+    {
+        notifications.cpuThreshold = Convert.ToDouble(App.Current.Properties["cpuThreshold"]);
+        notifications.gpuThreshold = Convert.ToDouble(App.Current.Properties["gpuThreshold"]);
+        notifications.memoryThreshold = Convert.ToDouble(App.Current.Properties["memoryThreshold"]);
+
+        if (Totalcpu > 0 && notifications.cpuThreshold > 0)
+        {
+            if (Totalcpu > notifications.cpuThreshold)
+            {
+                Console.WriteLine("CPU THRESHOLD PASSED.");
+                notifications.cpuThresholdPassed = true;
+            }
+        }
+
+        if (Totalgpu > 0 && notifications.gpuThreshold > 0)
+        {
+            if (Totalgpu > notifications.gpuThreshold)
+            {
+                Console.WriteLine("GPU THRESHOLDS PASSED.");
+                notifications.gpuThresholdPassed = true;
+            }
+        }
+
+        if (Totalmemory > 0 && notifications.memoryThreshold > 0)
+        {
+            if (Totalmemory > notifications.memoryThreshold)
+            {
+                Console.WriteLine("MEMORY THRESHOLDS PASSED.");
+                notifications.memoryThresholdPassed = true;
+            }
         }
     }
 
