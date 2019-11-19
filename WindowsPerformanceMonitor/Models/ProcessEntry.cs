@@ -16,8 +16,10 @@ namespace WindowsPerformanceMonitor.Models
         public double Gpu { get; set; }
         public double Memory { get; set; }
         public float Disk { get; set; }
-        public PerformanceCounter PrevDisk { get; set; }
-        public double Network { get; set; }
+        public float PrevDisk { get; set; }
+        public float PrevNetwork { get; set; }
+        public DateTime PrevTime { get; set; }
+        public float Network { get; set; }
         public bool IsApplication { get; set; }
         public string ApplicationName { get; set; }
         public int Ppid { get; set; }

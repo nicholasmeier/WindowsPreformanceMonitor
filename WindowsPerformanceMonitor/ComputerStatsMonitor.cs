@@ -107,7 +107,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             if (diskTask == null || diskTask.IsCompleted)
             {
                 diskTask = new Task(() => {
-                    obj.TotalDisk = processes.UpdateDisk(obj.ProcessList);
+                    obj.TotalDisk = processes.UpdateDisk(obj);
                 });
 
                 diskTask.Start();

@@ -16,6 +16,19 @@ namespace WindowsPerformanceMonitor.Backend
 {
     class Processes
     {
+        struct IO_COUNTERS
+        {
+            public ulong ReadOperationCount;
+            public ulong WriteOperationCount;
+            public ulong OtherOperationCount;
+            public ulong ReadTransferCount;
+            public ulong WriteTransferCount;
+            public ulong OtherTransferCount;
+        }
+        [DllImport(@"kernel32.dll", SetLastError = true)]
+        static extern bool GetProcessIoCounters(IntPtr hProcess, out IO_COUNTERS counters);
+
+
         public ObservableCollection<ProcessEntry> FindDelta(ObservableCollection<ProcessEntry> prev)
         {
             if (prev == null)
@@ -69,7 +82,7 @@ namespace WindowsPerformanceMonitor.Backend
 
         public ObservableCollection<ProcessEntry> GetProcesses()
         {
-            
+
             ObservableCollection<ProcessEntry> processEntries = new ObservableCollection<ProcessEntry>();
 
             Process[] processes = Process.GetProcesses();
@@ -140,7 +153,7 @@ namespace WindowsPerformanceMonitor.Backend
 
         private ObservableCollection<ProcessEntry> parallelList(Process[] processes, ObservableCollection<ProcessEntry> List, int start, int stop)
         {
-            for (int i=start; i < stop; i++)
+            for (int i = start; i < stop; i++)
             {
                 ProcessEntry p = null;
                 try
@@ -172,7 +185,7 @@ namespace WindowsPerformanceMonitor.Backend
                     continue;
                 }
 
-                if(p.Name != "Idle")
+                if (p.Name != "Idle")
                 {
                     try
                     {
@@ -281,8 +294,8 @@ namespace WindowsPerformanceMonitor.Backend
                     DateTime currTime = DateTime.Now;
                     TimeSpan currProcTime = proc.Proc.TotalProcessorTime;
 
-                    double cpuUsage = (currProcTime.TotalMilliseconds - proc.PrevCpu.Item2.TotalMilliseconds) 
-                                        / currTime.Subtract(proc.PrevCpu.Item1).TotalMilliseconds 
+                    double cpuUsage = (currProcTime.TotalMilliseconds - proc.PrevCpu.Item2.TotalMilliseconds)
+                                        / currTime.Subtract(proc.PrevCpu.Item1).TotalMilliseconds
                                         / Convert.ToDouble(Environment.ProcessorCount);
 
                     proc.Cpu = Math.Round(cpuUsage * 100, 2);
@@ -340,28 +353,62 @@ namespace WindowsPerformanceMonitor.Backend
          * This performance counter gives a total of disk and network.
          * This function takes longer than any of the others.
          */
-        public double UpdateDisk(ObservableCollection<ProcessEntry> procList)
+        public double UpdateDisk(ComputerObj obj)
         {
+            //Remove * lines if we are changing the network system.
+            ObservableCollection<ProcessEntry> procList = obj.ProcessList;
             double totalDisk = 0;
+            double totalNetwork = 0;//*
             foreach (ProcessEntry proc in procList)
             {
-                if (proc.PrevDisk == null)
-                {
-                    proc.PrevDisk = new PerformanceCounter("Process", "IO Data Bytes/sec", proc.Name);
-                }
-
                 try
                 {
-                    proc.Disk = (float)Math.Round(proc.PrevDisk.NextValue() / 1000000, 2);
+                    if (GetProcessIoCounters(proc.Proc.Handle, out IO_COUNTERS counters))
+                    {
+                        if (proc.PrevTime != null)
+                        {
+                            proc.Disk = (float)Math.Round((counters.ReadTransferCount + counters.WriteTransferCount - proc.PrevDisk) / 1000000 /
+                                (System.DateTime.Now - proc.PrevTime).TotalSeconds, 2);
+                            proc.Network = (float)Math.Round((counters.OtherTransferCount - proc.PrevNetwork) / 1000000 /
+                                (System.DateTime.Now - proc.PrevTime).TotalSeconds, 2); //*
+                        }
+                        proc.PrevTime = System.DateTime.Now;
+                        proc.PrevDisk = counters.WriteTransferCount + counters.ReadTransferCount;
+                        proc.PrevNetwork = counters.OtherTransferCount;//*
+                    }
                     totalDisk += proc.Disk;
+                    totalNetwork += proc.Network;//*
                 }
                 catch (Exception)
                 {
                     proc.Disk = 0;
+                    proc.Network = 0;
                 }
             }
 
-            return totalDisk;
+            //Parallel.ForEach(procList, new ParallelOptions { MaxDegreeOfParallelism = 3}, (proc) =>
+            //{
+            //    try
+            //    {
+            //        if (GetProcessIoCounters(proc.Proc.Handle, out IO_COUNTERS counters))
+            //        {
+            //            if (proc.PrevTime != null)
+            //            {
+            //                proc.Disk = (float)Math.Round((counters.ReadTransferCount + counters.WriteTransferCount - proc.PrevDisk) / 1000000 /
+            //                    (System.DateTime.Now - proc.PrevTime).TotalSeconds, 2);
+            //            }
+            //            proc.PrevTime = System.DateTime.Now;
+            //            proc.PrevDisk = counters.WriteTransferCount + counters.ReadTransferCount;
+            //        }
+            //        totalDisk += proc.Disk;
+            //    }
+            //    catch (Exception)
+            //    {
+            //        proc.Disk = 0;
+            //    }
+            //});
+            obj.TotalNetwork = totalNetwork;
+                return totalDisk;
         }
 
         #region C++ Interop
