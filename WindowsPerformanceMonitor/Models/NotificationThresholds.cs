@@ -10,9 +10,15 @@ namespace WindowsPerformanceMonitor.Models
     {
         public double cpuThreshold;
         public bool cpuThresholdPassed;
+        public DateTime cpuThresholdPassedTime;
+
         public double gpuThreshold;
         public bool gpuThresholdPassed;
+        public DateTime gpuThresholdPassedTime;
+
         public double memoryThreshold;
         public bool memoryThresholdPassed;
+        public DateTime memoryThresholdPassedTime;
+
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using OpenHardwareMonitor.Hardware;
 using WindowsPerformanceMonitor;
 using WindowsPerformanceMonitor.Backend;
@@ -17,9 +18,15 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
     List<IObserver<ComputerObj>> observers;
     public int tabIndex = 0;
     NotificationThresholds notifications = new NotificationThresholds();
+    private readonly NotifyIcon _notifyIcon;
     public ComputerStatsMonitor()
     {
         observers = new List<IObserver<ComputerObj>>();
+        _notifyIcon = new NotifyIcon();
+        // Extracts your app's icon and uses it as notify icon
+        _notifyIcon.Icon = new System.Drawing.Icon("../../Graphics/WindowsPerformanceMonitor.ico");
+        // Hides the icon when the notification is closed
+        _notifyIcon.BalloonTipClosed += (s, e) => _notifyIcon.Visible = false;
     }
     private class Unsubscriber : IDisposable
     {
@@ -192,8 +199,30 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         {
             if (Totalcpu > notifications.cpuThreshold)
             {
-                Console.WriteLine("CPU THRESHOLD PASSED.");
-                notifications.cpuThresholdPassed = true;
+                if (notifications.cpuThresholdPassed != true)
+                {
+
+                    //notifications.cpuThresholdPassed = true;
+                    if (notifications.cpuThresholdPassedTime == (new DateTime()))
+                    {
+                        // first time the threshold has ever been passed
+                        string message = "CPU is at " + Totalcpu + "%";
+                        ShowNotification("CPU Threshold Notification", message);
+                        notifications.cpuThresholdPassedTime = DateTime.Now;
+                    }
+                    else
+                    {
+                        // the threshold has been hit before we need to assert it has been atleast two minute later
+                        TimeSpan timeSpan = DateTime.Now - notifications.cpuThresholdPassedTime;
+                        if (timeSpan.TotalMinutes > 2)
+                        {
+                            // it has been two minutes lets make another notification
+                            string message = "CPU is at " + Totalcpu + "%";
+                            ShowNotification("CPU Threshold Notification", message);
+                            notifications.cpuThresholdPassedTime = DateTime.Now;
+                        }
+                    }
+                }
             }
         }
 
@@ -201,8 +230,24 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         {
             if (Totalgpu > notifications.gpuThreshold)
             {
-                Console.WriteLine("GPU THRESHOLDS PASSED.");
-                notifications.gpuThresholdPassed = true;
+                if (notifications.gpuThresholdPassedTime == (new DateTime()))
+                {
+                    // first time the threshold has ever been passed
+                    string message = "GPU is at " + Totalgpu + "%";
+                    ShowNotification("GPU Threshold Notification", message);
+                    notifications.gpuThresholdPassedTime = DateTime.Now;
+                }
+                else
+                {
+                    // the threshold has been hit before we need to assert it has been atleast two minutes later
+                    TimeSpan timeSpan = DateTime.Now - notifications.gpuThresholdPassedTime;
+                    if (timeSpan.TotalMinutes > 2)
+                    {
+                        string message = "GPU is at " + Totalgpu + "%";
+                        ShowNotification("GPU Threshold Notification", message);
+                        notifications.gpuThresholdPassedTime = DateTime.Now;
+                    }
+                }
             }
         }
 
@@ -210,10 +255,33 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         {
             if (Totalmemory > notifications.memoryThreshold)
             {
-                Console.WriteLine("MEMORY THRESHOLDS PASSED.");
-                notifications.memoryThresholdPassed = true;
+                if (notifications.memoryThresholdPassedTime == (new DateTime()))
+                {
+                    // first time the threshold has ever passed
+                    string message = "Memory is at " + Totalmemory + "%";
+                    ShowNotification("Memory Threshold Notification", message);
+                    notifications.memoryThresholdPassedTime = DateTime.Now;
+                }
+                else
+                {
+                    TimeSpan timeSpan = DateTime.Now - notifications.memoryThresholdPassedTime;
+                    if (timeSpan.TotalMinutes > 2)
+                    {
+                        string message = "Memory is at " + Totalmemory + "%";
+                        ShowNotification("Memory Threshold Notification", message);
+                        notifications.memoryThresholdPassedTime = DateTime.Now;
+                    }
+                }
             }
         }
+    }
+
+
+    public void ShowNotification(string title, string message)
+    {
+        _notifyIcon.Visible = true;
+        // Shows a notification with specified message and title
+        _notifyIcon.ShowBalloonTip(50000, title, message, ToolTipIcon.Warning);
     }
 
 }
