@@ -91,6 +91,7 @@
     <Compile Include="Backend\Hardware.cs" />
     <Compile Include="Backend\NetworkInfo.cs" />
     <Compile Include="Backend\Processes.cs" />
+    <Compile Include="Backend\WindowsNotification.cs" />
     <Compile Include="CompareLogs.xaml.cs">
       <DependentUpon>CompareLogs.xaml</DependentUpon>
     </Compile>

@@ -11,11 +11,14 @@ using WindowsPerformanceMonitor.Models;
 using System.Runtime.InteropServices;
 using System.Management;
 using PerformanceMonitor.Cpp.CLI;
+using System.Windows.Forms;
 
 namespace WindowsPerformanceMonitor.Backend
 {
     class Processes
     {
+        WindowsNotification WindowsNotification = new WindowsNotification();
+
         struct IO_COUNTERS
         {
             public ulong ReadOperationCount;
@@ -302,11 +305,59 @@ namespace WindowsPerformanceMonitor.Backend
 
                     proc.Cpu = Math.Round(cpuUsage * 100, 2);
                     if (proc.Cpu > 0)
-                        checkProcCPUThreshold(proc.Cpu, proc.CpuThreshold, proc.Name, proc.Pid);
+                    {
+                        if (proc.Cpu > 0 && proc.cpuThreshold > 0)
+                        {
+                            if (proc.Cpu > proc.cpuThreshold)
+                            {
+                                if (proc.cpuThresholdPassedTime == (new DateTime()))
+                                {
+                                    // first time threshold has gone over
+                                    string message = proc.Name + " is using " + proc.Cpu + "% of the cpu";
+                                    WindowsNotification.ShowNotification("Process CPU Notification", message);
+                                    proc.cpuThresholdPassedTime = DateTime.Now;
+                                }
+                                else
+                                {
+                                    TimeSpan timeSpan = DateTime.Now - proc.cpuThresholdPassedTime;
+                                    if (timeSpan.TotalMinutes > 2)
+                                    {
+                                        string message = proc.Name + " is using " + proc.Cpu + "% of the cpu";
+                                        WindowsNotification.ShowNotification("Process CPU Notification", message);
+                                        proc.cpuThresholdPassedTime = DateTime.Now;
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     proc.Gpu = Math.Round(proc.Cpu * .11, 2);   // GPU Estimation***
                     if (proc.Gpu > 0)
-                        checkProcGPUThreshold(proc.Gpu, proc.GpuThreshold, proc.Name, proc.Pid);
+                    {
+                        if (proc.Gpu > 0 && proc.gpuThreshold > 0)
+                        {
+                            if (proc.Gpu > proc.gpuThreshold)
+                            {
+                                if (proc.gpuThresholdPassedTime == (new DateTime()))
+                                {
+                                    // first time threshold has gone over
+                                    string message = proc.Name + " is using " + proc.Gpu + "% of the gpu";
+                                    WindowsNotification.ShowNotification("Process GPU Notification", message);
+                                    proc.gpuThresholdPassedTime = DateTime.Now;
+                                }
+                                else
+                                {
+                                    TimeSpan timeSpan = DateTime.Now - proc.gpuThresholdPassedTime;
+                                    if (timeSpan.TotalMinutes > 2)
+                                    {
+                                        string message = proc.Name + " is using " + proc.Cpu + "% of the gpu";
+                                        WindowsNotification.ShowNotification("Process GPU Notification", message);
+                                        proc.gpuThresholdPassedTime = DateTime.Now;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     totalCpu += cpuUsage;
 
                     proc.PrevCpu = new Tuple<DateTime, TimeSpan>(currTime, currProcTime);
@@ -336,7 +387,31 @@ namespace WindowsPerformanceMonitor.Backend
                     totalUsed += proc.Proc.WorkingSet64;
                
                     if (proc.Memory > 0)
-                        checkProcMemoryThreshold(proc.Memory, proc.MemoryThreshold, proc.Name, proc.Pid);
+                    {
+                        if (proc.Memory > 0 && proc.memoryThreshold > 0)
+                        {
+                            if (proc.Memory > proc.memoryThreshold)
+                            {
+                                if (proc.memoryThresholdPassedTime == (new DateTime()))
+                                {
+                                    // first time threshold has gone over
+                                    string message = proc.Name + " is using " + proc.Cpu + "MB of the memory";
+                                    WindowsNotification.ShowNotification("Process Memory Notification", message);
+                                    proc.memoryThresholdPassedTime = DateTime.Now;
+                                }
+                                else
+                                {
+                                    TimeSpan timeSpan = DateTime.Now - proc.memoryThresholdPassedTime;
+                                    if (timeSpan.TotalMinutes > 2)
+                                    {
+                                        string message = proc.Name + " is using " + proc.Cpu + "MB of the memory";
+                                        WindowsNotification.ShowNotification("Process Memory Notification", message);
+                                        proc.memoryThresholdPassedTime = DateTime.Now;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 catch (Exception)
                 {
@@ -519,39 +594,6 @@ namespace WindowsPerformanceMonitor.Backend
 
         #endregion
 
-        public void checkProcCPUThreshold(double cpu, double cpuThreshold, string procName, int pid)
-        {
-            if (cpu > 0 && cpuThreshold > 0)
-            {
-                if (cpu > cpuThreshold)
-                {
-                    Console.WriteLine("PROC CPU PASSED.");
-                }
-            }
-
-        }
-
-        public void checkProcGPUThreshold(double gpu, double gpuThreshold, string procName, int pid)
-        {
-            if (gpu > 0 && gpuThreshold > 0)
-            {
-                if (gpu > gpuThreshold)
-                {
-                    Console.WriteLine("PROC GPU PASSED.");
-                }
-            }
-        }
-
-        public void checkProcMemoryThreshold(double memory, double memoryThreshold, string procName, int pid)
-        {
-            if (memory > 0 && memoryThreshold > 0)
-            {
-                if (memory > memoryThreshold)
-                {
-                    Console.WriteLine("PROC MEMORY PASSED.");
-                }
-            }
-        }
 
     }
 }

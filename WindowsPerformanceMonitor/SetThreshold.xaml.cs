@@ -35,32 +35,32 @@ namespace WindowsPerformanceMonitor
 
         private void loadThresholds()
         {
-            if (selectedProcess.CpuThreshold < 0 || selectedProcess.CpuThreshold > 100)
+            if (selectedProcess.cpuThreshold < 0 || selectedProcess.cpuThreshold > 100)
             {
-                selectedProcess.CpuThreshold = 0;
+                selectedProcess.cpuThreshold = 0;
             }
 
-            if (selectedProcess.GpuThreshold < 0 || selectedProcess.GpuThreshold > 100)
+            if (selectedProcess.gpuThreshold < 0 || selectedProcess.gpuThreshold > 100)
             {
-                selectedProcess.GpuThreshold = 0;
+                selectedProcess.gpuThreshold = 0;
             }
 
-            if (selectedProcess.MemoryThreshold < 0 || selectedProcess.MemoryThreshold > 100)
+            if (selectedProcess.memoryThreshold < 0 || selectedProcess.memoryThreshold > 100)
             {
-                selectedProcess.MemoryThreshold = 0;
+                selectedProcess.memoryThreshold = 0;
             }
 
-            CPUThresholdTextBox.Text = selectedProcess.CpuThreshold.ToString();
-            GPUThresholdTextBox.Text = selectedProcess.GpuThreshold.ToString();
-            MemoryThresholdTextBox.Text = selectedProcess.MemoryThreshold.ToString();
+            CPUThresholdTextBox.Text = selectedProcess.cpuThreshold.ToString();
+            GPUThresholdTextBox.Text = selectedProcess.gpuThreshold.ToString();
+            MemoryThresholdTextBox.Text = selectedProcess.memoryThreshold.ToString();
             return;
         }
 
         private void SaveThresholds_Click(object sender, RoutedEventArgs e)
         {
-            selectedProcess.CpuThreshold = Convert.ToDouble(CPUThresholdTextBox.Text);
-            selectedProcess.GpuThreshold = Convert.ToDouble(GPUThresholdTextBox.Text);
-            selectedProcess.MemoryThreshold = Convert.ToDouble(MemoryThresholdTextBox.Text);
+            selectedProcess.cpuThreshold = Convert.ToDouble(CPUThresholdTextBox.Text);
+            selectedProcess.gpuThreshold = Convert.ToDouble(GPUThresholdTextBox.Text);
+            selectedProcess.memoryThreshold = Convert.ToDouble(MemoryThresholdTextBox.Text);
             loadThresholds();
             MessageBox.Show("The notifications thresholds were successfully updated.", "Notification Thresholds Updated", MessageBoxButton.OK, MessageBoxImage.Information);
         }
