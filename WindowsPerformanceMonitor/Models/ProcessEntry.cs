@@ -27,9 +27,14 @@ namespace WindowsPerformanceMonitor.Models
         public List<ProcessEntry> ChildProcesses { get; set; }
         public int parentPid { get; set; }
         // These are for notifications
-        public double CpuThreshold { get; set; }
-        public double GpuThreshold { get; set; }
-        public double MemoryThreshold { get; set; }
+        public double cpuThreshold;
+        public DateTime cpuThresholdPassedTime;
+
+        public double gpuThreshold;
+        public DateTime gpuThresholdPassedTime;
+
+        public double memoryThreshold;
+        public DateTime memoryThresholdPassedTime;
         public string LogScheduleTime { get; set; }
         public string LogScheduleDuration { get; set; }
         public NetworkInfo networkInfo { get; set; }
