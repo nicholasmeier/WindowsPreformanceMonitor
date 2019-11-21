@@ -35,6 +35,8 @@ namespace WindowsPerformanceMonitor
         public int maxLogLocation = 0;          // Max location we can be at for some log.
         ManualResetEvent pauseEvent = new ManualResetEvent(true);
         public payload log;
+        private bool looping = false;
+        private double speedfactor = 1;
 
         public class LogDetails
         {
@@ -61,6 +63,10 @@ namespace WindowsPerformanceMonitor
             StopRecordingButton.IsEnabled = false;
             Globals._logRef = this;
             pBar.Value = 0;
+            looping = false;
+            loop.Content = "Loop: Off";
+            speedfactor = 1;
+            speed.Content = "Speed: 1x";
         }
 
         private void OnControlLoaded(object sender, RoutedEventArgs e)
@@ -167,7 +173,7 @@ namespace WindowsPerformanceMonitor
 
                 Forward();
                 NotifyLocationHasChanged();
-                Thread.Sleep(50);
+                Thread.Sleep((int)(100 * speedfactor));
             }
         }
 
@@ -238,20 +244,57 @@ namespace WindowsPerformanceMonitor
             pBar.Dispatcher.Invoke(() => pBar.Maximum = max, DispatcherPriority.Background);
         }
 
+        private void Speed_Switch(object sender, RoutedEventArgs e)
+        {
+            if(speed.Content.Equals("Speed: 1x"))
+            {
+                speed.Content = "Speed: 2x";
+                speedfactor = 0.5;
+            } else if (speed.Content.Equals("Speed: 2x"))
+            {
+                speed.Content = "Speed: 0.5x";
+                speedfactor = 4;
+            } else if (speed.Content.Equals("Speed: 0.5x"))
+            {
+                speed.Content = "Speed: 1x";
+                speedfactor = 1;
+            }
+        }
+
+        private void Loop_Switch(object sender, RoutedEventArgs e)
+        {
+            if(loop.Content.Equals("Loop: Off"))
+            {
+                loop.Content = "Loop: On";
+                looping = true;
+            } else
+            {
+                loop.Content = "Loop: Off";
+                looping = false;
+            }
+        }
+
         private void NotifyLocationHasChanged()
         {
             if (currentLogLocation >= maxLogLocation - 2)
             {
-                this.Dispatcher.Invoke(() =>
+                if (looping)
                 {
+                    liveGraph.Clear();
+                    currentLogLocation = -1;
+                } else
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
 
-                    paused = true;
-                    pauseEvent.Reset();
-                    PauseButton.Content = "Resume";
-                    PauseButton.IsEnabled = false;
-                    StepForward.IsEnabled = true;
-                    StepBack.IsEnabled = true;
-                });
+                        paused = true;
+                        pauseEvent.Reset();
+                        PauseButton.Content = "Resume";
+                        PauseButton.IsEnabled = false;
+                        StepForward.IsEnabled = true;
+                        StepBack.IsEnabled = true;
+                    });
+                }
             }
             else
             {
