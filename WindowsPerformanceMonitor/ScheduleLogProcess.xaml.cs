@@ -34,15 +34,6 @@ namespace WindowsPerformanceMonitor
 
         private void loadSchedule()
         {
-            if (selectedProcess.LogScheduleTime != null)
-            {
-                TimeTextBox.Text = selectedProcess.LogScheduleTime;
-            }
-
-            if (selectedProcess.LogScheduleDuration != null)
-            {
-                DurationTextBox.Text = selectedProcess.LogScheduleDuration;
-            }
         }
 
         private void SaveScheduleLog_Click(object sender, RoutedEventArgs e)
@@ -50,8 +41,6 @@ namespace WindowsPerformanceMonitor
             if (validateTime(TimeTextBox.Text, DurationTextBox.Text) == 0)
             {
                 // valid times
-                selectedProcess.LogScheduleTime = TimeTextBox.Text;
-                selectedProcess.LogScheduleDuration = DurationTextBox.Text;
                 loadSchedule();
                 MessageBox.Show("The scheduled log was updated successfully.", "Log Schedule Updated", MessageBoxButton.OK, MessageBoxImage.Information);
             }
