@@ -51,6 +51,7 @@ namespace WindowsPerformanceMonitor
             liveGraph.connect();
             paused = false;
             setThresholdOpen = false;
+            UpdateIcons();
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
@@ -76,7 +77,6 @@ namespace WindowsPerformanceMonitor
             {
                 ProcessEntry selectedListView = selectedProcessListView;
                 ProcessEntry selectedComboBox = selectedProcessComboBox;
-                UpdateIcons(comp);
                 procListListView = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
                 procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
                 //procListTreeView = new ObservableCollection<ProcessEntry>(comp.ProcessTree.OrderByDescending(p => p.Cpu));
@@ -87,6 +87,7 @@ namespace WindowsPerformanceMonitor
 
                 UpdateColumnHeaders(comp);
                 UpdateProcessTreeView();
+                UpdateIcons();
             });
         }
 
@@ -105,23 +106,23 @@ namespace WindowsPerformanceMonitor
             }
         }
 
-        public void UpdateIcons(ComputerObj comp)
+        public void UpdateIcons()
         {
-            foreach(ProcessEntry pe in comp.ProcessList)
+            //Only update the top 7 icons to make things run fastest
+            foreach (ProcessEntry pe in _procListListView.Take(7))
             {
                 try
                 {
-                    Bitmap bitmap = pe.Icon.ToBitmap();
+                    Bitmap bitmap = Icon.ExtractAssociatedIcon(pe.ApplicationPath).ToBitmap();
                     IntPtr hBitmap = bitmap.GetHbitmap();
-
-                    pe.IE = Imaging.CreateBitmapSourceFromHBitmap(
+                    pe.Icon = Imaging.CreateBitmapSourceFromHBitmap(
                         hBitmap,
                         IntPtr.Zero,
                         Int32Rect.Empty,
                         BitmapSizeOptions.FromEmptyOptions());
                 } catch(Exception e)
                 {
-
+                    //Processs does not have an Icon
                 }
             }
         }

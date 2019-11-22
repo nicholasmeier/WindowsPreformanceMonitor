@@ -41,11 +41,10 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="listView_gridView">
-                    <GridViewColumn Header="IC" 
-                                    Width="30">
+                    <GridViewColumn Width="30">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding IE}" />
+                                <Image Source="{Binding Icon}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

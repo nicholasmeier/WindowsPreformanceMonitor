@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Media;
 using WindowsPerformanceMonitor.Backend;
 
@@ -41,8 +40,6 @@ namespace WindowsPerformanceMonitor.Models
         public string LogScheduleTime { get; set; }
         public string LogScheduleDuration { get; set; }
         public NetworkInfo networkInfo { get; set; }
-        public Icon Icon { get; set; }
-
-        public ImageSource IE { get; set; }
+        public ImageSource Icon { get; set; }
     }
 }

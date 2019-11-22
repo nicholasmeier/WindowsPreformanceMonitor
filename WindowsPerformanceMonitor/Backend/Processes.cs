@@ -498,20 +498,6 @@ namespace WindowsPerformanceMonitor.Backend
                 return totalDisk;
         }
 
-        public void UpdateIcon(ObservableCollection<ProcessEntry> procList)
-        {
-            foreach (ProcessEntry proc in procList)
-            {
-                try
-                {
-                    proc.Icon = Icon.ExtractAssociatedIcon(proc.ApplicationPath);
-                } catch(Exception e)
-                {
-                    proc.Icon = null;
-                }
-            }
-        }
-
         #region C++ Interop
         //inner enum used only internally
         [Flags]
