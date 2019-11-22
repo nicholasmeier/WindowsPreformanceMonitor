@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Media;
 using WindowsPerformanceMonitor.Backend;
 
 namespace WindowsPerformanceMonitor.Models
@@ -23,6 +25,7 @@ namespace WindowsPerformanceMonitor.Models
         public float Network { get; set; }
         public bool IsApplication { get; set; }
         public string ApplicationName { get; set; }
+        public string ApplicationPath { get; set; }
         public int Ppid { get; set; }
         public List<ProcessEntry> ChildProcesses { get; set; }
         public int parentPid { get; set; }
@@ -38,5 +41,8 @@ namespace WindowsPerformanceMonitor.Models
         public string LogScheduleTime { get; set; }
         public string LogScheduleDuration { get; set; }
         public NetworkInfo networkInfo { get; set; }
+        public Icon Icon { get; set; }
+
+        public ImageSource IE { get; set; }
     }
 }

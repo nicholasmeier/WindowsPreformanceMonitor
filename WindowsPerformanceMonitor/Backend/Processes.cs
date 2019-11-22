@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Management;
 using PerformanceMonitor.Cpp.CLI;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace WindowsPerformanceMonitor.Backend
 {
@@ -195,11 +196,13 @@ namespace WindowsPerformanceMonitor.Backend
                     try
                     {
                         p.ApplicationName = processes[i].MainModule.ModuleName;
+                        p.ApplicationPath = processes[i].MainModule.FileName;
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e + "parallelList");
                         p.ApplicationName = "Access Denied";
+                        p.ApplicationPath = "Access Denied";
                         continue;
                     }
 
@@ -493,6 +496,20 @@ namespace WindowsPerformanceMonitor.Backend
             //});
             obj.TotalNetwork = totalNetwork;
                 return totalDisk;
+        }
+
+        public void UpdateIcon(ObservableCollection<ProcessEntry> procList)
+        {
+            foreach (ProcessEntry proc in procList)
+            {
+                try
+                {
+                    proc.Icon = Icon.ExtractAssociatedIcon(proc.ApplicationPath);
+                } catch(Exception e)
+                {
+                    proc.Icon = null;
+                }
+            }
         }
 
         #region C++ Interop

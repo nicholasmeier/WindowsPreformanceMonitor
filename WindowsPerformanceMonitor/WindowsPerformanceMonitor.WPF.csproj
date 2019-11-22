@@ -113,6 +113,7 @@
       <DependentUpon>HardwareDetails.xaml</DependentUpon>
     </Compile>
     <Compile Include="HardwareObserver.cs" />
+    <Compile Include="IconExtension.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Logging.xaml.cs">
       <DependentUpon>Logging.xaml</DependentUpon>

@@ -14,6 +14,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Globalization;
 using WindowsPerformanceMonitor.Graphs;
+using System.Drawing;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 
 namespace WindowsPerformanceMonitor
 {
@@ -73,7 +76,7 @@ namespace WindowsPerformanceMonitor
             {
                 ProcessEntry selectedListView = selectedProcessListView;
                 ProcessEntry selectedComboBox = selectedProcessComboBox;
-
+                UpdateIcons(comp);
                 procListListView = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
                 procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
                 //procListTreeView = new ObservableCollection<ProcessEntry>(comp.ProcessTree.OrderByDescending(p => p.Cpu));
@@ -89,16 +92,37 @@ namespace WindowsPerformanceMonitor
 
         public void UpdateColumnHeaders(ComputerObj comp)
         {
-            listView_gridView.Columns[0].Header = $"Process {comp.ProcessList.Count}";
-            listView_gridView.Columns[1].Header = $"CPU {Math.Round(comp.TotalCpu, 2)}%";
-            listView_gridView.Columns[2].Header = $"GPU {Math.Round(comp.TotalGpu, 2)}%";
-            listView_gridView.Columns[3].Header = $"Memory {Math.Round(comp.TotalMemory, 2)}%";
-            listView_gridView.Columns[4].Header = $"Disk {Math.Round(comp.TotalDisk, 2)} Mb/s";
-            listView_gridView.Columns[5].Header = $"Network {Math.Round(comp.TotalNetwork, 2)}Mb/s";
+            listView_gridView.Columns[1].Header = $"Process {comp.ProcessList.Count}";
+            listView_gridView.Columns[2].Header = $"CPU {Math.Round(comp.TotalCpu, 2)}%";
+            listView_gridView.Columns[3].Header = $"GPU {Math.Round(comp.TotalGpu, 2)}%";
+            listView_gridView.Columns[4].Header = $"Memory {Math.Round(comp.TotalMemory, 2)}%";
+            listView_gridView.Columns[5].Header = $"Disk {Math.Round(comp.TotalDisk, 2)} Mb/s";
+            listView_gridView.Columns[6].Header = $"Network {Math.Round(comp.TotalNetwork, 2)}Mb/s";
 
             if (Math.Round(comp.TotalCpu, 2) > 100)
             {
                 listView_gridView.Columns[1].Header = $"CPU 100%";
+            }
+        }
+
+        public void UpdateIcons(ComputerObj comp)
+        {
+            foreach(ProcessEntry pe in comp.ProcessList)
+            {
+                try
+                {
+                    Bitmap bitmap = pe.Icon.ToBitmap();
+                    IntPtr hBitmap = bitmap.GetHbitmap();
+
+                    pe.IE = Imaging.CreateBitmapSourceFromHBitmap(
+                        hBitmap,
+                        IntPtr.Zero,
+                        Int32Rect.Empty,
+                        BitmapSizeOptions.FromEmptyOptions());
+                } catch(Exception e)
+                {
+
+                }
             }
         }
 

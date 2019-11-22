@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:util="clr-namespace:Wpf.Util"
              x:Class="WindowsPerformanceMonitor.RealTime"
-             >
+    >
     <Grid ShowGridLines="False" Height="Auto" Width="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -41,6 +41,14 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="listView_gridView">
+                    <GridViewColumn Header="IC" 
+                                    Width="30">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding IE}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Process" 
                                     Width="100"
                                     DisplayMemberBinding="{Binding Name}"

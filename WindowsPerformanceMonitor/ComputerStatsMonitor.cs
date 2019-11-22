@@ -126,14 +126,16 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
                     () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses()))),
+                    () => processes.UpdateIcon(obj.ProcessList),
                     () => obj.Tab = 1
-                ); ;
+                );
             }
             else
             {
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                    () => processes.UpdateIcon(obj.ProcessList),
                     () => obj.Tab = 0
                 ); ;
             }
