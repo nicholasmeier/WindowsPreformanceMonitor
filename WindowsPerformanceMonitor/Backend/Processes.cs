@@ -388,7 +388,8 @@ namespace WindowsPerformanceMonitor.Backend
                 try
                 {
                     totalUsed += proc.Proc.WorkingSet64;
-               
+                    proc.Memory = Math.Round(((double)proc.Proc.WorkingSet64 / totalMem * 100), 2);
+
                     if (proc.Memory > 0)
                     {
                         if (proc.Memory > 0 && proc.memoryThreshold > 0)
@@ -456,15 +457,16 @@ namespace WindowsPerformanceMonitor.Backend
                         {
                             proc.Disk = (float)Math.Round((counters.ReadTransferCount + counters.WriteTransferCount - proc.PrevDisk) / 1000000 /
                                 (System.DateTime.Now - proc.PrevTime).TotalSeconds, 2);
-                            proc.Network = (float)Math.Round((counters.OtherTransferCount - proc.PrevNetwork) / 1000000 /
-                                (System.DateTime.Now - proc.PrevTime).TotalSeconds, 2); //*
+                            //proc.Network = (float)Math.Round((counters.OtherTransferCount - proc.PrevNetwork) / 1000000 /
+                                //(System.DateTime.Now - proc.PrevTime).TotalSeconds, 2); //*
                         }
                         proc.PrevTime = System.DateTime.Now;
                         proc.PrevDisk = counters.WriteTransferCount + counters.ReadTransferCount;
-                        proc.PrevNetwork = counters.OtherTransferCount;//*
+                        //proc.PrevNetwork = counters.OtherTransferCount;//*
                     }
+
                     totalDisk += proc.Disk;
-                    totalNetwork += proc.Network;//*
+                    //totalNetwork += proc.Network;//*
                 }
                 catch (Exception)
                 {
