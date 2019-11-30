@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="WindowsPerformanceMonitor.OverlaySettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Loaded="OnControlLoaded" Height="393.2" Width="787.6"
+             xmlns:local="clr-namespace:WindowsPerformanceMonitor"
+             >
+    <Grid ShowGridLines="False" Height="400" Width="775" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="388*"></ColumnDefinition>
+            <ColumnDefinition Width="194*"></ColumnDefinition>
+            <ColumnDefinition Width="193*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="Overlay" Margin="0,0,5,0">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="enc" FlowDirection="LeftToRight" Checked="Sys_stat_checked" Unchecked="Sys_stat_checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Show Overall System Statistics" />
+                    </CheckBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Label Content="Additional Process To Monitor :" HorizontalAlignment="Left"/>
+                    <ComboBox 
+                    ItemsSource="{Binding extFileComboBox}"
+                    SelectedItem="{Binding _selectedExt}"
+                    HorizontalAlignment="Stretch" 
+                    Name="ProcessListsComboBox" 
+                    Margin="17,0,0,0" 
+                    Width="160"
+                    SelectionChanged="ComboBox_SelectionChanged" 
+                    MaxDropDownHeight="100" 
+                />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Save Settings" Margin="5,200,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
+                    <Button Content="Start Overlay" Click="StartOverlay_Click" HorizontalAlignment="Left" Width="100" Margin="5,200,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="0" Grid.Column="1"  Header="Overlay Statistics" Grid.ColumnSpan="2" Margin="0,0,5,0">
+            <StackPanel Margin="5,10,0,10">
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="CPU" FlowDirection="LeftToRight" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="RightToLeft" Text="Show CPU Stats" />
+                    </CheckBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="GPU" FlowDirection="LeftToRight" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="RightToLeft" Text="Show GPU Stats" />
+                    </CheckBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="MEM" FlowDirection="LeftToRight" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="RightToLeft" Text="Show Memory Stats" />
+                    </CheckBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="DIS" FlowDirection="LeftToRight" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="RightToLeft" Text="Show Disk Stats" />
+                    </CheckBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="NET" FlowDirection="LeftToRight" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="RightToLeft" Text="Show Network Stats" />
+                    </CheckBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="TempC" FlowDirection="LeftToRight" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="RightToLeft" Text="Show CPU Temperature" />
+                    </CheckBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="TempG" FlowDirection="LeftToRight" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="RightToLeft" Text="Show GPU Temperature" />
+                    </CheckBox>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+
+</UserControl>
