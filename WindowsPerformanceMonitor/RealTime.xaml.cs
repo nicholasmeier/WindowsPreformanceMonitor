@@ -120,9 +120,10 @@ namespace WindowsPerformanceMonitor
                         IntPtr.Zero,
                         Int32Rect.Empty,
                         BitmapSizeOptions.FromEmptyOptions());
-                } catch(Exception e)
+                }
+                catch (Exception e)
                 {
-                    //Processs does not have an Icon
+
                 }
             }
         }

@@ -69,6 +69,27 @@ namespace WindowsPerformanceMonitor
             {
                 selectedExt = ".txt";
             }
+
+            Hibernate.IsChecked = Globals.Settings.settings.Hibernation;
+            App.Current.Properties["DisableHibernation"] = Globals.Settings.settings.Hibernation;
+
+            if (Globals.Settings.settings.CpuThreshold != null)
+            {
+                CPUThresholdTextBox.Text = Globals.Settings.settings.CpuThreshold;
+                App.Current.Properties["cpuThreshold"] = Convert.ToDouble(Globals.Settings.settings.CpuThreshold);
+            }
+
+            if (Globals.Settings.settings.GpuThreshold != null)
+            {
+                GPUThresholdTextBox.Text = Globals.Settings.settings.GpuThreshold;
+                App.Current.Properties["gpuThreshold"] = Convert.ToDouble(Globals.Settings.settings.GpuThreshold);
+            }
+
+            if (Globals.Settings.settings.MemoryThreshold != null)
+            {
+                MemoryThresholdTextBox.Text = Globals.Settings.settings.MemoryThreshold;
+                App.Current.Properties["memoryThreshold"] = Convert.ToDouble(Globals.Settings.settings.MemoryThreshold);
+            }
         }
 
         private void File_Button_Click(object sender, RoutedEventArgs e)
@@ -175,10 +196,12 @@ namespace WindowsPerformanceMonitor
             if (check.IsChecked == true)
             {
                 App.Current.Properties["DisableHibernation"] = true;
+                Globals.Settings.settings.Hibernation = true;
             }
             else
             {
                 App.Current.Properties["DisableHibernation"] = false;
+                Globals.Settings.settings.Hibernation = false;
             }
         }
 
@@ -208,8 +231,11 @@ namespace WindowsPerformanceMonitor
         private void SaveThresholdsButton_Click(object snder, RoutedEventArgs e)
         {
             nt.cpuThreshold = Convert.ToDouble(CPUThresholdTextBox.Text);
+            Globals.Settings.settings.CpuThreshold = CPUThresholdTextBox.Text;
             nt.gpuThreshold = Convert.ToDouble(GPUThresholdTextBox.Text);
+            Globals.Settings.settings.GpuThreshold = GPUThresholdTextBox.Text;
             nt.memoryThreshold = Convert.ToDouble(MemoryThresholdTextBox.Text);
+            Globals.Settings.settings.MemoryThreshold = MemoryThresholdTextBox.Text;
             loadThresholds();
             App.Current.Properties["cpuThreshold"] = nt.cpuThreshold;
             App.Current.Properties["gpuThreshold"] = nt.gpuThreshold;

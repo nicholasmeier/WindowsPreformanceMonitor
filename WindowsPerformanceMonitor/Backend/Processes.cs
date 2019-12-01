@@ -13,6 +13,10 @@ using System.Management;
 using PerformanceMonitor.Cpp.CLI;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Interop;
+using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace WindowsPerformanceMonitor.Backend
 {
@@ -76,8 +80,18 @@ namespace WindowsPerformanceMonitor.Backend
                         Ppid = GetParentProcess(proc.Id),
                         ChildProcesses = new List<ProcessEntry>(),
                         IsApplication = proc.MainWindowHandle != IntPtr.Zero ? true : false,
-                        PrevCpu = new Tuple<DateTime, TimeSpan>(new DateTime(1), new TimeSpan(0))
+                        PrevCpu = new Tuple<DateTime, TimeSpan>(new DateTime(1), new TimeSpan(0)),
                     };
+
+                    try
+                    {
+                        p.ApplicationName = proc.MainModule.ModuleName;
+                        p.ApplicationPath = proc.MainModule.FileName;
+                    }
+                    catch (Exception)
+                    {
+
+                    }
 
                     ret.Add(p);
                 }

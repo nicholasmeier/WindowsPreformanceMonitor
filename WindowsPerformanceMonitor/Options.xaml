@@ -16,7 +16,7 @@
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
                     <CheckBox x:Name="enc" FlowDirection="RightToLeft" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
-                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Enable Encryption" />
+                        <TextBlock Margin="14, 0, 0, 0" FlowDirection="LeftToRight" Text="Enable Encryption" />
                     </CheckBox>
                 </StackPanel>
 
@@ -27,14 +27,17 @@
                     SelectedItem="{Binding _selectedExt}"
                     HorizontalAlignment="Stretch" 
                     Name="FileExtensionComboBox" 
-                    Margin="17,0,0,0" 
+                    Margin="25,0,0,0" 
                     Width="160"
                     SelectionChanged="ComboBox_SelectionChanged" 
                     MaxDropDownHeight="100" 
                 />
                 </StackPanel>
 
-                <Button Content="Choose Location" Click="ChooseLocation_Click" HorizontalAlignment="Left" MaxWidth="100" Margin="5,5,5,3"/>
+                <StackPanel  Orientation="Horizontal" Margin="0,0,0,10">
+                    <Label Content="Log File Location" HorizontalAlignment="Left"/>
+                    <Button Content=". . ." Click="ChooseLocation_Click" HorizontalAlignment="Left" MaxWidth="100" Margin="20,0,0,0" Width="25"/>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
                     <CheckBox x:Name="Hibernate" FlowDirection="RightToLeft" Checked="Hibernate_Checked" Unchecked="Hibernate_Checked">
                         <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Disable Hibernation"/>
@@ -49,14 +52,14 @@
 
         <GroupBox Grid.Row="0" Grid.Column="1"  Header="Notifications">
             <StackPanel>
-                <Label Content="Set CPU Notification Threshold %" FontWeight="Bold"/>
-                <TextBox  x:Name="CPUThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+                <Label Content="CPU Notification Threshold %" FontWeight="Bold"/>
+                <TextBox  x:Name="CPUThresholdTextBox" Width="180" HorizontalAlignment="Left" Margin="5,0,0,0"/>
 
-                <Label Content="Set GPU Notification Threshold %" FontWeight="Bold"/>
-                <TextBox  x:Name="GPUThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+                <Label Content="GPU Notification Threshold %" FontWeight="Bold"/>
+                <TextBox  x:Name="GPUThresholdTextBox" Width="180" HorizontalAlignment="Left" Margin="5,0,0,0"/>
 
-                <Label Content="Set Memory Notification Threshold %" FontWeight="Bold"/>
-                <TextBox x:Name="MemoryThresholdTextBox" Width="180" HorizontalAlignment="Left"/>
+                <Label Content="Memory Notification Threshold %" FontWeight="Bold"/>
+                <TextBox x:Name="MemoryThresholdTextBox" Width="180" HorizontalAlignment="Left" Margin="5,0,0,0"/>
                 <Button Content="Save Thresholds" x:Name="SaveThresholds" Margin="5,10,0,0"  Click="SaveThresholdsButton_Click" Width="100" HorizontalAlignment="Left" />
 
                 <Label Content="Schedule System Log" FontWeight="Bold"/>

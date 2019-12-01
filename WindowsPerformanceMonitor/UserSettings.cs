@@ -15,6 +15,10 @@ namespace WindowsPerformanceMonitor
             public bool IsEncryption;
             public string LogFilePath;
             public string LogFileFormat;
+            public bool Hibernation;
+            public string CpuThreshold;
+            public string GpuThreshold;
+            public string MemoryThreshold;
         }
 
         public Settings settings;
