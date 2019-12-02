@@ -15,6 +15,17 @@ namespace WindowsPerformanceMonitor
             public bool IsEncryption;
             public string LogFilePath;
             public string LogFileFormat;
+
+            //overlay settings
+            public string OverlayProc;
+            public bool ovly_sys;
+            public bool ovly_cpu;
+            public bool ovly_gpu;
+            public bool ovly_mem;
+            public bool ovly_net;
+            public bool ovly_dis;
+            public bool ovly_tcpu;
+            public bool ovly_tgpu;
         }
 
         public Settings settings;

@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
-        Title="OverlayWindow" Height="70" Width="900">
-    <Grid>
+        Title="OverlayWindow" Height="70" Width="900"
+        AllowsTransparency="True" WindowStyle="None">
+    <Window.Background>
+        <SolidColorBrush Opacity="0.5" Color="White"/>
+    </Window.Background>
+        <Grid>
         
     </Grid>
     
