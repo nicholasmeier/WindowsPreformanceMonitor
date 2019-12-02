@@ -476,8 +476,8 @@ namespace WindowsPerformanceMonitor.Backend
                             {
                                 if ((System.DateTime.Now - proc.PrevTime).TotalMilliseconds > 20)
                                 {
-                                    float temp = (float)Math.Round((RCount + WCount - proc.PrevDisk) / 1000000 /
-                                        (System.DateTime.Now - proc.PrevTime).TotalSeconds, 2);
+                                    float temp = (float)Math.Round(((RCount + WCount - proc.PrevDisk) / 1000000 /
+                                        (System.DateTime.Now - proc.PrevTime).TotalSeconds), 2);
                                     if (float.IsNaN(temp))
                                         proc.Disk = 0;
                                     else if (float.IsInfinity(temp))
@@ -511,6 +511,7 @@ namespace WindowsPerformanceMonitor.Backend
                 }
             }
             obj.TotalNetwork = totalNetwork;
+            totalDisk = Math.Round(totalDisk, 2);
                 return totalDisk;
         }
 
