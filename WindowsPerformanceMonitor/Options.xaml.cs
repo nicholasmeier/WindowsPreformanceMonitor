@@ -90,6 +90,11 @@ namespace WindowsPerformanceMonitor
                 MemoryThresholdTextBox.Text = Globals.Settings.settings.MemoryThreshold;
                 App.Current.Properties["memoryThreshold"] = Convert.ToDouble(Globals.Settings.settings.MemoryThreshold);
             }
+
+            if (!String.IsNullOrEmpty(Globals.Settings.settings.Email))
+            {
+                EmailTextBox.Text = Globals.Settings.settings.Email;
+            }
         }
 
         private void File_Button_Click(object sender, RoutedEventArgs e)
@@ -221,7 +226,7 @@ namespace WindowsPerformanceMonitor
             {
                 nt.memoryThreshold = 0;
             }
-
+            EmailTextBox.Text = nt.email;
             CPUThresholdTextBox.Text = nt.cpuThreshold.ToString();
             GPUThresholdTextBox.Text = nt.gpuThreshold.ToString();
             MemoryThresholdTextBox.Text = nt.memoryThreshold.ToString();
@@ -236,6 +241,8 @@ namespace WindowsPerformanceMonitor
             Globals.Settings.settings.GpuThreshold = GPUThresholdTextBox.Text;
             nt.memoryThreshold = Convert.ToDouble(MemoryThresholdTextBox.Text);
             Globals.Settings.settings.MemoryThreshold = MemoryThresholdTextBox.Text;
+            nt.email = EmailTextBox.Text;
+            Globals.Settings.settings.Email = EmailTextBox.Text;
             loadThresholds();
             App.Current.Properties["cpuThreshold"] = nt.cpuThreshold;
             App.Current.Properties["gpuThreshold"] = nt.gpuThreshold;

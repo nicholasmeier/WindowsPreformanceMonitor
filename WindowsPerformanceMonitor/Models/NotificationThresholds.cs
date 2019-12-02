@@ -20,5 +20,6 @@ namespace WindowsPerformanceMonitor.Models
         public bool memoryThresholdPassed;
         public DateTime memoryThresholdPassedTime;
 
+        public String email;
     }
 }

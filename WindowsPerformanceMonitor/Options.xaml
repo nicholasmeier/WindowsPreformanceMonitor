@@ -60,7 +60,10 @@
 
                 <Label Content="Memory Notification Threshold %" FontWeight="Bold"/>
                 <TextBox x:Name="MemoryThresholdTextBox" Width="180" HorizontalAlignment="Left" Margin="5,0,0,0"/>
-                <Button Content="Save Thresholds" x:Name="SaveThresholds" Margin="5,10,0,0"  Click="SaveThresholdsButton_Click" Width="100" HorizontalAlignment="Left" />
+
+                <Label Content="Email For Notification" FontWeight="Bold"/>
+                <TextBox x:Name="EmailTextBox" Width="180" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                <Button Content="Apply Settings" x:Name="SaveThresholds" Margin="5,10,0,0"  Click="SaveThresholdsButton_Click" Width="100" HorizontalAlignment="Left" />
 
                 <Label Content="Schedule System Log" FontWeight="Bold"/>
 

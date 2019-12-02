@@ -19,6 +19,7 @@ namespace WindowsPerformanceMonitor
             public string CpuThreshold;
             public string GpuThreshold;
             public string MemoryThreshold;
+            public string Email;
         }
 
         public Settings settings;
