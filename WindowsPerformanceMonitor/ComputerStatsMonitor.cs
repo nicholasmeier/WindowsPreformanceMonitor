@@ -107,26 +107,13 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         {
             obj.ProcessList = processes.FindDelta(obj.ProcessList);
 
-            /*
-             * This function is slow, so this should let it run independently. It 
-             * will not bottleneck the other updates if we have it run it its own
-             * Task.
-             */
-            if (diskTask == null || diskTask.IsCompleted)
-            {
-                diskTask = new Task(() => {
-                    //obj.TotalDisk = processes.UpdateDisk(obj);
-                });
-
-                diskTask.Start();
-            }
 
             if (tabIndex == 1)
             {
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-                    //() => obj.TotalDisk = processes.UpdateDisk(obj),
+                    () => obj.TotalDisk = processes.UpdateDisk(obj),
                 () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses()))),
                     () => obj.Tab = 1
                 );
@@ -136,7 +123,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-                    //() => obj.TotalDisk = processes.UpdateDisk(obj),
+                    () => obj.TotalDisk = processes.UpdateDisk(obj),
                     () => obj.Tab = 0
                 ); ;
             }
