@@ -98,7 +98,7 @@ namespace WindowsPerformanceMonitor
             listView_gridView.Columns[3].Header = $"GPU {Math.Round(comp.TotalGpu, 2)}%";
             listView_gridView.Columns[4].Header = $"Memory {Math.Round(comp.TotalMemory, 2)}%";
             listView_gridView.Columns[5].Header = $"Disk {Math.Round(comp.TotalDisk, 2)} Mb/s";
-            listView_gridView.Columns[6].Header = $"Network {Math.Round(comp.TotalNetwork, 2)}Mb/s";
+            listView_gridView.Columns[6].Header = $"IO Activity {Math.Round(comp.TotalOtherIO, 2)} Mb/s";
 
             if (Math.Round(comp.TotalCpu, 2) > 100)
             {

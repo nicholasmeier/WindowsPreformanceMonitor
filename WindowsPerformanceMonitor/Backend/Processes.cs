@@ -483,26 +483,26 @@ namespace WindowsPerformanceMonitor.Backend
                                     else if (float.IsInfinity(temp))
                                         inf = true;
                                     else proc.Disk = temp;
-                                    //proc.Network = (float)Math.Round((counters.OtherTransferCount - proc.PrevNetwork) / 1000000 /
-                                    //(System.DateTime.Now - proc.PrevTime).TotalSeconds, 2); //*
+                                    proc.Network = (float)Math.Round((counters.OtherTransferCount - proc.PrevNetwork) / 1000000 /
+                                    (System.DateTime.Now - proc.PrevTime).TotalSeconds, 2); 
                                 }
                             }
                             if (!inf)
                             {
                                 proc.PrevTime = System.DateTime.Now;
                                 proc.PrevDisk = RCount + WCount;
-                                //proc.PrevNetwork = counters.OtherTransferCount;//*
+                                proc.PrevNetwork = counters.OtherTransferCount;
                             }
                         }
 
                         totalDisk += proc.Disk;
-                        //totalNetwork += proc.Network;//*
+                        totalNetwork += proc.Network;
                     }
                     catch (Exception e)
                     {
                         string result = e.Message;
                         proc.Disk = 0;
-                        //proc.Network = 0;
+                        proc.Network = 0;
                     }
                 }
                 else
@@ -513,6 +513,30 @@ namespace WindowsPerformanceMonitor.Backend
             obj.TotalNetwork = totalNetwork;
             totalDisk = Math.Round(totalDisk, 2);
                 return totalDisk;
+        }
+
+        public double UpdateOtherIO(ObservableCollection<ProcessEntry> procList)
+        {
+            double totalOtherIO = 0;
+            foreach (ProcessEntry proc in procList)
+            {
+                if (proc.PrevIO == null)
+                {
+                    proc.PrevIO = new PerformanceCounter("Process", "IO Data Bytes/sec", proc.Name);
+                }
+
+                try
+                {
+                        proc.IO = Math.Round((float)Math.Round(proc.PrevIO.NextValue() / 1000000, 2), 2);
+                        totalOtherIO += proc.IO;
+                }
+                catch (Exception)
+                {
+                    proc.IO = 0;
+                }
+            }
+
+            return totalOtherIO;
         }
 
         #region C++ Interop

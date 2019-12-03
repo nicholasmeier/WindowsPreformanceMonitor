@@ -97,12 +97,12 @@
                         </GridViewColumn.CellTemplate>
 
                     </GridViewColumn>
-                    <GridViewColumn Header="Network" 
+                    <GridViewColumn Header="IO Activity" 
                                     Width="100"
-                                    util:GridViewSort.PropertyName="Network">
+                                    util:GridViewSort.PropertyName="IO">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Network, StringFormat={}{0} MB}" TextAlignment="Right" />
+                                <TextBlock Text="{Binding IO, StringFormat={}{0} MB}" TextAlignment="Right" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

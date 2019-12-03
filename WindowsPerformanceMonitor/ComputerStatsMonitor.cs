@@ -101,12 +101,20 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         computer.HDDEnabled = true;
         computer.FanControllerEnabled = true;
         computer.MainboardEnabled = true;
-        Task diskTask = null;
+        Task IOTask = null;
 
         while (true)
         {
             obj.ProcessList = processes.FindDelta(obj.ProcessList);
 
+            if (IOTask == null || IOTask.IsCompleted)
+            {
+                IOTask = new Task(() => {
+                    obj.TotalOtherIO = processes.UpdateOtherIO(obj.ProcessList);
+                });
+
+                IOTask.Start();
+            }
 
             if (tabIndex == 1)
             {
@@ -114,7 +122,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
                     () => obj.TotalDisk = processes.UpdateDisk(obj),
-                () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses()))),
+                    () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses()))),
                     () => obj.Tab = 1
                 );
             }

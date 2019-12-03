@@ -42,5 +42,7 @@ namespace WindowsPerformanceMonitor.Models
         public NetworkInfo networkInfo { get; set; }
         public ImageSource Icon { get; set; }
         public bool tracked { get; set; }
+        public PerformanceCounter PrevIO { get; set; }
+        public double IO { get; set; }
     }
 }
