@@ -171,6 +171,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                     {
                         Globals._log.WriteIt();
                     }
+                    ShowNotification("Scheduled Log Finished", "Your scheduled log has completed! It is now ready to be viewed.");
                     App.Current.Properties["ScheduledLogRunning"] = false;
                     Globals._log = new Log();
                     logList.Remove(logtime);
