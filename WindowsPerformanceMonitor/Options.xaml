@@ -15,7 +15,7 @@
         <GroupBox Grid.Row="0" Grid.Column="0" Header="Options">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
-                    <CheckBox x:Name="enc" FlowDirection="RightToLeft" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
+                    <CheckBox x:Name="enc" FlowDirection="LeftToRight" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked">
                         <TextBlock Margin="14, 0, 0, 0" FlowDirection="LeftToRight" Text="Enable Encryption" />
                     </CheckBox>
                 </StackPanel>
@@ -39,7 +39,7 @@
                     <Button Content=". . ." Click="ChooseLocation_Click" HorizontalAlignment="Left" MaxWidth="100" Margin="20,0,0,0" Width="25"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
-                    <CheckBox x:Name="Hibernate" FlowDirection="RightToLeft" Checked="Hibernate_Checked" Unchecked="Hibernate_Checked">
+                    <CheckBox x:Name="Hibernate" FlowDirection="LeftToRight" Checked="Hibernate_Checked" Unchecked="Hibernate_Checked">
                         <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Disable Hibernation"/>
                     </CheckBox>
                 </StackPanel>

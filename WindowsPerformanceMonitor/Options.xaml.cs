@@ -107,6 +107,7 @@ namespace WindowsPerformanceMonitor
 
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
+            SaveThresholdsButton_Click(null, null);
             Globals.Settings.Save();
         }
         private void ChooseLocation_Click(object sender, RoutedEventArgs e)
