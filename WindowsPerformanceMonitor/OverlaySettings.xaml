@@ -26,7 +26,7 @@
                     <Label Content="Additional Process To Monitor :" HorizontalAlignment="Left"/>
                     <ComboBox 
                     ItemsSource="{Binding procListComboBox}"
-                    SelectedItem="{Binding selectedProcessComboBox}"
+                    SelectedItem="{Binding overlayProcess}"
                     HorizontalAlignment="Stretch" 
                     Name="Overlay_ProcessListsComboBox" 
                     Margin="17,0,0,0" 

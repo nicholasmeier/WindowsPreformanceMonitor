@@ -25,7 +25,7 @@ namespace WindowsPerformanceMonitor
     public partial class OverlaySettings : UserControl
     {
         private ProcessEntry _overlayProcess;
-        private ObservableCollection<ProcessEntry> _procListComboBox;
+        private ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
         private MainWindow mainWindow = null; // Reference to the MainWindow
         private OverlayWindow overlay = null; //Reference to the OverlayWindow
 
@@ -33,9 +33,11 @@ namespace WindowsPerformanceMonitor
         public OverlaySettings()
         {
             InitializeComponent();
+            HardwareObserver observer = new HardwareObserver(UpdateValues);
             this.DataContext = this;
             _procListComboBox = new ObservableCollection<ProcessEntry>();
             _overlayProcess = null;
+            this.Overlay_ProcessListsComboBox.ItemsSource = _procListComboBox;
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
@@ -113,6 +115,28 @@ namespace WindowsPerformanceMonitor
 
         }
         #endregion
+
+        public void UpdateValues(ComputerObj comp)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                ProcessEntry selectedProc = _overlayProcess;
+                _procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
+                _overlayProcess = Find(selectedProc, _procListComboBox);
+            });
+        }
+
+        public ProcessEntry Find(ProcessEntry proc, ObservableCollection<ProcessEntry> list)
+        {
+            if (proc != null)
+            {
+                if (list.FirstOrDefault(p => p.Pid == proc.Pid) != null)
+                {
+                    return list.First(p => p.Pid == proc.Pid);
+                }
+            }
+            return new ProcessEntry { Name = "SYSTEM", Pid = -1 };
+        }
 
         #region UI Events
         private void Sys_stat_checked(object sender, RoutedEventArgs e)
@@ -208,10 +232,14 @@ namespace WindowsPerformanceMonitor
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string selected = (string)Overlay_ProcessListsComboBox.SelectedItem;
+            ProcessEntry selected = (ProcessEntry)Overlay_ProcessListsComboBox.SelectedItem;
             if (selected != null)
             {
-
+                Globals.Settings.settings.OverlayProc = selected;
+            }
+            else
+            {
+                Globals.Settings.settings.OverlayProc = null;
             }
         }
 
