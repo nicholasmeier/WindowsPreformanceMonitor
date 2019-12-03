@@ -77,6 +77,11 @@ namespace WindowsPerformanceMonitor
 
         }
 
+        public bool ContainsPid(int i)
+        {
+            return myPids.Exists(x => x == i);
+        }
+
         public void StartLog()
         {
             mypayload.mystart = DateTime.Now;

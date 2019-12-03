@@ -44,7 +44,14 @@
                     <GridViewColumn Width="30">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding Icon}" />
+                                <Border x:Name="BGBorder" Width="17">
+                                    <Image Source="{Binding Icon, TargetNullValue={x:Null}}" />
+                                </Border>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding tracked}" Value="True">
+                                        <Setter Property="Background" TargetName="BGBorder" Value="DarkBlue"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

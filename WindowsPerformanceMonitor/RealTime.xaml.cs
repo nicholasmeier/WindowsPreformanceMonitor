@@ -113,6 +113,7 @@ namespace WindowsPerformanceMonitor
             {
                 try
                 {
+                    pe.tracked = Globals._log.ContainsPid(pe.Pid);
                     Bitmap bitmap = Icon.ExtractAssociatedIcon(pe.ApplicationPath).ToBitmap();
                     IntPtr hBitmap = bitmap.GetHbitmap();
                     pe.Icon = Imaging.CreateBitmapSourceFromHBitmap(

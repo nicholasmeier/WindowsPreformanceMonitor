@@ -41,5 +41,6 @@ namespace WindowsPerformanceMonitor.Models
         public string LogScheduleDuration { get; set; }
         public NetworkInfo networkInfo { get; set; }
         public ImageSource Icon { get; set; }
+        public bool tracked { get; set; }
     }
 }
