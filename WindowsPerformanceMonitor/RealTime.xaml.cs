@@ -213,6 +213,16 @@ namespace WindowsPerformanceMonitor
             }
         }
 
+        private void ShowProperties_Click(object sender, RoutedEventArgs e)
+        {
+            if (listView_ProcList.SelectedIndex > -1)
+            {
+                Processes procs = new Processes();
+                ProcessEntry procEntry = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
+                ShowFileProperties(procEntry.ApplicationPath);
+            }
+        }
+
         private void TrackInLog_Click(object sender, EventArgs e)
         {
             ProcessEntry procEntry = (ProcessEntry)listView_ProcList.Items[listView_ProcList.SelectedIndex];
@@ -456,6 +466,47 @@ namespace WindowsPerformanceMonitor
             GeneralView summary = new GeneralView(Application.Current.MainWindow);
             summary.Show();
             Application.Current.MainWindow.Hide();
+        }
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct SHELLEXECUTEINFO
+        {
+            public int cbSize;
+            public uint fMask;
+            public IntPtr hwnd;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpVerb;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpFile;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpParameters;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpDirectory;
+            public int nShow;
+            public IntPtr hInstApp;
+            public IntPtr lpIDList;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpClass;
+            public IntPtr hkeyClass;
+            public uint dwHotKey;
+            public IntPtr hIcon;
+            public IntPtr hProcess;
+        }
+
+        private const int SW_SHOW = 5;
+        private const uint SEE_MASK_INVOKEIDLIST = 12;
+        public static bool ShowFileProperties(string Filename)
+        {
+            SHELLEXECUTEINFO info = new SHELLEXECUTEINFO();
+            info.cbSize = Marshal.SizeOf(info);
+            info.fMask = SEE_MASK_INVOKEIDLIST;
+            info.lpVerb = "properties";
+            info.lpFile = Filename;
+            info.nShow = SW_SHOW;
+            return ShellExecuteEx(ref info);
         }
     }
 }
