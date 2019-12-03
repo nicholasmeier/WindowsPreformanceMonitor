@@ -102,7 +102,7 @@
                                     util:GridViewSort.PropertyName="IO">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding IO, StringFormat={}{0} MB}" TextAlignment="Right" />
+                                <TextBlock Text="{Binding IO, StringFormat={}{0} Mb/s}" TextAlignment="Right" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
