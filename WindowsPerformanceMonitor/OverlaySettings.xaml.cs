@@ -226,15 +226,25 @@ namespace WindowsPerformanceMonitor
             {
                 overlay = new OverlayWindow();
                 overlay.Show();
-                mainWindow.Close();
-                
+                stopbtn.IsEnabled = true;
+                strtbtn.IsEnabled = false;
             }
         }
+
+        private void StopOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            overlay.Close();
+            stopbtn.IsEnabled = false;
+            strtbtn.IsEnabled = true;
+        }
+
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
             Globals.Settings.Save();
         }
 
         #endregion
+
+
     }
 }

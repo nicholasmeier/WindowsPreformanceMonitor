@@ -5,13 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WindowsPerformanceMonitor"
         mc:Ignorable="d"
-        Title="OverlayWindow" Height="70" Width="900"
+        Title="OverlayWindow" Height="70" Width="690.393"
+        WindowStartupLocation="Manual"
+        Left="0" Top="0"
         AllowsTransparency="True" WindowStyle="None">
     <Window.Background>
         <SolidColorBrush Opacity="0.5" Color="White"/>
     </Window.Background>
-        <Grid>
-        
+    <Grid Margin="0,0,199,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <Label Name ="SYS" Content="System: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="27" Width="100" FontWeight="Bold"/>
+        <Label Name ="PROC" Content="NULL: " HorizontalAlignment="Left" Margin="10,33,0,0" VerticalAlignment="Top" Height="27" Width="100" FontWeight="Bold"/>
+        <Label Name ="SYS_CPU" Content="CPU: " HorizontalAlignment="Left" Margin="103,10,0,0" VerticalAlignment="Top" Height="27" Width="72"/>
+        <Label Name="PROC_CPU" Content="CPU: " HorizontalAlignment="Left" Margin="103,33,0,0" VerticalAlignment="Top" Height="27" Width="72"/>
+        <Label Name="SYS_GPU" Content="GPU: " HorizontalAlignment="Left" Margin="175,10,0,0" VerticalAlignment="Top" Height="27" Width="60"/>
+        <Label Name ="PROC_GPU" Content="GPU: " HorizontalAlignment="Left" Margin="175,33,0,0" VerticalAlignment="Top" Height="27" Width="60"/>
+        <Label x:Name ="SYS_MEM" Content="MEM: " HorizontalAlignment="Left" Margin="235,10,0,0" VerticalAlignment="Top" Height="27" Width="72" RenderTransformOrigin="1.066,0.479"/>
+        <Label x:Name ="PROC_MEM" Content="MEM: " HorizontalAlignment="Left" Margin="235,33,0,0" VerticalAlignment="Top" Height="27" Width="72"/>
+        <Label x:Name ="SYS_DIS" Content="DISK: " HorizontalAlignment="Left" Margin="307,10,0,0" VerticalAlignment="Top" Height="27" Width="66"/>
+        <Label x:Name ="PROC_DIS" Content="DISK: " HorizontalAlignment="Left" Margin="307,33,0,0" VerticalAlignment="Top" Height="27" Width="66"/>
+        <Label x:Name ="SYS_NET" Content="NET: " HorizontalAlignment="Left" Margin="373,10,0,0" VerticalAlignment="Top" Height="27" Width="68" RenderTransformOrigin="1.428,0.509"/>
+        <Label x:Name ="PROC_NET" Content="NET: " HorizontalAlignment="Left" Margin="373,33,0,0" VerticalAlignment="Top" Height="27" Width="68"/>
+        <Label x:Name ="CPU_TEMP" Content="CPU TEMP: " HorizontalAlignment="Left" Margin="452,10,-61,0" VerticalAlignment="Top" Height="27" Width="100" Grid.ColumnSpan="2"/>
+        <Label x:Name ="CPU_TEMP_Copy" Content="GPU TEMP: " HorizontalAlignment="Left" Margin="61,10,-164,0" VerticalAlignment="Top" Height="27" Width="103" Grid.Column="1"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="27" Margin="10,10,-171,0" VerticalAlignment="Top" Width="652" Grid.ColumnSpan="2"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="27" Margin="10,37,-171,0" VerticalAlignment="Top" Width="652" Grid.ColumnSpan="2"/>
     </Grid>
-    
+
 </Window>

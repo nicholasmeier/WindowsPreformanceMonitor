@@ -38,7 +38,8 @@
 
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Save Settings" Margin="5,200,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>
-                    <Button Content="Start Overlay" Click="StartOverlay_Click" HorizontalAlignment="Left" Width="100" Margin="5,200,0,0"/>
+                    <Button Name="strtbtn" Content="Start Overlay" Click="StartOverlay_Click" HorizontalAlignment="Left" Width="100" Margin="5,200,0,0"/>
+                    <Button Name="stopbtn" Content="Stop Overlay" Click="StopOverlay_Click" HorizontalAlignment="Left" Width="100" Margin="5,200,0,0" IsEnabled="false"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
