@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Models;
 
@@ -127,6 +128,7 @@ namespace WindowsPerformanceMonitor
         {
             // Note: might need to compress these using System.IO.Compression.
             //       might need to force a write after so much memory is used to avoid running out.
+            Thread.Sleep(100);
             String json = JsonConvert.SerializeObject(mypayload);
             String fileName = mypayload.mystart.Date.Month.ToString() + "-" + mypayload.mystart.Date.Day.ToString() + "-" + mypayload.mystart.Date.Year.ToString();
             if (!System.IO.Directory.Exists(Path.Combine(logPath)))

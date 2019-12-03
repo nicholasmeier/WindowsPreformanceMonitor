@@ -463,54 +463,55 @@ namespace WindowsPerformanceMonitor.Backend
             double totalNetwork = 0;//*
             foreach (ProcessEntry proc in procList)
             {
-                try
-                {
-                    if (GetProcessIoCounters(proc.Proc.Handle, out IO_COUNTERS counters))
+                if (proc.IsApplication)
+                {//no other way to find disk usage without running into a ton of errors.
+                    try
                     {
-                        if (proc.PrevTime != null)
+                        if (GetProcessIoCounters(proc.Proc.Handle, out IO_COUNTERS counters))
                         {
-                            proc.Disk = (float)Math.Round((counters.ReadTransferCount + counters.WriteTransferCount - proc.PrevDisk) / 1000000 /
-                                (System.DateTime.Now - proc.PrevTime).TotalSeconds, 2);
-                            //proc.Network = (float)Math.Round((counters.OtherTransferCount - proc.PrevNetwork) / 1000000 /
-                                //(System.DateTime.Now - proc.PrevTime).TotalSeconds, 2); //*
+                            ulong RCount = counters.ReadTransferCount;
+                            ulong WCount = counters.WriteTransferCount;
+                            bool inf = false;
+                            if (proc.PrevTime != null)
+                            {
+                                if ((System.DateTime.Now - proc.PrevTime).TotalMilliseconds > 20)
+                                {
+                                    float temp = (float)Math.Round(((RCount + WCount - proc.PrevDisk) / 1000000 /
+                                        (System.DateTime.Now - proc.PrevTime).TotalSeconds), 2);
+                                    if (float.IsNaN(temp))
+                                        proc.Disk = 0;
+                                    else if (float.IsInfinity(temp))
+                                        inf = true;
+                                    else proc.Disk = temp;
+                                    //proc.Network = (float)Math.Round((counters.OtherTransferCount - proc.PrevNetwork) / 1000000 /
+                                    //(System.DateTime.Now - proc.PrevTime).TotalSeconds, 2); //*
+                                }
+                            }
+                            if (!inf)
+                            {
+                                proc.PrevTime = System.DateTime.Now;
+                                proc.PrevDisk = RCount + WCount;
+                                //proc.PrevNetwork = counters.OtherTransferCount;//*
+                            }
                         }
-                        proc.PrevTime = System.DateTime.Now;
-                        proc.PrevDisk = counters.WriteTransferCount + counters.ReadTransferCount;
-                        //proc.PrevNetwork = counters.OtherTransferCount;//*
-                    }
 
-                    totalDisk += proc.Disk;
-                    //totalNetwork += proc.Network;//*
+                        totalDisk += proc.Disk;
+                        //totalNetwork += proc.Network;//*
+                    }
+                    catch (Exception e)
+                    {
+                        string result = e.Message;
+                        proc.Disk = 0;
+                        //proc.Network = 0;
+                    }
                 }
-                catch (Exception)
+                else
                 {
                     proc.Disk = 0;
-                    proc.Network = 0;
                 }
             }
-
-            //Parallel.ForEach(procList, new ParallelOptions { MaxDegreeOfParallelism = 3}, (proc) =>
-            //{
-            //    try
-            //    {
-            //        if (GetProcessIoCounters(proc.Proc.Handle, out IO_COUNTERS counters))
-            //        {
-            //            if (proc.PrevTime != null)
-            //            {
-            //                proc.Disk = (float)Math.Round((counters.ReadTransferCount + counters.WriteTransferCount - proc.PrevDisk) / 1000000 /
-            //                    (System.DateTime.Now - proc.PrevTime).TotalSeconds, 2);
-            //            }
-            //            proc.PrevTime = System.DateTime.Now;
-            //            proc.PrevDisk = counters.WriteTransferCount + counters.ReadTransferCount;
-            //        }
-            //        totalDisk += proc.Disk;
-            //    }
-            //    catch (Exception)
-            //    {
-            //        proc.Disk = 0;
-            //    }
-            //});
             obj.TotalNetwork = totalNetwork;
+            totalDisk = Math.Round(totalDisk, 2);
                 return totalDisk;
         }
 

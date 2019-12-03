@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -106,26 +107,14 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         {
             obj.ProcessList = processes.FindDelta(obj.ProcessList);
 
-            /*
-             * This function is slow, so this should let it run independently. It 
-             * will not bottleneck the other updates if we have it run it its own
-             * Task.
-             */
-            if (diskTask == null || diskTask.IsCompleted)
-            {
-                diskTask = new Task(() => {
-                    //obj.TotalDisk = processes.UpdateDisk(obj);
-                });
-
-                diskTask.Start();
-            }
 
             if (tabIndex == 1)
             {
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
-                    () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses()))),
+                    () => obj.TotalDisk = processes.UpdateDisk(obj),
+                () => obj.ProcessTree = new ObservableCollection<ProcessEntry>(processes.BuildProcessTree(new List<ProcessEntry>(processes.GetProcesses()))),
                     () => obj.Tab = 1
                 );
             }
@@ -134,6 +123,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 Parallel.Invoke(
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
+                    () => obj.TotalDisk = processes.UpdateDisk(obj),
                     () => obj.Tab = 0
                 ); ;
             }
@@ -282,7 +272,33 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
         _notifyIcon.Visible = true;
         // Shows a notification with specified message and title
         _notifyIcon.ShowBalloonTip(50000, title, message, ToolTipIcon.Warning);
+        if (!String.IsNullOrEmpty(Globals.Settings.settings.Email))
+        {
+            SendEmail(title, message);
+        }
     }
+    public void SendEmail(string title, string message)
+    {
+        try
+        {
+            MailMessage mail = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
 
+            mail.From = new MailAddress("WPMNotification@gmail.com");
+            mail.To.Add(Globals.Settings.settings.Email);
+            mail.Subject = title;
+            mail.Body = message;
+
+            SmtpServer.Port = 587;
+            SmtpServer.Credentials = new System.Net.NetworkCredential("WPMNotification@gmail.com", "Justatest#101");
+            SmtpServer.EnableSsl = true;
+
+            SmtpServer.Send(mail);
+        }
+        catch (Exception e)
+        {
+            string result = e.Message;
+        }
+    }
 }
 

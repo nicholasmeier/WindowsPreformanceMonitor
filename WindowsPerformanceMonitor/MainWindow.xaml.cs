@@ -76,8 +76,6 @@ namespace WindowsPerformanceMonitor
                 }
 
             }
-
-            ni.Visible = true;
             e.Cancel = true;
 
         }
