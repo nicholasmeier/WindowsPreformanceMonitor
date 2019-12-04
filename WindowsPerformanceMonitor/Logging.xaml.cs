@@ -470,13 +470,6 @@ namespace WindowsPerformanceMonitor
             }
         }
 
-        private void CompareLog_Click(object sender, RoutedEventArgs e)
-        {
-            CompareLogs compare = new CompareLogs(Application.Current.MainWindow);
-            compare.Show();
-            Application.Current.MainWindow.Hide();
-        }
-
         #endregion
 
         #region INotifyPropertyChanged
@@ -539,6 +532,5 @@ namespace WindowsPerformanceMonitor
         }
 
         #endregion
-
     }
 }
