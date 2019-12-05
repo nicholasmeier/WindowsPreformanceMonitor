@@ -117,6 +117,9 @@
     <Compile Include="Logging.xaml.cs">
       <DependentUpon>Logging.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LogReport.xaml.cs">
+      <DependentUpon>LogReport.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\ApplicationStartup.cs" />
     <Compile Include="Models\ComputerObj.cs" />
     <Compile Include="Models\CPUHardwareDetails.cs" />
@@ -167,6 +170,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Logging.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LogReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

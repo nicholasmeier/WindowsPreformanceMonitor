@@ -121,6 +121,7 @@
             Grid.RowSpan="2" 
             Margin="10,10,10,10" 
             PreviewMouseLeftButtonUp="logList_Click"
+            MouseDoubleClick="logList_DoubleClick"
             ItemsSource="{Binding LogList}"
             x:Name="logList">
             <ListView.ContextMenu>

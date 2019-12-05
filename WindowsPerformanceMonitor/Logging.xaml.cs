@@ -470,6 +470,16 @@ namespace WindowsPerformanceMonitor
             }
         }
 
+        private void logList_DoubleClick(object sender, RoutedEventArgs e)
+        {
+            if (logList.SelectedIndex > -1)
+            {
+                SelectedLog = (LogDetails)logList.Items[logList.SelectedIndex];
+                LogReport logreport = new LogReport(SelectedLog.path, SelectedLog.name);
+                logreport.Show();
+            }
+        }
+
         private void CompareLog_Click(object sender, RoutedEventArgs e)
         {
             CompareLogs compare = new CompareLogs(Application.Current.MainWindow);
