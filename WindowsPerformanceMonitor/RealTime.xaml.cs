@@ -77,10 +77,15 @@ namespace WindowsPerformanceMonitor
             {
                 ProcessEntry selectedListView = selectedProcessListView;
                 ProcessEntry selectedComboBox = selectedProcessComboBox;
+
+
                 procListListView = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
-                procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
-                //procListTreeView = new ObservableCollection<ProcessEntry>(comp.ProcessTree.OrderByDescending(p => p.Cpu));
-                procListComboBox.Insert(0, system);
+
+                if (!comboBox1.IsDropDownOpen)
+                {
+                    procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu)); // TEMPORARY - sorting to make it easier since most processes use 0%
+                    procListComboBox.Insert(0, system);
+                }
 
                 selectedProcessListView = Find(selectedListView, procListListView);
                 selectedProcessComboBox = Find(selectedComboBox, procListComboBox);
