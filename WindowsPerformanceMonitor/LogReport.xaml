@@ -26,7 +26,8 @@
         <Label Grid.Row="3" x:Name="avgGpuLabel"/>
         <Label Grid.Row="4" x:Name="avgMemLabel"/>
         <Label Grid.Row="5" x:Name="avgDiskLabel"/>
-        <Label Grid.Row="6" x:Name="avgNetworkLabel"/>
+        <!--<Label Grid.Row="6" x:Name="avgNetworkLabel"/>-->
+        <Label Grid.Row="6" x:Name="avgIOLabel"/>
         <Label Grid.Row="7" x:Name="avgCpuTempLabel"/>
         <Label Grid.Row="8" x:Name="avgGpuTempLabel"/>
         <Button Grid.Row="9" 

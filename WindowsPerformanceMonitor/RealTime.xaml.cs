@@ -235,11 +235,13 @@ namespace WindowsPerformanceMonitor
             int gpuNonZeroCount = 0;
             int memNonZeroCount = 0;
             int diskNonZeroCount = 0;
+            int ioNonZeroCount = 0;
 
             double cpuTotal = 0;
             double gpuTotal = 0;
             double memTotal = 0;
             double diskTotal = 0;
+            double ioTotal = 0;
 
             //MessageBox.Show(procListListView.Count.ToString());
             for (int i=0;i<procListListView.Count;i++)
@@ -249,16 +251,18 @@ namespace WindowsPerformanceMonitor
                 if (procListListView[i].Gpu != 0) { gpuNonZeroCount++; }
                 if (procListListView[i].Memory != 0) { memNonZeroCount++; }
                 if (procListListView[i].Disk != 0) { diskNonZeroCount++; }
+                if (procListListView[i].IO != 0) { ioNonZeroCount++; }
 
                 cpuTotal += procListListView[i].Cpu;
                 gpuTotal += procListListView[i].Gpu;
                 memTotal += procListListView[i].Memory;
                 diskTotal += procListListView[i].Disk;
+                ioTotal += procListListView[i].IO;
 
             }
             //MessageBox.Show((cpuTotal/cpuNonZeroCount).ToString()+", " + (gpuTotal/gpuNonZeroCount).ToString());
             DateTime currTime = DateTime.Now;
-            LogReport logreport = new LogReport(currTime, (cpuTotal / cpuNonZeroCount), (gpuTotal / gpuNonZeroCount), (memTotal / memNonZeroCount), (diskTotal / diskNonZeroCount));
+            LogReport logreport = new LogReport(currTime, (cpuTotal / cpuNonZeroCount), (gpuTotal / gpuNonZeroCount), (memTotal / memNonZeroCount), (diskTotal / diskNonZeroCount), (ioTotal / ioNonZeroCount));
             logreport.Show();
         }
 

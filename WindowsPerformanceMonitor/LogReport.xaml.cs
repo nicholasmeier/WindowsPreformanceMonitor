@@ -30,21 +30,25 @@ namespace WindowsPerformanceMonitor
 
         public struct averageData
         {
+            public DateTime startDate;
+            public DateTime endDate;
             public double avgCpu;
             public double avgGpu;
             public double avgMemory;
             public double avgDisk;
-            public double avgNetwork;
+            //public double avgNetwork;
+            public double avgIO;
             public double avgCpuTemp;
             public double avgGpuTemp;
         }
 
-        public LogReport(DateTime currTime, double avCpu, double avGpu, double avMemory, double avDisk)
+        public LogReport(DateTime currTime, double avCpu, double avGpu, double avMemory, double avDisk, double avIO)
         {
-            avCpu = Math.Round(avCpu, 2);
-            avGpu = Math.Round(avGpu, 2);
-            avMemory = Math.Round(avMemory, 2);
-            avDisk = Math.Round(avDisk, 2);
+            avCpu = Math.Round(avCpu, 3);
+            avGpu = Math.Round(avGpu, 3);
+            avMemory = Math.Round(avMemory, 3);
+            avDisk = Math.Round(avDisk, 3);
+            avIO = Math.Round(avIO, 3);
 
             reportType = 1;
             InitializeComponent();
@@ -55,8 +59,10 @@ namespace WindowsPerformanceMonitor
             data.avgGpu = avGpu;
             data.avgMemory = avMemory;
             data.avgDisk = avDisk;
+            data.avgIO = avIO;
 
             realTimeName = currTime;
+            data.startDate = realTimeName;
 
             titleLabel.Content = "Real Time Report";
             dateLabel.Content = "(" + currTime.ToString() + ")";
@@ -64,6 +70,7 @@ namespace WindowsPerformanceMonitor
             avgGpuLabel.Content = "Average GPU Usage: " + avGpu.ToString() + " %";
             avgMemLabel.Content = "Average Memory Usage: " + avMemory.ToString() + " MB";
             avgDiskLabel.Content = "Average Disk Usage: " + avDisk.ToString() + " Mb/s";
+            avgIOLabel.Content = "Average IO Usage: " + avIO.ToString() + " Mb/s";
         }
 
         public LogReport(String path, String logName)
@@ -80,14 +87,14 @@ namespace WindowsPerformanceMonitor
             double totalGpu = 0;
             double totalMem = 0;
             double totalDisk = 0;
-            double totalNetwork = 0;
+            //double totalNetwork = 0;
             double totalCpuTemp = 0;
             double totalGpuTemp = 0;
 
-            //MessageBox.Show(path);
-
             DateTime start = log.mystart;
             DateTime end = log.mytimes[len - 1];
+            data.startDate = start;
+            data.endDate = end;
 
             logNamee = logName;
             titleLabel.Content = logName+" Log Report";
@@ -99,26 +106,26 @@ namespace WindowsPerformanceMonitor
                 totalGpu += log.mydata[0].Gpu;
                 totalMem += log.mydata[0].Memory;
                 totalDisk += log.mydata[0].Disk;
-                totalNetwork += log.mydata[0].Network;
-                //if (log.mydata[0].CpuTemp.is)
+                //totalNetwork += log.mydata[0].Network;
                 totalCpuTemp += log.mydata[0].CpuTemp;
                 totalGpuTemp += log.mydata[0].GpuTemp;
 
             }
 
-            data.avgCpuTemp = (totalCpu / len);
-            data.avgGpuTemp = (totalGpu / len);
-            data.avgCpu = (totalMem / len);
-            data.avgGpu = (totalDisk / len);
-            data.avgMemory = (totalNetwork / len);
-            data.avgNetwork = (totalCpuTemp / len);
-            data.avgDisk = (totalGpuTemp / len);
+            data.avgCpu = (totalCpu / len);
+            data.avgGpu = (totalGpu / len);
+            data.avgMemory = (totalMem / len);
+            data.avgDisk = (totalDisk / len);
+            //data.avgNetwork = (totalNetwork / len);
+            data.avgCpuTemp = (totalCpuTemp / len);
+            data.avgGpuTemp = (totalGpuTemp / len);
 
             avgCpuLabel.Content = "Average CPU Usage: " + (totalCpu / len).ToString() + " %";
             avgGpuLabel.Content = "Average GPU Usage: " + (totalGpu / len).ToString() + " %";
             avgMemLabel.Content = "Average Memory Usage: " + (totalMem / len).ToString() + " MB";
             avgDiskLabel.Content = "Average Disk Usage: " + (totalDisk / len).ToString() + " Mb/s";
-            avgNetworkLabel.Content = "Average Network Usage: " + (totalNetwork / len).ToString();
+            //avgNetworkLabel.Content = "Average Network Usage: " + (totalNetwork / len).ToString();
+            avgIOLabel.Content = "Average IO Usage: " + "0 Mb/s";
             avgCpuTempLabel.Content = "Average CPU Temperature: " + (totalCpuTemp / len).ToString();
             avgGpuTempLabel.Content = "Average GPU Temperature: " + (totalGpuTemp / len).ToString();
 
