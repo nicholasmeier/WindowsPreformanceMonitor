@@ -28,6 +28,9 @@
         <TabItem Header="Startup Apps">
             <tabData:Startup x:Name="ucTab1Data4" />
         </TabItem>
+        <TabItem Header="Overlay">
+            <tabData:OverlaySettings/>
+        </TabItem>
         <TabItem Header="Options">
             <tabData:Options x:Name="ucTab1Data5" />
         </TabItem>

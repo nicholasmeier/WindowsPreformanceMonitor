@@ -15,11 +15,24 @@ namespace WindowsPerformanceMonitor
             public bool IsEncryption;
             public string LogFilePath;
             public string LogFileFormat;
+
             public bool Hibernation;
             public string CpuThreshold;
             public string GpuThreshold;
             public string MemoryThreshold;
             public string Email;
+
+            //overlay settings
+            public double ovly_opac;
+            public bool ovly_sys;
+            public bool ovly_cpu;
+            public bool ovly_gpu;
+            public bool ovly_mem;
+            public bool ovly_net;
+            public bool ovly_dis;
+            public bool ovly_tcpu;
+            public bool ovly_tgpu;
+
         }
 
         public Settings settings;
