@@ -135,7 +135,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                     () => obj.Tab = 0
                 ); ;
             }
-
+            obj.TotalGpu = Math.Round(obj.TotalCpu * .11, 2);
             checkNotificationThresholds(obj.TotalCpu, obj.TotalGpu, obj.TotalMemory);
             checkLogSchedule();
 
