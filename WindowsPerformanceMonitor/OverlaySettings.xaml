@@ -33,7 +33,12 @@
                     Width="160"
                     SelectionChanged="ComboBox_SelectionChanged" 
                     MaxDropDownHeight="100" 
-                />
+                    />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <Label Content="Overlay Opacity: " HorizontalAlignment="Left" Height="27"/>
+                    <Slider x:Name= "OpacitySlider" Minimum = "0" Maximum = "1" TickFrequency = "1" TickPlacement = "BottomRight" ValueChanged = "slider_ValueChanged" Margin ="10" Width="200"/>
+                    <TextBox x:Name="OpacityValue" Text="0" Height="18" Width="31" IsReadOnlyCaretVisible="True" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">

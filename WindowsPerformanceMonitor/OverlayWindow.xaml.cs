@@ -49,13 +49,19 @@ namespace WindowsPerformanceMonitor
         private ProcessEntry _selectedProcess = null;
         private ProcessEntry system = null;
         private Hardware hw = new Hardware();
+        //colors for stat warnings
+        private Color stat_good = Color.FromRgb(128, 255, 128);
+        private Color stat_ok = Color.FromRgb(255, 255, 26);
+        private Color stat_bad = Color.FromRgb(255, 71, 26);
 
         public OverlayWindow()
         {
+            InitializeComponent();
             this.Top = 0;
             this.Topmost = true;
             this.ShowActivated = false;
-            InitializeComponent();
+            this.Opacity = Globals.Settings.settings.ovly_opac;
+            
             HardwareObserver ol_observer = new HardwareObserver(UpdateValues);
             Globals.provider.Subscribe(ol_observer);
             #region Stat Visibility
@@ -140,23 +146,183 @@ namespace WindowsPerformanceMonitor
 
         public void updateSysStats(ComputerObj comp)
         {
-            SYS_CPU.Content = $"CPU: {Math.Round(comp.TotalCpu, 0)}%";
-            SYS_GPU.Content = $"GPU: {Math.Round(comp.TotalGpu, 0)}%";
-            SYS_MEM.Content = $"Memory: {Math.Round(comp.TotalMemory, 0)}%";
-            SYS_DIS.Content = $"Disk: {Math.Round(comp.TotalDisk, 0)}%";
-            SYS_NET.Content = $"Network: {Math.Round(comp.TotalNetwork, 0)}%";
-            CPU_TEMP.Content = $"CPU TEMP: {Math.Round(hw.CpuTemp(comp), 1)}°";
-            GPU_TEMP.Content = $"GPU TEMP: {Math.Round(hw.GpuTemp(comp), 1)}°";
+            double cpu = Math.Round(comp.TotalCpu, 0);
+            double gpu = Math.Round(comp.TotalGpu, 0);
+            double mem = Math.Round(comp.TotalMemory, 0);
+            double disk = Math.Round(comp.TotalDisk, 0);
+            double net = Math.Round(comp.TotalNetwork, 0);
+            double ctp = Math.Round(hw.CpuTemp(comp), 1);
+            double gtp = Math.Round(hw.GpuTemp(comp), 1);
+            SYS_CPU.Content = $"CPU: {cpu}%";
+            SYS_GPU.Content = $"GPU: {gpu}%";
+            SYS_MEM.Content = $"Memory: {mem}%";
+            SYS_DIS.Content = $"Disk: {disk}%";
+            SYS_NET.Content = $"Network: {net}%";
+            CPU_TEMP.Content = $"CPU TEMP: {ctp}°";
+            GPU_TEMP.Content = $"GPU TEMP: {gtp}°";
+            
+            //change background colors for stat labels
+            switch(cpu){
+                case double c when (c <= 50):
+                    SYS_CPU.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    SYS_CPU.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    SYS_CPU.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (gpu)
+            {
+                case double g when (g <= 50):
+                    SYS_GPU.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double g when (g >= 50 && g < 75):
+                    SYS_GPU.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double g when (g >= 75):
+                    SYS_GPU.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (mem)
+            {
+                case double c when (c <= 50):
+                    SYS_MEM.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    SYS_MEM.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    SYS_MEM.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (disk)
+            {
+                case double c when (c <= 50):
+                    SYS_DIS.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    SYS_DIS.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    SYS_DIS.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (net)
+            {
+                case double c when (c <= 50):
+                    SYS_NET.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    SYS_NET.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    SYS_NET.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (ctp)
+            {
+                case double c when (c <= 50):
+                    CPU_TEMP.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    CPU_TEMP.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    CPU_TEMP.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (gtp)
+            {
+                case double c when (c <= 50):
+                    GPU_TEMP.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    GPU_TEMP.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    GPU_TEMP.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
         }
 
         public void updateProcStats()
         {
+            double cpu = Math.Round(_selectedProcess.Cpu, 0);
+            double gpu = Math.Round(_selectedProcess.Gpu, 0);
+            double mem = Math.Round(_selectedProcess.Memory, 0);
+            double disk = Math.Round(_selectedProcess.Disk, 0);
+            double net = Math.Round(_selectedProcess.Network, 0);
+
             PROC.Content = _selectedProcess.Name;
-            PROC_CPU.Content = $"CPU: {Math.Round(_selectedProcess.Cpu, 0)}%";
-            PROC_GPU.Content = $"GPU: {Math.Round(_selectedProcess.Gpu, 0)}%";
-            PROC_MEM.Content = $"Memory: {Math.Round(_selectedProcess.Memory, 0)}%";
-            PROC_DIS.Content = $"Disk: {Math.Round(_selectedProcess.Network, 0)}%";
-            PROC_NET.Content = $"Network: {Math.Round(_selectedProcess.Disk, 0)}%";
+            PROC_CPU.Content = $"CPU: {cpu}%";
+            PROC_GPU.Content = $"GPU: {gpu}%";
+            PROC_MEM.Content = $"Memory: {mem}%";
+            PROC_DIS.Content = $"Disk: {disk}%";
+            PROC_NET.Content = $"Network: {net}%";
+
+            //change background colors for stat labels
+            switch (cpu)
+            {
+                case double c when (c <= 50):
+                    PROC_CPU.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    PROC_CPU.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    PROC_CPU.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (gpu)
+            {
+                case double g when (g <= 50):
+                    PROC_GPU.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double g when (g >= 50 && g < 75):
+                    PROC_GPU.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double g when (g >= 75):
+                    PROC_GPU.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (mem)
+            {
+                case double c when (c <= 50):
+                    PROC_MEM.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    PROC_MEM.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    PROC_MEM.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (disk)
+            {
+                case double c when (c <= 50):
+                    PROC_DIS.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    PROC_DIS.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    PROC_DIS.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
+            switch (net)
+            {
+                case double c when (c <= 50):
+                    PROC_NET.Background = new SolidColorBrush(stat_good);
+                    break;
+                case double c when (c >= 50 && c < 75):
+                    PROC_NET.Background = new SolidColorBrush(stat_ok);
+                    break;
+                case double c when (c >= 75):
+                    PROC_NET.Background = new SolidColorBrush(stat_bad);
+                    break;
+            }
         }
 
         private void Window_Deactivated(object sender, EventArgs e)

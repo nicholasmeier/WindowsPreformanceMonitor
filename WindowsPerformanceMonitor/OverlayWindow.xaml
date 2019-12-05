@@ -17,8 +17,8 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
-        <Label x:Name ="SYS" Content="System: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="27" Width="100" FontWeight="Bold"/>
-        <Label x:Name ="PROC" Content="NULL: " HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Height="27" Width="100" FontWeight="Bold"/>
+        <Label x:Name ="SYS" Content="System: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="27" Width="100" FontWeight="Bold" Background="#66a3ff"/>
+        <Label x:Name ="PROC" Content="NULL: " HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Height="27" Width="100" FontWeight="Bold" Background="#66a3ff"/>
         <Label x:Name ="SYS_CPU" Content="CPU: " HorizontalAlignment="Left" Margin="89,10,0,0" VerticalAlignment="Top" Height="27" Width="72" BorderBrush="Black" BorderThickness="1"/>
         <Label x:Name="PROC_CPU" Content="CPU: " HorizontalAlignment="Left" Margin="89,37,0,0" VerticalAlignment="Top" Height="27" Width="72" BorderBrush="Black" BorderThickness="1"/>
         <Label x:Name="SYS_GPU" Content="GPU: " HorizontalAlignment="Left" Margin="161,10,0,0" VerticalAlignment="Top" Height="27" Width="74" BorderBrush="Black" BorderThickness="1"/>

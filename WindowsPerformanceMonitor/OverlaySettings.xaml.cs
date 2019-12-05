@@ -271,6 +271,14 @@ namespace WindowsPerformanceMonitor
             Globals.Settings.Save();
         }
 
+        private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double val = Convert.ToDouble(e.NewValue);
+            OpacityValue.Text = $"{Math.Round(val, 1)}";
+            Globals.Settings.settings.ovly_opac = val;
+
+        }
+
         #endregion
 
 
