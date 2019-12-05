@@ -123,13 +123,12 @@ namespace WindowsPerformanceMonitor
         {
             this.Dispatcher.Invoke(() =>
             {
-                ProcessEntry selectedComboBox = selectedProcessComboBox;
-                procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
-                procListComboBox.Insert(0, system);
-                selectedProcessComboBox = Find(selectedComboBox, procListComboBox);
-                Overlay_ProcessListsComboBox.ItemsSource = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
-                Overlay_ProcessListsComboBox.SelectedItem = "selectedProcessComboBox";
-                Overlay_ProcessListsComboBox.DisplayMemberPath = "Name";
+                if (!Overlay_ProcessListsComboBox.IsDropDownOpen)
+                {
+                    Overlay_ProcessListsComboBox.ItemsSource = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
+                    Overlay_ProcessListsComboBox.SelectedItem = Find(selectedProcessComboBox, procListComboBox);
+                    Overlay_ProcessListsComboBox.DisplayMemberPath = "Name";
+                }
             });
         }
 

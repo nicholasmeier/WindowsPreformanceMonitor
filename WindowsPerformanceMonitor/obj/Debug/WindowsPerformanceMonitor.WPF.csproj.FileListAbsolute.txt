@@ -256,3 +256,9 @@ C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\bin\Debug\PacketDotNe
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\bin\Debug\SharpPcap.dll
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\LogReport.g.cs
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\LogReport.baml
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\OverlayWindow.g.cs
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\OverlaySettings.g.cs
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\OverlayWindow.baml
+C:\Users\Darren\source\repos\WPM\WindowsPerformanceMonitor\obj\Debug\OverlaySettings.baml
