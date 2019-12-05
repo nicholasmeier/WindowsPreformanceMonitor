@@ -190,7 +190,15 @@
                 </GroupBox>
             </ScrollViewer>
 
-            <Button x:Name="PauseButton" HorizontalAlignment="Left" Width="80" Margin="20, 5, 0, 0" Click="Pause_List">Pause List</Button>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="PauseButton" Grid.Column="0" HorizontalAlignment="Left" Width="80" Margin="20, 5, 0, 0" Click="Pause_List">Pause List</Button>
+                <Button x:Name="ReportButton" Grid.Column="1" Width="80" Margin="20, 5, 0, 0" Click="GetReport_Click">Get Report</Button>
+            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>

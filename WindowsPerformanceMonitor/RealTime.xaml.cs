@@ -229,6 +229,39 @@ namespace WindowsPerformanceMonitor
             Globals._log.AddPid(procEntry.Pid);
         }
 
+        private void GetReport_Click(object sender, EventArgs e)
+        {
+            int cpuNonZeroCount = 0;
+            int gpuNonZeroCount = 0;
+            int memNonZeroCount = 0;
+            int diskNonZeroCount = 0;
+
+            double cpuTotal = 0;
+            double gpuTotal = 0;
+            double memTotal = 0;
+            double diskTotal = 0;
+
+            //MessageBox.Show(procListListView.Count.ToString());
+            for (int i=0;i<procListListView.Count;i++)
+            {
+                //MessageBox.Show(procListListView[i].Cpu.ToString());
+                if (procListListView[i].Cpu != 0) { cpuNonZeroCount++; }
+                if (procListListView[i].Gpu != 0) { gpuNonZeroCount++; }
+                if (procListListView[i].Memory != 0) { memNonZeroCount++; }
+                if (procListListView[i].Disk != 0) { diskNonZeroCount++; }
+
+                cpuTotal += procListListView[i].Cpu;
+                gpuTotal += procListListView[i].Gpu;
+                memTotal += procListListView[i].Memory;
+                diskTotal += procListListView[i].Disk;
+
+            }
+            //MessageBox.Show((cpuTotal/cpuNonZeroCount).ToString()+", " + (gpuTotal/gpuNonZeroCount).ToString());
+            DateTime currTime = DateTime.Now;
+            LogReport logreport = new LogReport(currTime, (cpuTotal / cpuNonZeroCount), (gpuTotal / gpuNonZeroCount), (memTotal / memNonZeroCount), (diskTotal / diskNonZeroCount));
+            logreport.Show();
+        }
+
         private void Pause_List(object sender, EventArgs e)
         {
             if (paused)

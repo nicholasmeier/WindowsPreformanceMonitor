@@ -22,14 +22,11 @@ namespace WindowsPerformanceMonitor
     public partial class LogReport : Window
     {
         public payload log;
-        public String avgCpu;
-        public double avgGpu;
-        public double avgMem;
-        public double avgDisk;
-        public double avgNetwork;
-        public double avgCpuTemp;
-        public double avgGpuTemp;
+        public String logNamee; // for log report name
+        public DateTime realTimeName; // for real time report name 
+        
         public averageData data;
+        public int reportType;  // log report -> 0, real time report -> 1
 
         public struct averageData
         {
@@ -42,8 +39,36 @@ namespace WindowsPerformanceMonitor
             public double avgGpuTemp;
         }
 
+        public LogReport(DateTime currTime, double avCpu, double avGpu, double avMemory, double avDisk)
+        {
+            avCpu = Math.Round(avCpu, 2);
+            avGpu = Math.Round(avGpu, 2);
+            avMemory = Math.Round(avMemory, 2);
+            avDisk = Math.Round(avDisk, 2);
+
+            reportType = 1;
+            InitializeComponent();
+            DataContext = this;
+            data = new averageData();
+
+            data.avgCpu = avCpu;
+            data.avgGpu = avGpu;
+            data.avgMemory = avMemory;
+            data.avgDisk = avDisk;
+
+            realTimeName = currTime;
+
+            titleLabel.Content = "Real Time Report";
+            dateLabel.Content = "(" + currTime.ToString() + ")";
+            avgCpuLabel.Content = "Average CPU Usage: " + avCpu.ToString() + " %";
+            avgGpuLabel.Content = "Average GPU Usage: " + avGpu.ToString() + " %";
+            avgMemLabel.Content = "Average Memory Usage: " + avMemory.ToString() + " MB";
+            avgDiskLabel.Content = "Average Disk Usage: " + avDisk.ToString() + " Mb/s";
+        }
+
         public LogReport(String path, String logName)
         {
+            reportType = 0;
             InitializeComponent();
             DataContext = this;
             data = new averageData();
@@ -64,6 +89,7 @@ namespace WindowsPerformanceMonitor
             DateTime start = log.mystart;
             DateTime end = log.mytimes[len - 1];
 
+            logNamee = logName;
             titleLabel.Content = logName+" Log Report";
             dateLabel.Content = "(" + start.ToString() + ") to (" + end.ToString() + ")";
 
@@ -88,10 +114,10 @@ namespace WindowsPerformanceMonitor
             data.avgNetwork = (totalCpuTemp / len);
             data.avgDisk = (totalGpuTemp / len);
 
-            avgCpuLabel.Content = "Average CPU Usage: " + (totalCpu / len).ToString();
-            avgGpuLabel.Content = "Average GPU Usage: " + (totalGpu / len).ToString();
-            avgMemLabel.Content = "Average Memory Usage: " + (totalMem / len).ToString();
-            avgDiskLabel.Content = "Average Disk Usage: " + (totalDisk / len).ToString();
+            avgCpuLabel.Content = "Average CPU Usage: " + (totalCpu / len).ToString() + " %";
+            avgGpuLabel.Content = "Average GPU Usage: " + (totalGpu / len).ToString() + " %";
+            avgMemLabel.Content = "Average Memory Usage: " + (totalMem / len).ToString() + " MB";
+            avgDiskLabel.Content = "Average Disk Usage: " + (totalDisk / len).ToString() + " Mb/s";
             avgNetworkLabel.Content = "Average Network Usage: " + (totalNetwork / len).ToString();
             avgCpuTempLabel.Content = "Average CPU Temperature: " + (totalCpuTemp / len).ToString();
             avgGpuTempLabel.Content = "Average GPU Temperature: " + (totalGpuTemp / len).ToString();
@@ -101,8 +127,19 @@ namespace WindowsPerformanceMonitor
         private void SaveLogReport_Click(object sender, RoutedEventArgs e)
         {
             String json = JsonConvert.SerializeObject(data);
-            String fileName = log.mystart.Date.Month.ToString() + "-" + log.mystart.Date.Day.ToString() + "-" + log.mystart.Date.Year.ToString()+"_Report";
-            String logPath = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitor");
+
+            String fileName = "";
+            String logPath = "";
+
+            if (reportType == 0)
+            {
+                fileName = logNamee + "_LogReport";
+                logPath = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitorLogReports");
+            } else
+            {
+                fileName = realTimeName.Date.Month.ToString() + "-" + realTimeName.Date.Day.ToString() + "-" + realTimeName.Date.Year.ToString() + "_RealTimeReport";
+                logPath = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents", "WindowsPerformanceMonitorRealTimeReports");
+            }
 
             if (!System.IO.Directory.Exists(Path.Combine(logPath)))
             {
@@ -119,6 +156,9 @@ namespace WindowsPerformanceMonitor
             }
 
             System.IO.File.WriteAllText(Path.Combine(logPath, fileName + appendage + ".txt"), json);
+
+            MessageBox.Show("Report Successfully Saved");
+            this.Hide();
         }
 
     }
