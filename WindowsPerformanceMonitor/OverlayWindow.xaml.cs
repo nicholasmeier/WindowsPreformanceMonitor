@@ -112,9 +112,9 @@ namespace WindowsPerformanceMonitor
                 PROC_NET.Visibility = Visibility.Collapsed;
             }
 
-            if (Globals.Settings.settings.OverlayProc != null)
+            if (Globals.OverlayProc != null)
             {
-                _selectedProcess = Globals.Settings.settings.OverlayProc;
+                _selectedProcess = Globals.OverlayProc;
             }
             else
             {

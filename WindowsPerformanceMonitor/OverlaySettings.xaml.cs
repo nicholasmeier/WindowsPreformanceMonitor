@@ -24,20 +24,22 @@ namespace WindowsPerformanceMonitor
     /// </summary>
     public partial class OverlaySettings : UserControl
     {
-        private ProcessEntry _overlayProcess;
+        private ProcessEntry _selectedProcessComboBox;
         private ObservableCollection<ProcessEntry> _procListComboBox { get; set; }
         private MainWindow mainWindow = null; // Reference to the MainWindow
         private OverlayWindow overlay = null; //Reference to the OverlayWindow
+        public ProcessEntry system = new ProcessEntry { Name = "SYSTEM", Pid = -1 };
 
         #region Initialization 
         public OverlaySettings()
         {
             InitializeComponent();
             HardwareObserver observer = new HardwareObserver(UpdateValues);
+            Globals.provider.Subscribe(observer);
             this.DataContext = this;
             _procListComboBox = new ObservableCollection<ProcessEntry>();
-            _overlayProcess = null;
-            this.Overlay_ProcessListsComboBox.ItemsSource = _procListComboBox;
+            selectedProcessComboBox = system;
+            
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
@@ -54,7 +56,8 @@ namespace WindowsPerformanceMonitor
             if (Globals.Settings.settings.ovly_cpu == true)
             {
                 CPU.IsChecked = true;
-            } else
+            }
+            else
             {
                 CPU.IsChecked = false;
             }
@@ -120,9 +123,13 @@ namespace WindowsPerformanceMonitor
         {
             this.Dispatcher.Invoke(() =>
             {
-                ProcessEntry selectedProc = _overlayProcess;
-                _procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
-                _overlayProcess = Find(selectedProc, _procListComboBox);
+                ProcessEntry selectedComboBox = selectedProcessComboBox;
+                procListComboBox = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
+                procListComboBox.Insert(0, system);
+                selectedProcessComboBox = Find(selectedComboBox, procListComboBox);
+                Overlay_ProcessListsComboBox.ItemsSource = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
+                Overlay_ProcessListsComboBox.SelectedItem = "selectedProcessComboBox";
+                Overlay_ProcessListsComboBox.DisplayMemberPath = "Name";
             });
         }
 
@@ -135,7 +142,7 @@ namespace WindowsPerformanceMonitor
                     return list.First(p => p.Pid == proc.Pid);
                 }
             }
-            return new ProcessEntry { Name = "SYSTEM", Pid = -1 };
+            return system;
         }
 
         #region UI Events
@@ -235,18 +242,18 @@ namespace WindowsPerformanceMonitor
             ProcessEntry selected = (ProcessEntry)Overlay_ProcessListsComboBox.SelectedItem;
             if (selected != null)
             {
-                Globals.Settings.settings.OverlayProc = selected;
+                Globals.OverlayProc = selected;
             }
             else
             {
-                Globals.Settings.settings.OverlayProc = null;
+                Globals.OverlayProc = null;
             }
         }
 
         private void StartOverlay_Click(object sender, RoutedEventArgs e)
         {
             //tray close main window, open overlaywindow
-            if ((SYS.IsChecked == false) && (_overlayProcess == null))
+            if ((SYS.IsChecked == false) && (selectedProcessComboBox == null))
             {
                 MessageBox.Show("Error: Please choose a process to monitor or enable system statistics", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -281,6 +288,32 @@ namespace WindowsPerformanceMonitor
 
         #endregion
 
+        #region ComboBox Stuff
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+        public ProcessEntry selectedProcessComboBox
+        {
+            get { return _selectedProcessComboBox; }
+            set
+            {
+                _selectedProcessComboBox = value;
+                OnPropertyChanged(nameof(selectedProcessComboBox));
+            }
+        }
+        public ObservableCollection<ProcessEntry> procListComboBox
+        {
+            get { return _procListComboBox; }
+            set
+            {
+                _procListComboBox = value;
+                OnPropertyChanged(nameof(procListComboBox));
+            }
 
+        }
+
+        #endregion
     }
 }

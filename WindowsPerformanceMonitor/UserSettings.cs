@@ -17,7 +17,6 @@ namespace WindowsPerformanceMonitor
             public string LogFileFormat;
 
             //overlay settings
-            public Models.ProcessEntry OverlayProc;
             public double ovly_opac;
             public bool ovly_sys;
             public bool ovly_cpu;
