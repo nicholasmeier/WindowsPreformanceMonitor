@@ -28,13 +28,17 @@ namespace WindowsPerformanceMonitor
         private ObservableCollection<LogDetails> _logList { get; set; }
         private LogDetails _selectedLog1 { get; set; }
         private LogDetails _selectedLog2 { get; set; }
-        private ObservableCollection<LogProcessEntry> _logProcList { get; set; }
 
-        private Thread readThread;
-        public payload log;
-        public int currentLogLocation = -1;
-        public int maxLogLocation = 0;
-        ManualResetEvent pauseEvent = new ManualResetEvent(true);
+        private Thread readThread1;
+        private Thread readThread2;
+        public payload log1;
+        public payload log2;
+        public int currentLogLocation1 = -1;
+        public int currentLogLocation2 = -1;
+        public int maxLogLocation1 = 0;
+        public int maxLogLocation2 = 0;
+        ManualResetEvent pauseCompareEvent1 = new ManualResetEvent(true);
+        ManualResetEvent pauseCompareEvent2 = new ManualResetEvent(true);
 
         public CompareLogs(Window window)
         {
@@ -42,7 +46,8 @@ namespace WindowsPerformanceMonitor
             this.DataContext = this;
             LogList = new ObservableCollection<LogDetails>();
             GetLogList();
-            readThread = new Thread(() => { });
+            readThread1 = new Thread(() => { });
+            readThread2 = new Thread(() => { });
 
             mainWindowRef = window;
             this.Closed += new EventHandler(Window_Closed);
@@ -112,129 +117,139 @@ namespace WindowsPerformanceMonitor
 
         private void CompareBtn_Click(object sender, RoutedEventArgs e)
         {
-            //MessageBox.Show("1: " + SelectedLog1.name + ", " + SelectedLog1.path + "\n2: " + SelectedLog2.name + ", " + SelectedLog2.path);
-
             ResetUI();
-            currentLogLocation = -1;
-            if (SelectedLog1 != null)
+            currentLogLocation1 = -1;
+            currentLogLocation2 = -1;
+            if (SelectedLog1 != null && SelectedLog2 != null)
             {
-                readThread.Abort();
+                readThread1.Abort();
+                readThread2.Abort();
 
-                readThread = new Thread(() =>
+                readThread1 = new Thread(() =>
                 {
                     this.Dispatcher.Invoke(() =>
                     {
-                        //paused = false;
-                        pauseEvent.Set();
-                        /*PauseButton.Content = "Pause";
-                        StepForward.IsEnabled = false;
-                        StepBack.IsEnabled = false;*/
+                        pauseCompareEvent1.Set();
                     });
 
-                    currentLogLocation = -1;
-                    ConnectLog(SelectedLog1.path);
-                    Play(SelectedLog1.path);
+                    currentLogLocation1 = -1;
+                    ConnectLog(SelectedLog1.path, 1);
+                    Play(SelectedLog1.path, 1);
                 });
 
-                readThread.Start();
+                readThread2 = new Thread(() =>
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        pauseCompareEvent2.Set();
+                    });
+
+                    currentLogLocation2 = -1;
+                    ConnectLog(SelectedLog2.path, 2);
+                    Play(SelectedLog2.path, 2);
+                });
+
+                readThread1.Start();
+                readThread2.Start();
             }
         }
 
         #endregion
 
-        private void ConnectLog(string path)
+        private void ResetUI()
         {
-            log = Globals._log.ReadIt(path);
-            liveGraph1.connect();
-            maxLogLocation = log.mytimes.Count - 1;
-            //SetProgressBarMax(maxLogLocation - 2);
+            liveGraph1.Clear();
+            liveGraph2.Clear();
         }
 
-        private void Play(string path)
+        private void ConnectLog(string path, int logNum)
+        {
+            if (logNum == 1)
+            {
+                log1 = Globals._log.ReadIt(path);
+
+                liveGraph1.connect(log1);
+                maxLogLocation1 = log1.mytimes.Count - 1;
+            } else
+            {
+                // logNum == 2
+                log2 = Globals._log.ReadIt(path);
+
+                liveGraph2.connect(log2);
+                maxLogLocation2 = log2.mytimes.Count - 1;
+            }
+        }
+
+        private void Play(string path, int logNum)
         {
             while (true)
             {
-                pauseEvent.WaitOne(Timeout.Infinite);
-
-                if (currentLogLocation + 2 > maxLogLocation)
+                if (logNum == 1)
                 {
-                    continue;
+                    pauseCompareEvent1.WaitOne(Timeout.Infinite);
+
+                    if (currentLogLocation1 + 2 > maxLogLocation1)
+                    {
+                        continue;
+                    }
+
+                    Forward(1);
+                    NotifyLocationHasChanged(1);
+                } else
+                {
+                    pauseCompareEvent2.WaitOne(Timeout.Infinite);
+
+                    if (currentLogLocation2 + 2 > maxLogLocation2)
+                    {
+                        continue;
+                    }
+
+                    Forward(2);
+                    NotifyLocationHasChanged(2);
                 }
 
-
-                Forward();
-                NotifyLocationHasChanged();
                 Thread.Sleep((int)(100 * 0.5));
             }
         }
 
-        private void Forward()
+        private void Forward(int logNum)
         {
-            currentLogLocation++;
-            Console.WriteLine("CURRENT LOG LOCATION: " + currentLogLocation);
-            //IncProgressBar();
-            liveGraph1.Read(log, currentLogLocation);
-            LogProcList = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
-            //UpdateColumnHeaders(log.mydata[currentLogLocation]);
-            //procListComboBox = new ObservableCollection<LogProcessEntry>(log.mydata[currentLogLocation].ProcessList.OrderByDescending(p => p.Cpu));
-            //procListComboBox.Insert(0, system);
-        }
-
-        private void NotifyLocationHasChanged()
-        {
-            if (currentLogLocation >= maxLogLocation - 2)
+            if (logNum == 1)
             {
-       
-                this.Dispatcher.Invoke(() =>
-                {
-                    //paused = true;
-                    pauseEvent.Reset();
-                    MessageBox.Show("END");
-                    /*PauseButton.Content = "Resume";
-                    PauseButton.IsEnabled = false;
-                    StepForward.IsEnabled = true;
-                    StepBack.IsEnabled = true;*/
-                });
-                
+                currentLogLocation1++;
+                liveGraph1.Read(log1, currentLogLocation1);
+            } else
+            {
+                currentLogLocation2++;
+                liveGraph2.Read(log2, currentLogLocation2);
             }
-            /*else
-            {
-                if (paused)
-                {
-                    this.Dispatcher.Invoke(() => {
-                        PauseButton.Content = "Resume";
-                        PauseButton.IsEnabled = true;
-                        StepForward.IsEnabled = true;
-                        StepBack.IsEnabled = true;
-                    });
-                }
-                else
-                {
-                    this.Dispatcher.Invoke(() => {
-                        PauseButton.Content = "Pause";
-                        PauseButton.IsEnabled = true;
-                        StepForward.IsEnabled = false;
-                        StepBack.IsEnabled = false;
-                    });
-                }
-            }*/
         }
 
-        private void ResetUI()
+        private void NotifyLocationHasChanged(int logNum)
         {
-            liveGraph1.Clear();
-            LogProcList = new ObservableCollection<LogProcessEntry>();
-            //ResetColumnHeaders();
-            //pBar.Value = 0;
-        }
-
-        public ObservableCollection<LogProcessEntry> LogProcList
-        {
-            get { return _logProcList; }
-            set
+            if (logNum == 1)
             {
-                _logProcList = value;
-                OnPropertyChanged(nameof(LogProcList));
+                if (currentLogLocation1 >= maxLogLocation1 - 2)
+                {
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        pauseCompareEvent1.Reset();
+                    });
+
+                }
+            }
+            else
+            {
+                if (currentLogLocation2 >= maxLogLocation2 - 2)
+                {
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        pauseCompareEvent2.Reset();
+                    });
+
+                }
             }
         }
 

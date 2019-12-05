@@ -97,12 +97,12 @@ namespace WindowsPerformanceMonitor.Graphs
             }
 
             SeriesVisibility[(int)Series.Cpu] = true;
-            SeriesVisibility[(int)Series.Gpu] = false;
-            SeriesVisibility[(int)Series.Memory] = false;
-            SeriesVisibility[(int)Series.Disk] = false;
-            SeriesVisibility[(int)Series.Network] = false;
-            SeriesVisibility[(int)Series.CpuTemp] = false;
-            SeriesVisibility[(int)Series.GpuTemp] = false;
+            SeriesVisibility[(int)Series.Gpu] = true;
+            SeriesVisibility[(int)Series.Memory] = true;
+            SeriesVisibility[(int)Series.Disk] = true;
+            SeriesVisibility[(int)Series.Network] = true;
+            SeriesVisibility[(int)Series.CpuTemp] = true;
+            SeriesVisibility[(int)Series.GpuTemp] = true;
 
             CpuSeries = new LineSeries { Title = "Cpu", Values = new ChartValues<MeasureModel>(), ScalesYAt = 0 };
             GpuSeries = new LineSeries { Title = "Gpu", Values = new ChartValues<MeasureModel>(), ScalesYAt = 0 };
