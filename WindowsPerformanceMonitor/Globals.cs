@@ -25,5 +25,13 @@ namespace WindowsPerformanceMonitor
             _provider = csm;
         }
         public static bool limit = true;
+        public static double totCpu = 0.0;
+        public static double totGpu = 0.0;
+        public static double totMem = 0.0;
+        public static double totCpuTemp = 0.0;
+        public static double totGpuTemp = 0.0;
+        public static double totDisk = 0.0;
+        public static double totIO = 0.0;
+        public static long len = 0;
     }
 }

@@ -33,6 +33,7 @@ namespace WindowsPerformanceMonitor
         public ProcessEntry system = new ProcessEntry { Name = "SYSTEM", Pid = -1 };
         public bool paused;
         private bool setThresholdOpen;
+        private Hardware hw = new Hardware();
 
         #region Initialization
 
@@ -67,8 +68,22 @@ namespace WindowsPerformanceMonitor
             if (!paused)
             {
                 UpdateList(comp);
-                return;
             }
+            Globals.len++;
+            if(!double.IsNaN(comp.TotalCpu))
+                Globals.totCpu += comp.TotalCpu;
+            if (!double.IsNaN(comp.TotalGpu))
+                Globals.totGpu += comp.TotalGpu;
+            if (!double.IsNaN(comp.TotalDisk))
+                Globals.totDisk += comp.TotalDisk;
+            if (!double.IsNaN(comp.TotalOtherIO))
+                Globals.totIO += comp.TotalOtherIO;
+            if (!double.IsNaN(comp.TotalMemory))
+                Globals.totMem += comp.TotalMemory;
+            if (!double.IsNaN(hw.CpuTemp(comp)))
+                Globals.totCpuTemp += hw.CpuTemp(comp);
+            if (!double.IsNaN(hw.GpuTemp(comp)))
+                Globals.totGpuTemp += hw.GpuTemp(comp);
         }
 
         public void UpdateList(ComputerObj comp)
@@ -236,38 +251,38 @@ namespace WindowsPerformanceMonitor
 
         private void GetReport_Click(object sender, EventArgs e)
         {
-            int cpuNonZeroCount = 0;
-            int gpuNonZeroCount = 0;
-            int memNonZeroCount = 0;
-            int diskNonZeroCount = 0;
-            int ioNonZeroCount = 0;
+            //int cpuNonZeroCount = 0;
+            //int gpuNonZeroCount = 0;
+            //int memNonZeroCount = 0;
+            //int diskNonZeroCount = 0;
+            //int ioNonZeroCount = 0;
 
-            double cpuTotal = 0;
-            double gpuTotal = 0;
-            double memTotal = 0;
-            double diskTotal = 0;
-            double ioTotal = 0;
+            //double cpuTotal = 0;
+            //double gpuTotal = 0;
+            //double memTotal = 0;
+            //double diskTotal = 0;
+            //double ioTotal = 0;
 
-            //MessageBox.Show(procListListView.Count.ToString());
-            for (int i=0;i<procListListView.Count;i++)
-            {
-                //MessageBox.Show(procListListView[i].Cpu.ToString());
-                if (procListListView[i].Cpu != 0) { cpuNonZeroCount++; }
-                if (procListListView[i].Gpu != 0) { gpuNonZeroCount++; }
-                if (procListListView[i].Memory != 0) { memNonZeroCount++; }
-                if (procListListView[i].Disk != 0) { diskNonZeroCount++; }
-                if (procListListView[i].IO != 0) { ioNonZeroCount++; }
+            ////MessageBox.Show(procListListView.Count.ToString());
+            //for (int i=0;i<procListListView.Count;i++)
+            //{
+            //    //MessageBox.Show(procListListView[i].Cpu.ToString());
+            //    if (procListListView[i].Cpu != 0) { cpuNonZeroCount++; }
+            //    if (procListListView[i].Gpu != 0) { gpuNonZeroCount++; }
+            //    if (procListListView[i].Memory != 0) { memNonZeroCount++; }
+            //    if (procListListView[i].Disk != 0) { diskNonZeroCount++; }
+            //    if (procListListView[i].IO != 0) { ioNonZeroCount++; }
 
-                cpuTotal += procListListView[i].Cpu;
-                gpuTotal += procListListView[i].Gpu;
-                memTotal += procListListView[i].Memory;
-                diskTotal += procListListView[i].Disk;
-                ioTotal += procListListView[i].IO;
+            //    cpuTotal += procListListView[i].Cpu;
+            //    gpuTotal += procListListView[i].Gpu;
+            //    memTotal += procListListView[i].Memory;
+            //    diskTotal += procListListView[i].Disk;
+            //    ioTotal += procListListView[i].IO;
 
-            }
+            //}
             //MessageBox.Show((cpuTotal/cpuNonZeroCount).ToString()+", " + (gpuTotal/gpuNonZeroCount).ToString());
             DateTime currTime = DateTime.Now;
-            LogReport logreport = new LogReport(currTime, (cpuTotal / cpuNonZeroCount), (gpuTotal / gpuNonZeroCount), (memTotal / memNonZeroCount), (diskTotal / diskNonZeroCount), (ioTotal / ioNonZeroCount));
+            LogReport logreport = new LogReport(currTime, (Globals.totCpu / Globals.len), (Globals.totGpu / Globals.len), (Globals.totMem / Globals.len), (Globals.totDisk / Globals.len), (Globals.totIO / Globals.len));
             logreport.Show();
         }
 
