@@ -90,6 +90,7 @@ namespace WindowsPerformanceMonitor
             //double totalNetwork = 0;
             double totalCpuTemp = 0;
             double totalGpuTemp = 0;
+            double totalIO = 0;
 
             DateTime start = log.mystart;
             DateTime end = log.mytimes[len - 2];
@@ -118,6 +119,10 @@ namespace WindowsPerformanceMonitor
                 {
                     totalDisk += log.mydata[i].Disk;
                 }
+                if (!double.IsNaN(log.mydata[i].Network))
+                {
+                    totalIO += log.mydata[i].Network;
+                }
                 //totalNetwork += log.mydata[0].Network;
                 if (!double.IsNaN(log.mydata[i].CpuTemp))
                 {
@@ -137,13 +142,14 @@ namespace WindowsPerformanceMonitor
             //data.avgNetwork = (totalNetwork / len);
             data.avgCpuTemp = Math.Round((totalCpuTemp / len), 2);
             data.avgGpuTemp = Math.Round((totalGpuTemp / len), 2);
+            data.avgIO = Math.Round((totalIO / len), 2);
 
             avgCpuLabel.Content = "Average CPU Usage: " + Math.Round((totalCpu / len), 2).ToString() + " %";
             avgGpuLabel.Content = "Average GPU Usage: " + Math.Round((totalGpu / len), 2).ToString() + " %";
             avgMemLabel.Content = "Average Memory Usage: " + Math.Round((totalMem / len), 2).ToString() + " MB";
             avgDiskLabel.Content = "Average Disk Usage: " + Math.Round((totalDisk / len), 2).ToString() + " Mb/s";
             //avgNetworkLabel.Content = "Average Network Usage: " + (totalNetwork / len).ToString();
-            avgIOLabel.Content = "Average IO Usage: " + "0 Mb/s";
+            avgIOLabel.Content = "Average IO Usage: " + Math.Round((totalIO / len), 2).ToString() + "Mb/s";
             avgCpuTempLabel.Content = "Average CPU Temperature: " + Math.Round((totalCpuTemp / len), 2).ToString();
             avgGpuTempLabel.Content = "Average GPU Temperature: " + Math.Round((totalGpuTemp / len), 2).ToString();
 

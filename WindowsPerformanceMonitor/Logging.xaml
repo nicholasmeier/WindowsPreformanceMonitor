@@ -67,7 +67,7 @@
                         </GridViewColumn.CellTemplate>
 
                     </GridViewColumn>
-                    <GridViewColumn Header="Network" 
+                    <GridViewColumn Header="IO Activity" 
                                     Width="95">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -99,7 +99,7 @@
                     <CheckBox Content="GPU" Name="gpu" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
                     <CheckBox Content="Memory" Name="memory" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
                     <CheckBox Content="Disk" Name="disk" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
-                    <CheckBox Content="Network" Name="network" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                    <CheckBox Content="IO Activity" Name="network" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
                     <CheckBox Content="GPU Temperature" Name="gpuTemp" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
                     <CheckBox Content="CPU Temperature" Name="cpuTemp" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
                 </StackPanel>

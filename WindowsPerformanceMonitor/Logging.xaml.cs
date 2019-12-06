@@ -339,7 +339,7 @@ namespace WindowsPerformanceMonitor
                 listView_gridView.Columns[2].Header = $"GPU";
                 listView_gridView.Columns[3].Header = $"Memory";
                 listView_gridView.Columns[4].Header = $"Disk";
-                listView_gridView.Columns[5].Header = $"Network";
+                listView_gridView.Columns[5].Header = $"IO Activity";
             });
         }
 
@@ -352,7 +352,7 @@ namespace WindowsPerformanceMonitor
                 listView_gridView.Columns[2].Header = $"GPU {Math.Round(load.Gpu, 2)}%";
                 listView_gridView.Columns[3].Header = $"Memory {Math.Round(load.Memory, 2)}%";
                 listView_gridView.Columns[4].Header = $"Disk {Math.Round(load.Disk, 2)}%";
-                listView_gridView.Columns[5].Header = $"Network {Math.Round(load.Network, 2)}%";
+                listView_gridView.Columns[5].Header = $"IO Activity {Math.Round(load.Network, 2)}%";
 
                 if (Math.Round(load.Cpu, 2) > 100)
                 {

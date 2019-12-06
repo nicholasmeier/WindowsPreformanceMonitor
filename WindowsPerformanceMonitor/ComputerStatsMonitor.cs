@@ -110,7 +110,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             if (IOTask == null || IOTask.IsCompleted)
             {
                 IOTask = new Task(() => {
-                    obj.TotalOtherIO = processes.UpdateOtherIO(obj.ProcessList);
+                    obj.TotalOtherIO = processes.UpdateOtherIO(obj);
                 });
 
                 IOTask.Start();

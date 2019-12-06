@@ -170,7 +170,7 @@
                         </Label>
                         <Label>
                             <StackPanel Orientation="Horizontal" Margin="0,-11,0,0">
-                                <CheckBox Content="Network" Name="network" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
+                                <CheckBox Content="IO Activity" Name="network" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"/>
                                 <Image Source="Icons/bullet_purple.png" />
                             </StackPanel>
                         </Label>

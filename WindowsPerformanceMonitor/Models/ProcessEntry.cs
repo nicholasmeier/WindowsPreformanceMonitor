@@ -21,7 +21,7 @@ namespace WindowsPerformanceMonitor.Models
         public float PrevDisk { get; set; }
         public float PrevNetwork { get; set; }
         public DateTime PrevTime { get; set; }
-        public float Network { get; set; }
+        public double Network { get; set; }
         public bool IsApplication { get; set; }
         public string ApplicationName { get; set; }
         public string ApplicationPath { get; set; }

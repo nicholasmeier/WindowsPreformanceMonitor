@@ -334,7 +334,7 @@ namespace WindowsPerformanceMonitor
                 SetVisibilityToFalseExecept((int)Series.Memory);
                 liveGraph.SeriesVisibility[(int)Series.Memory] = true;
             }
-            else if (button == "Network")
+            else if (button == "IO Activity")
             {
                 SetVisibilityToFalseExecept((int)Series.Network);
                 liveGraph.SeriesVisibility[(int)Series.Network] = true;

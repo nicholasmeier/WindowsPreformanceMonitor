@@ -27,8 +27,8 @@
         <Label x:Name ="PROC_MEM" Content="MEM: " HorizontalAlignment="Left" Margin="235,37,0,0" VerticalAlignment="Top" Height="27" Width="84" BorderBrush="Black" BorderThickness="1"/>
         <Label x:Name ="SYS_DIS" Content="DISK: " HorizontalAlignment="Left" Margin="319,10,0,0" VerticalAlignment="Top" Height="27" Width="71" RenderTransformOrigin="0.609,0.539" BorderBrush="Black" BorderThickness="1"/>
         <Label x:Name ="PROC_DIS" Content="DISK: " HorizontalAlignment="Left" Margin="319,37,0,0" VerticalAlignment="Top" Height="27" Width="71"  BorderBrush="Black" BorderThickness="1"/>
-        <Label x:Name ="SYS_NET" Content="NET: " HorizontalAlignment="Left" Margin="390,10,0,0" VerticalAlignment="Top" Height="27" Width="82" RenderTransformOrigin="1.428,0.509" BorderBrush="Black" BorderThickness="1"/>
-        <Label x:Name ="PROC_NET" Content="NET: " HorizontalAlignment="Left" Margin="390,37,0,0" VerticalAlignment="Top" Height="27" Width="82"  BorderBrush="Black" BorderThickness="1"/>
+        <Label x:Name ="SYS_NET" Content="IO: " HorizontalAlignment="Left" Margin="390,10,0,0" VerticalAlignment="Top" Height="27" Width="82" RenderTransformOrigin="1.428,0.509" BorderBrush="Black" BorderThickness="1"/>
+        <Label x:Name ="PROC_NET" Content="IO: " HorizontalAlignment="Left" Margin="390,37,0,0" VerticalAlignment="Top" Height="27" Width="82"  BorderBrush="Black" BorderThickness="1"/>
         <Label x:Name ="CPU_TEMP" Content="CPU TEMP: " HorizontalAlignment="Left" Margin="472,10,-86,0" VerticalAlignment="Top" Height="27" Width="105" Grid.ColumnSpan="2"  BorderBrush="Black" BorderThickness="1"/>
         <Label x:Name ="GPU_TEMP" Content="GPU TEMP: " HorizontalAlignment="Left" Margin="86,10,-189,0" VerticalAlignment="Top" Height="27" Width="103" Grid.Column="1"  BorderBrush="Black" BorderThickness="1"/>
     </Grid>
