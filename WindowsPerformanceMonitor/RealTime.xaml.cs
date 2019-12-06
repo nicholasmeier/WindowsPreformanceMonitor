@@ -52,6 +52,7 @@ namespace WindowsPerformanceMonitor
             paused = false;
             setThresholdOpen = false;
             UpdateIcons();
+            
         }
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {

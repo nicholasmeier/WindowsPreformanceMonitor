@@ -143,6 +143,8 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
             Parallel.ForEach(observers, observer =>
                 observer.OnNext(obj)
             );
+            if (Globals.limit)
+                Thread.Sleep(200);
         }
     }
     

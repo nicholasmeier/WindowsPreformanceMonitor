@@ -24,5 +24,6 @@ namespace WindowsPerformanceMonitor
         {
             _provider = csm;
         }
+        public static bool limit = true;
     }
 }

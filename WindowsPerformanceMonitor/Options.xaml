@@ -43,6 +43,11 @@
                         <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Disable Hibernation"/>
                     </CheckBox>
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,10,0,10">
+                    <CheckBox x:Name="limitData" FlowDirection="LeftToRight" Checked="limit_Checked" Unchecked="limit_Checked">
+                        <TextBlock Margin="5, 0, 0, 0" FlowDirection="LeftToRight" Text="Limit Datapoints"/>
+                    </CheckBox>
+                </StackPanel>
                 
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Save Settings" Margin="5,200,0,0" Width="100" HorizontalAlignment="Left" Click="Save_Button_Click"/>

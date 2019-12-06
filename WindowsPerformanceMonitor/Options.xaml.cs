@@ -37,6 +37,7 @@ namespace WindowsPerformanceMonitor
             this.DataContext = this;
             loadThresholds();
             logTimeList = new List<Tuple<string, string>>();
+            limitData.IsChecked = true;
         }
 
         // Get a reference to main windows when it is available.
@@ -209,6 +210,12 @@ namespace WindowsPerformanceMonitor
                 App.Current.Properties["DisableHibernation"] = false;
                 Globals.Settings.settings.Hibernation = false;
             }
+        }
+
+        private void limit_Checked(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.CheckBox check = (System.Windows.Controls.CheckBox)sender;
+            Globals.limit = (bool)check.IsChecked;
         }
 
         public int loadThresholds()
