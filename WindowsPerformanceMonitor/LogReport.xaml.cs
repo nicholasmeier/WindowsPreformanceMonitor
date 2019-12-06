@@ -92,7 +92,7 @@ namespace WindowsPerformanceMonitor
             double totalGpuTemp = 0;
 
             DateTime start = log.mystart;
-            DateTime end = log.mytimes[len - 1];
+            DateTime end = log.mytimes[len - 2];
             data.startDate = start;
             data.endDate = end;
 
@@ -102,32 +102,50 @@ namespace WindowsPerformanceMonitor
 
             for (int i = 0; i < len; i++)
             {
-                totalCpu += log.mydata[0].Cpu;
-                totalGpu += log.mydata[0].Gpu;
-                totalMem += log.mydata[0].Memory;
-                totalDisk += log.mydata[0].Disk;
+                if (!double.IsNaN(log.mydata[i].Cpu))
+                {
+                    totalCpu += log.mydata[i].Cpu;
+                }
+                if (!double.IsNaN(log.mydata[i].Gpu))
+                {
+                    totalGpu +=log.mydata[i].Gpu;
+                }
+                if (!double.IsNaN(log.mydata[i].Memory))
+                {
+                    totalMem += log.mydata[i].Memory;
+                }
+                if (!double.IsNaN(log.mydata[i].Disk))
+                {
+                    totalDisk += log.mydata[i].Disk;
+                }
                 //totalNetwork += log.mydata[0].Network;
-                totalCpuTemp += log.mydata[0].CpuTemp;
-                totalGpuTemp += log.mydata[0].GpuTemp;
+                if (!double.IsNaN(log.mydata[i].CpuTemp))
+                {
+                    totalCpuTemp += log.mydata[i].CpuTemp;
+                }
+                if (!double.IsNaN(log.mydata[i].GpuTemp))
+                {
+                    totalGpuTemp += log.mydata[i].GpuTemp;
+                }
 
             }
 
-            data.avgCpu = (totalCpu / len);
-            data.avgGpu = (totalGpu / len);
-            data.avgMemory = (totalMem / len);
-            data.avgDisk = (totalDisk / len);
+            data.avgCpu = Math.Round((totalCpu / len), 2);
+            data.avgGpu = Math.Round((totalGpu / len), 2);
+            data.avgMemory = Math.Round((totalMem / len), 2);
+            data.avgDisk = Math.Round((totalDisk / len), 2);
             //data.avgNetwork = (totalNetwork / len);
-            data.avgCpuTemp = (totalCpuTemp / len);
-            data.avgGpuTemp = (totalGpuTemp / len);
+            data.avgCpuTemp = Math.Round((totalCpuTemp / len), 2);
+            data.avgGpuTemp = Math.Round((totalGpuTemp / len), 2);
 
-            avgCpuLabel.Content = "Average CPU Usage: " + (totalCpu / len).ToString() + " %";
-            avgGpuLabel.Content = "Average GPU Usage: " + (totalGpu / len).ToString() + " %";
-            avgMemLabel.Content = "Average Memory Usage: " + (totalMem / len).ToString() + " MB";
-            avgDiskLabel.Content = "Average Disk Usage: " + (totalDisk / len).ToString() + " Mb/s";
+            avgCpuLabel.Content = "Average CPU Usage: " + Math.Round((totalCpu / len), 2).ToString() + " %";
+            avgGpuLabel.Content = "Average GPU Usage: " + Math.Round((totalGpu / len), 2).ToString() + " %";
+            avgMemLabel.Content = "Average Memory Usage: " + Math.Round((totalMem / len), 2).ToString() + " MB";
+            avgDiskLabel.Content = "Average Disk Usage: " + Math.Round((totalDisk / len), 2).ToString() + " Mb/s";
             //avgNetworkLabel.Content = "Average Network Usage: " + (totalNetwork / len).ToString();
             avgIOLabel.Content = "Average IO Usage: " + "0 Mb/s";
-            avgCpuTempLabel.Content = "Average CPU Temperature: " + (totalCpuTemp / len).ToString();
-            avgGpuTempLabel.Content = "Average GPU Temperature: " + (totalGpuTemp / len).ToString();
+            avgCpuTempLabel.Content = "Average CPU Temperature: " + Math.Round((totalCpuTemp / len), 2).ToString();
+            avgGpuTempLabel.Content = "Average GPU Temperature: " + Math.Round((totalGpuTemp / len), 2).ToString();
 
         }
 
