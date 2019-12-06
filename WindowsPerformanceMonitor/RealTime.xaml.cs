@@ -7,7 +7,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using OpenHardwareMonitor.Hardware;
-using PerformanceMonitor.Cpp.CLI;
 using WindowsPerformanceMonitor.Backend;
 using WindowsPerformanceMonitor.Models;
 using System.ComponentModel;

@@ -121,15 +121,18 @@ namespace WindowsPerformanceMonitor
 
         public void UpdateValues(ComputerObj comp)
         {
-            this.Dispatcher.Invoke(() =>
+            if (comp.Tab == 5)
             {
-                if (!Overlay_ProcessListsComboBox.IsDropDownOpen)
+                this.Dispatcher.Invoke(() =>
                 {
-                    Overlay_ProcessListsComboBox.ItemsSource = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
-                    Overlay_ProcessListsComboBox.SelectedItem = Find(selectedProcessComboBox, procListComboBox);
-                    Overlay_ProcessListsComboBox.DisplayMemberPath = "Name";
-                }
-            });
+                    if (!Overlay_ProcessListsComboBox.IsDropDownOpen)
+                    {
+                        Overlay_ProcessListsComboBox.ItemsSource = new ObservableCollection<ProcessEntry>(comp.ProcessList.OrderByDescending(p => p.Cpu));
+                        Overlay_ProcessListsComboBox.SelectedItem = Find(selectedProcessComboBox, procListComboBox);
+                        Overlay_ProcessListsComboBox.DisplayMemberPath = "Name";
+                    }
+                });
+            }
         }
 
         public ProcessEntry Find(ProcessEntry proc, ObservableCollection<ProcessEntry> list)

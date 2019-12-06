@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using WindowsPerformanceMonitor.Models;
 using System.Runtime.InteropServices;
 using System.Management;
-using PerformanceMonitor.Cpp.CLI;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Windows.Interop;

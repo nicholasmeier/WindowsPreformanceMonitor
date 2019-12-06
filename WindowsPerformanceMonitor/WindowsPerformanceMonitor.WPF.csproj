@@ -260,12 +260,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WindowsPerformanceMonitor.Cpp.Wrapper\WindowsPerformanceMonitor.Cpp.Wrapper.vcxproj">
-      <Project>{8496ce5d-5eeb-4ec9-991d-46790ad27159}</Project>
-      <Name>WindowsPerformanceMonitor.Cpp.Wrapper</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Graphics\" />
   </ItemGroup>
   <ItemGroup>

@@ -132,7 +132,7 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                     () => obj.TotalCpu = processes.UpdateCpu(obj.ProcessList),
                     () => obj.TotalMemory = processes.UpdateMem(obj.ProcessList),
                     () => obj.TotalDisk = processes.UpdateDisk(obj),
-                    () => obj.Tab = 0
+                    () => obj.Tab = tabIndex
                 ); ;
             }
             obj.TotalGpu = Math.Round(obj.TotalCpu * .11, 2);
@@ -185,9 +185,6 @@ public class ComputerStatsMonitor : IObservable<ComputerObj>
                 }
             }
         }
-            
-
-
     }
 
     public void checkNotificationThresholds(double Totalcpu, double Totalgpu, double Totalmemory)
